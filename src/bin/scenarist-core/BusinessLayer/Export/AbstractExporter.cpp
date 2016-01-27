@@ -95,6 +95,7 @@ namespace {
 		static QList<ScenarioBlockStyle::Type> s_outlinePrintableBlocksTypes =
 			QList<ScenarioBlockStyle::Type>()
 			<< ScenarioBlockStyle::SceneHeading
+			<< ScenarioBlockStyle::SceneHeadingShadow
 			<< ScenarioBlockStyle::SceneCharacters
 			<< ScenarioBlockStyle::SceneGroupHeader
 			<< ScenarioBlockStyle::SceneGroupFooter
@@ -109,6 +110,7 @@ namespace {
 			<< ScenarioBlockStyle::Character
 			<< ScenarioBlockStyle::Dialogue
 			<< ScenarioBlockStyle::Parenthetical
+			<< ScenarioBlockStyle::TitleHeader
 			<< ScenarioBlockStyle::Title
 			<< ScenarioBlockStyle::Note
 			<< ScenarioBlockStyle::Transition
