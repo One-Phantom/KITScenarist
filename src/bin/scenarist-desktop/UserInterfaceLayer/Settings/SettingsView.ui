@@ -136,7 +136,7 @@
        <item>
         <widget class="QStackedWidget" name="categoriesWidgets">
          <property name="currentIndex">
-          <number>3</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="applicationPage">
           <layout class="QGridLayout" name="applicationPageLayout">
@@ -296,7 +296,7 @@
                   <item row="4" column="0">
                    <widget class="QCheckBox" name="applicationTwoPanelMode">
                     <property name="text">
-                     <string>Two Panel Mode</string>
+                     <string>Two Panel Mode (F12)</string>
                     </property>
                    </widget>
                   </item>
