@@ -1469,27 +1469,34 @@ void ScenarioTextEdit::updateEnteredText(QKeyEvent* _event)
 			//
 			// Исправляем проблему ДВойных ЗАглавных
 			//
-			else if (m_correctDoubleCapitals
-					 && cursorBackwardText.right(2).simplified().length() == 2
-					 && cursorBackwardText.right(2) == cursorBackwardText.right(2).toUpper()) {
+			else if (m_correctDoubleCapitals) {
+				QString right3Characters = cursorBackwardText.right(3).simplified();
 				//
-				// Сделаем последнюю букву строчной
+				// Если две из трёх последних букв находятся в верхнем регистре, то это наш случай
 				//
-				QString correctedText = eventText;
-				correctedText[correctedText.length() - 1] = correctedText[correctedText.length() - 1].toLower();
+				if (!right3Characters.contains(" ")
+					&& right3Characters.length() == 3
+					&& right3Characters.left(2) == right3Characters.left(2).toUpper()
+					&& eventText != eventText.toUpper()) {
+					//
+					// Сделаем предпоследнюю букву строчной
+					//
+					QString correctedText = right3Characters;
+					correctedText[correctedText.length() - 2] = correctedText[correctedText.length() - 2].toLower();
 
-				//
-				// Стираем предыдущий введённый текст
-				//
-				for (int repeats = 0; repeats < eventText.length(); ++repeats) {
-					cursor.deletePreviousChar();
+					//
+					// Стираем предыдущий введённый текст
+					//
+					for (int repeats = 0; repeats < correctedText.length(); ++repeats) {
+						cursor.deletePreviousChar();
+					}
+
+					//
+					// Выводим необходимый
+					//
+					cursor.insertText(correctedText);
+					setTextCursor(cursor);
 				}
-
-				//
-				// Выводим необходимый
-				//
-				cursor.insertText(correctedText);
-				setTextCursor(cursor);
 			}
 
 			//
