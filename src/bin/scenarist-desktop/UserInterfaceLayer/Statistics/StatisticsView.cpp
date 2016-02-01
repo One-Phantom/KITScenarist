@@ -11,8 +11,8 @@
 #include <3rd_party/Widgets/Ctk/ctkCollapsibleButton.h>
 #include <3rd_party/Widgets/Ctk/ctkPopupWidget.h>
 #include <3rd_party/Widgets/FlatButton/FlatButton.h>
-#include <3rd_party/Widgets/ProgressWidget/ProgressWidget.h>
 #include <3rd_party/Widgets/QCutomPlot/qcustomplotextended.h>
+#include <3rd_party/Widgets/QLightBoxWidget/qlightboxprogress.h>
 
 #include <QApplication>
 #include <QButtonGroup>
@@ -83,7 +83,7 @@ StatisticsView::StatisticsView(QWidget* _parent) :
 	m_statisticData(new QStackedWidget(this)),
 	m_reportData(new QTextBrowser(this)),
 	m_plotData(new QCustomPlotExtended(this)),
-	m_progress(new ProgressWidget(m_statisticData, false))
+	m_progress(new QLightBoxProgress(m_statisticData, false))
 {
 	initView();
 	initPlot();

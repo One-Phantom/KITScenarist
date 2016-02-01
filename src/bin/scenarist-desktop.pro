@@ -199,7 +199,6 @@ SOURCES += \
     scenarist-desktop/Application.cpp \
     scenarist-desktop/ManagementLayer/Import/ImportManager.cpp \
     scenarist-desktop/UserInterfaceLayer/Import/ImportDialog.cpp \
-    scenarist-core/3rd_party/Widgets/ProgressWidget/ProgressWidget.cpp \
     scenarist-core/BusinessLayer/Import/DocumentImporter.cpp \
     scenarist-core/BusinessLayer/Export/DocxExporter.cpp \
     scenarist-core/3rd_party/Widgets/ScalableWrapper/ScalableWrapper.cpp \
@@ -305,7 +304,8 @@ SOURCES += \
     scenarist-core/UserInterfaceLayer/ScenarioTextEdit/Handlers/SceneDescriptionHandler.cpp \
     scenarist-desktop/UserInterfaceLayer/Scenario/ScenarioSceneDescription/ScenarioSceneDescription.cpp \
     scenarist-desktop/ManagementLayer/Scenario/ScenarioSceneDescriptionManager.cpp \
-    scenarist-core/BusinessLayer/ScenarioDocument/ScenarioTextCorrector.cpp
+    scenarist-core/BusinessLayer/ScenarioDocument/ScenarioTextCorrector.cpp \
+    scenarist-core/3rd_party/Widgets/QLightBoxWidget/qlightboxprogress.cpp
 
 HEADERS += \
     scenarist-desktop/ManagementLayer/ApplicationManager.h \
@@ -415,7 +415,6 @@ HEADERS += \
     scenarist-core/BusinessLayer/Import/AbstractImporter.h \
     scenarist-desktop/ManagementLayer/Import/ImportManager.h \
     scenarist-desktop/UserInterfaceLayer/Import/ImportDialog.h \
-    scenarist-core/3rd_party/Widgets/ProgressWidget/ProgressWidget.h \
     scenarist-core/BusinessLayer/Import/DocumentImporter.h \
     scenarist-core/BusinessLayer/Export/DocxExporter.h \
     scenarist-core/3rd_party/Widgets/ScalableWrapper/ScalableWrapper.h \
@@ -542,7 +541,9 @@ HEADERS += \
     scenarist-core/UserInterfaceLayer/ScenarioTextEdit/Handlers/SceneDescriptionHandler.h \
     scenarist-desktop/UserInterfaceLayer/Scenario/ScenarioSceneDescription/ScenarioSceneDescription.h \
     scenarist-desktop/ManagementLayer/Scenario/ScenarioSceneDescriptionManager.h \
-    scenarist-core/BusinessLayer/ScenarioDocument/ScenarioTextCorrector.h
+    scenarist-core/BusinessLayer/ScenarioDocument/ScenarioTextCorrector.h \
+    scenarist-core/3rd_party/Widgets/QLightBoxWidget/qlightboxprogress.h \
+    scenarist-core/3rd_party/Helpers/FileHelper.h
 
 FORMS += \
     scenarist-desktop/UserInterfaceLayer/StartUp/StartUpView.ui \

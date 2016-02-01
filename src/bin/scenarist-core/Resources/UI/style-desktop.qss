@@ -330,10 +330,10 @@ ctkBasePopupWidget {
 }
 
 QProgressBar {
-    border-radius: 0px;
-    border: none;
-    background-color: #b3c4da;
-    max-height: 5px;
+	border-radius: 0px;
+	border: none;
+	background-color: #b3c4da;
+	max-height: 5px;
 }
 
 QProgressBar::chunk {
@@ -354,4 +354,26 @@ QProgressBar::chunk {
 	background-color: palette(window);
 	border: 1px solid palette(dark);
 	padding: 8px 20px 10px 20px;
+}
+
+[lightBoxProgressTitle=true] {
+	font-size: 20pt;
+	font-weight: 500;
+	background-color: transparent;
+	color: white;
+	border: none;
+	margin: 20px 0px 0px 12px;
+}
+
+[lightBoxProgressIndicator=true] {
+	background-color: transparent;
+	color: white;
+	border: none;
+}
+
+[lightBoxProgressDescription=true] {
+	background-color: transparent;
+	color: white;
+	border: none;
+	margin: 0px 0px 0px 12px;
 }
