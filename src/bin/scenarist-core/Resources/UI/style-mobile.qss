@@ -243,3 +243,25 @@ QComboBox::indicator[toolbar=true] {
     border: none;
     padding: 0dp 24dp 24dp 24dp;
 }
+
+[lightBoxProgressTitle=true] {
+	font-size: 20pt;
+	font-weight: 500;
+	background-color: transparent;
+	color: white;
+	border: none;
+	margin: 20px 0px 0px 12px;
+}
+
+[lightBoxProgressIndicator=true] {
+	background-color: transparent;
+	color: white;
+	border: none;
+}
+
+[lightBoxProgressDescription=true] {
+	background-color: transparent;
+	color: white;
+	border: none;
+	margin: 0px 0px 0px 12px;
+}

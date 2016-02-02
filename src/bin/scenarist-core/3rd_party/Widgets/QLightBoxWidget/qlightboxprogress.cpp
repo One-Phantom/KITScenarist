@@ -80,7 +80,7 @@ void QLightBoxProgress::setProgressValue(int _value)
 	if (s_lastUsedWidget != 0) {
 		QString title = s_lastUsedWidget->m_title->property(TITLE_SOURCE_TEXT).toString();
 		if (_value >= 0 && _value <= 100) {
-			title.append(" [%1%]").arg(_value);
+			title += " " + QString::number(_value) + "%";
 		}
 		s_lastUsedWidget->m_title->setText(title);
 	}
