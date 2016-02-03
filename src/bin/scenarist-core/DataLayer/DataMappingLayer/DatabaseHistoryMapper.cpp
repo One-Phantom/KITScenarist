@@ -5,7 +5,9 @@
 
 #include <3rd_party/Helpers/QVariantMapWriter.h>
 
+#include <QDebug>
 #include <QSqlDatabase>
+#include <QSqlError>
 #include <QSqlQuery>
 #include <QVariant>
 
@@ -91,7 +93,12 @@ void DatabaseHistoryMapper::applyHistoryRecord(const QString& _query, const QStr
 	foreach (const QString& key, values.keys()) {
 		q_saver.addBindValue(values.value(key));
 	}
-	q_saver.exec();
+
+	if (!q_saver.exec()) {
+		qDebug() << q_saver.lastError();
+		qDebug() << q_saver.lastQuery();
+		qDebug() << q_saver.boundValues();
+	}
 }
 
 DatabaseHistoryMapper::DatabaseHistoryMapper()

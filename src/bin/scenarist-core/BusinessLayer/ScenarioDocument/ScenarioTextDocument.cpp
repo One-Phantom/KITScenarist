@@ -219,6 +219,9 @@ void ScenarioTextDocument::applyPatches(const QList<QString>& _patches)
 	QString newXml = currentXml;
 	int currentIndex = 0, max = _patches.size();
 	foreach (const QString& patch, _patches) {
+		//
+		// TODO: оптимизировать, сперва объединяя все патчи в один, а потом накладывать только его
+		//
 		const QString patchUncopressed = DatabaseHelper::uncompress(patch);
 		newXml = DiffMatchPatchHelper::applyPatchXml(newXml, patchUncopressed);
 		QLightBoxProgress::setProgressValue(++currentIndex * 100 / max);
