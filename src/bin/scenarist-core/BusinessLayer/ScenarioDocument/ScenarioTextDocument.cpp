@@ -24,7 +24,7 @@
 //
 // Для отладки работы с патчами
 //
-//#define PATCH_DEBUG
+#define PATCH_DEBUG
 #ifdef PATCH_DEBUG
 #include <QDebug>
 #endif
@@ -180,6 +180,8 @@ void ScenarioTextDocument::applyPatch(const QString& _patch)
 	qDebug() << "###################################################################";
 	qDebug() << xmlsForUpdate.first.xml;
 	qDebug() << "###################################################################";
+	qDebug() << qPrintable(QByteArray::fromPercentEncoding(patchUncopressed.toUtf8()));
+	qDebug() << "###################################################################";
 	qDebug() << xmlsForUpdate.second.xml;
 #endif
 
@@ -313,7 +315,7 @@ void ScenarioTextDocument::undoReimpl()
 
 void ScenarioTextDocument::redoReimpl()
 {
-	if (!m_redoStack.isEmpty()) {
+	while (!m_redoStack.isEmpty()) {
 		Domain::ScenarioChange* change = m_redoStack.takeLast();
 		m_undoStack.append(change);
 		applyPatch(change->redoPatch());

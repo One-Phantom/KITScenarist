@@ -869,7 +869,7 @@ void ScenarioDocument::updateItem(ScenarioModelItem* _item, int _itemStartPos, i
 	//
 	else {
 		//
-		// TODO: какое безобразие, нужно это явно сделать красиво!
+		// FIXME: какое безобразие, нужно это явно сделать красиво!
 		//
 		QTextCursor descriptionCursor = cursor;
 		descriptionCursor.setPosition(_itemStartPos);
@@ -878,7 +878,9 @@ void ScenarioDocument::updateItem(ScenarioModelItem* _item, int _itemStartPos, i
 		if (info == 0) {
 			info = new ScenarioTextBlockInfo;
 		}
-		info->setPlainDescription(description);
+		QTextDocument doc;
+		doc.setPlainText(description);
+		info->setDescription(doc.toHtml());
 		descriptionCursor.block().setUserData(info);
 
 		//
