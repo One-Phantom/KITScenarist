@@ -223,6 +223,8 @@ void ScenarioTextDocument::applyPatch(const QString& _patch)
 	//
 	m_scenarioXml = m_xmlHandler->scenarioToXml();
 	m_scenarioXmlHash = ::textMd5Hash(m_scenarioXml);
+	m_lastSavedScenarioXml = m_scenarioXml;
+	m_lastSavedScenarioXmlHash = m_scenarioXmlHash;
 
 
 	m_isPatchApplyProcessed = false;
@@ -332,7 +334,7 @@ void ScenarioTextDocument::undoReimpl()
 
 void ScenarioTextDocument::redoReimpl()
 {
-	while (!m_redoStack.isEmpty()) {
+	if (!m_redoStack.isEmpty()) {
 		Domain::ScenarioChange* change = m_redoStack.takeLast();
 		m_undoStack.append(change);
 		applyPatch(change->redoPatch());
