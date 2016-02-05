@@ -218,7 +218,7 @@ void ProjectsManager::setCurrentProjectName(const QString& _projectName)
 	}
 }
 
-void ProjectsManager::setCurrentProjectSyncAvailable(bool _syncAvailable)
+void ProjectsManager::setCurrentProjectSyncAvailable(bool _syncAvailable, int _errorCode)
 {
 	//
 	// Определим источник хранения проекта
@@ -233,7 +233,7 @@ void ProjectsManager::setCurrentProjectSyncAvailable(bool _syncAvailable)
 	while (projectsIterator.hasNext()) {
 		Project& project = projectsIterator.next();
 		if (project == s_currentProject) {
-			s_currentProject.setSyncAvailable(_syncAvailable);
+			s_currentProject.setSyncAvailable(_syncAvailable, _errorCode);
 			projectsIterator.setValue(s_currentProject);
 			break;
 		}
@@ -312,7 +312,7 @@ void ProjectsManager::setRemoteProjects(const QString& _xml)
 void ProjectsManager::setRemoteProjectsSyncUnavailable()
 {
 	for (int projectIndex = 0; projectIndex < m_remoteProjects.size(); ++projectIndex) {
-		m_remoteProjects[projectIndex].setSyncAvailable(false);
+		m_remoteProjects[projectIndex].setSyncAvailable(false, 0);
 	}
 }
 
