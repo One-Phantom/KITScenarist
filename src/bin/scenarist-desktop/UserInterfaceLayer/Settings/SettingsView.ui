@@ -296,7 +296,7 @@
                   <item row="4" column="0">
                    <widget class="QCheckBox" name="applicationTwoPanelMode">
                     <property name="text">
-                     <string>Two Panel Mode (F12)</string>
+                     <string>Two Panel Mode (F2)</string>
                     </property>
                    </widget>
                   </item>
