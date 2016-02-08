@@ -15,7 +15,7 @@ public:
 	 */
 	static QString systemSavebleFileName(const QString& _fileName) {
 		QString result = _fileName;
-#ifdef Q_OS_WINDOWS
+#ifdef Q_OS_WIN
 		result = result.replace("\"", "_").replace(":", "_");
 #endif
 		return result;
