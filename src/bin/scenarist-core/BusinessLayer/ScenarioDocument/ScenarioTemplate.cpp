@@ -192,11 +192,7 @@ QString ScenarioBlockStyle::shortTypeName(ScenarioBlockStyle::Type _type)
 
 ScenarioBlockStyle::Type ScenarioBlockStyle::forBlock(const QTextBlock& _block)
 {
-	ScenarioBlockStyle::Type blockType = ScenarioBlockStyle::Undefined;
-	if (_block.blockFormat().hasProperty(ScenarioBlockStyle::PropertyType)) {
-		blockType = (ScenarioBlockStyle::Type)_block.blockFormat().intProperty(ScenarioBlockStyle::PropertyType);
-	}
-	return blockType;
+	return (ScenarioBlockStyle::Type)_block.blockFormat().intProperty(ScenarioBlockStyle::PropertyType);
 }
 
 void ScenarioBlockStyle::setIsActive(bool _isActive)

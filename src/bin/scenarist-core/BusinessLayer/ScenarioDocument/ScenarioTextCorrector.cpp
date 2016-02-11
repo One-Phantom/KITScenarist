@@ -2,6 +2,7 @@
 
 #include "ScenarioTemplate.h"
 #include "ScenarioTextBlockParsers.h"
+#include "ScenarioTextDocument.h"
 
 #include <QAbstractTextDocumentLayout>
 #include <QApplication>
@@ -469,15 +470,15 @@ void ScenarioTextCorrector::removeDecorations(const QTextCursor& _cursor, int _s
 	cursor.endEditBlock();
 }
 
-void ScenarioTextCorrector::correctScenarioText(QTextDocument* _document, int _startPosition)
+void ScenarioTextCorrector::correctScenarioText(ScenarioTextDocument* _document, int _startPosition)
 {
 	//
 	// Вводим карту с текстами обрабатываемых документов, чтобы не выполнять лишнюю работу,
 	// повторно обрабатывая один и тот же документ
 	//
-	static QMap<QTextDocument*, QString> s_documentTexts;
-	if (s_documentTexts.contains(_document)
-		&& s_documentTexts.value(_document) == _document->toHtml()) {
+	static QMap<QTextDocument*, QString> s_documentHash;
+	if (s_documentHash.contains(_document)
+		&& s_documentHash.value(_document) == _document->scenarioXmlHash()) {
 		return;
 	}
 
@@ -1056,11 +1057,10 @@ void ScenarioTextCorrector::correctScenarioText(QTextDocument* _document, int _s
 			removeDecorations(mainCursor);
 		}
 
-
 		//
 		// Обновляем текст текущего документа
 		//
-		s_documentTexts[_document] = _document->toHtml();
+		s_documentHash[_document] = _document->scenarioXmlHash();
 
 		s_proccessedNow = false;
 	}

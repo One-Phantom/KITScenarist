@@ -431,7 +431,7 @@
     <name>BusinessLogic::ScenarioModel</name>
     <message>
         <location filename="../../BusinessLayer/ScenarioDocument/ScenarioModel.cpp" line="292"/>
-        <source>FADE IN</source>
+        <source>FADE IN:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -446,13 +446,13 @@
 <context>
     <name>BusinessLogic::ScenarioTextCorrector</name>
     <message>
-        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioTextCorrector.cpp" line="22"/>
+        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioTextCorrector.cpp" line="23"/>
         <source>CONT&apos;D</source>
         <extracomment>Continued</extracomment>
         <translation type="unfinished">Ci-dessous</translation>
     </message>
     <message>
-        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioTextCorrector.cpp" line="30"/>
+        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioTextCorrector.cpp" line="31"/>
         <source>MORE</source>
         <translation type="unfinished"></translation>
     </message>
