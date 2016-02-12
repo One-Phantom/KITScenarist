@@ -187,7 +187,19 @@ void ScenarioTextDocument::applyPatch(const QString& _patch)
 	//
 	QTextCursor cursor(this);
 	cursor.beginEditBlock();
-	const int selectionStartPos = xmlsForUpdate.first.plainPos;
+	int selectionStartPos = xmlsForUpdate.first.plainPos;
+	{
+		//
+		// Увеличиваем стартовую позицию на количество разрывов
+		//
+		cursor.setPosition(selectionStartPos);
+		while (!cursor.atStart()) {
+			if (cursor.block().blockFormat().boolProperty(ScenarioBlockStyle::PropertyIsCorrection)) {
+				selectionStartPos += cursor.block().length();
+			}
+			cursor.movePosition(QTextCursor::PreviousBlock);
+		}
+	}
 	const int selectionEndPos = selectionStartPos + xmlsForUpdate.first.plainLength;
 	//
 	// ... удаляем все декорации, и сшиваем разрывы в том месте, куда должен быть наложен патч
@@ -214,7 +226,7 @@ void ScenarioTextDocument::applyPatch(const QString& _patch)
 	// Замещаем его обновлённым
 	//
 	cursor.removeSelectedText();
-	m_xmlHandler->xmlToScenario(xmlsForUpdate.first.plainPos,
+	m_xmlHandler->xmlToScenario(selectionStartPos,
 		ScenarioXml::makeMimeFromXml(xmlsForUpdate.second.xml));
 	cursor.endEditBlock();
 
