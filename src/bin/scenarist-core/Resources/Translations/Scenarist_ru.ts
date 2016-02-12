@@ -446,7 +446,7 @@
 <context>
     <name>BusinessLogic::ScenarioTemplate</name>
     <message>
-        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioTemplate.cpp" line="800"/>
+        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioTemplate.cpp" line="796"/>
         <source>Default</source>
         <translation>Стандартный</translation>
     </message>
@@ -1817,7 +1817,7 @@ Continue working in offline mode.</source>
         <location filename="../../../scenarist-desktop/ManagementLayer/Settings/SettingsManager.cpp" line="821"/>
         <location filename="../../../scenarist-mobile/ManagementLayer/Settings/SettingsManager.cpp" line="788"/>
         <source>Press in paragraph&apos;s end</source>
-        <translation>Курсор в конце абзаца с текстом</translation>
+        <translation>Курсор в конце строки</translation>
     </message>
     <message>
         <location filename="../../../scenarist-desktop/ManagementLayer/Settings/SettingsManager.cpp" line="823"/>
@@ -1839,7 +1839,7 @@ Continue working in offline mode.</source>
         <location filename="../../../scenarist-desktop/ManagementLayer/Settings/SettingsManager.cpp" line="826"/>
         <location filename="../../../scenarist-mobile/ManagementLayer/Settings/SettingsManager.cpp" line="793"/>
         <source>Press in empty paragraph</source>
-        <translation>Курсор в пустом абзаце</translation>
+        <translation>Курсор в пустой строке</translation>
     </message>
     <message>
         <location filename="../../../scenarist-desktop/ManagementLayer/Settings/SettingsManager.cpp" line="832"/>
@@ -1993,13 +1993,15 @@ Continue working in offline mode.</source>
         <translation>Сценарий</translation>
     </message>
     <message>
-        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioXml.cpp" line="461"/>
+        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioXml.cpp" line="362"/>
+        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioXml.cpp" line="744"/>
         <source>END OF GROUP</source>
         <comment>ScenarioXml</comment>
         <translation>КОНЕЦ ГРУППЫ</translation>
     </message>
     <message>
-        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioXml.cpp" line="472"/>
+        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioXml.cpp" line="373"/>
+        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioXml.cpp" line="755"/>
         <source>END OF FOLDER</source>
         <comment>ScenarioXml</comment>
         <translation>КОНЕЦ ПАПКИ</translation>
@@ -2011,7 +2013,7 @@ Continue working in offline mode.</source>
         <translation>КОНЕЦ</translation>
     </message>
     <message>
-        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioTemplate.cpp" line="484"/>
+        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioTemplate.cpp" line="480"/>
         <source>Title:</source>
         <comment>ScenarioBlockStyle</comment>
         <translation>Титр:</translation>

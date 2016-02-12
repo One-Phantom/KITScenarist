@@ -438,7 +438,7 @@
 <context>
     <name>BusinessLogic::ScenarioTemplate</name>
     <message>
-        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioTemplate.cpp" line="800"/>
+        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioTemplate.cpp" line="796"/>
         <source>Default</source>
         <translation>Défaut</translation>
     </message>
@@ -1954,19 +1954,21 @@ Continuer à travailler à ce projet en mode déconnecté.</translation>
         <translation>Scénario</translation>
     </message>
     <message>
-        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioTemplate.cpp" line="484"/>
+        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioTemplate.cpp" line="480"/>
         <source>Title:</source>
         <comment>ScenarioBlockStyle</comment>
         <translation>Titre:</translation>
     </message>
     <message>
-        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioXml.cpp" line="461"/>
+        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioXml.cpp" line="362"/>
+        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioXml.cpp" line="744"/>
         <source>END OF GROUP</source>
         <comment>ScenarioXml</comment>
         <translation>FIN DE GROUPE</translation>
     </message>
     <message>
-        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioXml.cpp" line="472"/>
+        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioXml.cpp" line="373"/>
+        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioXml.cpp" line="755"/>
         <source>END OF FOLDER</source>
         <comment>ScenarioXml</comment>
         <translation>FIN DU DOSSIER</translation>

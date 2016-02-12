@@ -438,7 +438,7 @@
 <context>
     <name>BusinessLogic::ScenarioTemplate</name>
     <message>
-        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioTemplate.cpp" line="800"/>
+        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioTemplate.cpp" line="796"/>
         <source>Default</source>
         <translation>Por defecto</translation>
     </message>
@@ -1979,19 +1979,21 @@ Continue trabajando fuera de linea.</translation>
         <translation>Guión</translation>
     </message>
     <message>
-        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioTemplate.cpp" line="484"/>
+        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioTemplate.cpp" line="480"/>
         <source>Title:</source>
         <comment>ScenarioBlockStyle</comment>
         <translation>Titulo:</translation>
     </message>
     <message>
-        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioXml.cpp" line="461"/>
+        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioXml.cpp" line="362"/>
+        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioXml.cpp" line="744"/>
         <source>END OF GROUP</source>
         <comment>ScenarioXml</comment>
         <translation>FINAL DEL GRUPO</translation>
     </message>
     <message>
-        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioXml.cpp" line="472"/>
+        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioXml.cpp" line="373"/>
+        <location filename="../../BusinessLayer/ScenarioDocument/ScenarioXml.cpp" line="755"/>
         <source>END OF FOLDER</source>
         <comment>ScenarioXml</comment>
         <translation>FINAL DE LA CARPETA</translation>
