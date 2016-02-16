@@ -305,6 +305,11 @@ void ScenarioDocument::clear()
 	cursor.removeSelectedText();
 }
 
+void ScenarioDocument::refresh()
+{
+	aboutContentsChange(0, 0, m_document->characterCount());
+}
+
 QStringList ScenarioDocument::findCharacters() const
 {
 	//
@@ -407,10 +412,9 @@ int ScenarioDocument::positionToInsertMime(ScenarioModelItem* _insertParent, Sce
 
 	return insertPosition;
 }
-#include <QDebug>
+
 void ScenarioDocument::aboutContentsChange(int _position, int _charsRemoved, int _charsAdded)
 {
-//	qDebug() << _position << _charsRemoved << _charsAdded;
 	//
 	// Сохраняем изменённый xml и его хэш
 	//
