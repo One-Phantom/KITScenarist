@@ -709,13 +709,11 @@ void ScenarioTextCorrector::correctScenarioText(ScenarioTextDocument* _document,
 
 							//
 							// Время и место
-							// Имя персонажа
 							//
 							// переносим на следующую страницу
 							// - если в конце предыдущей страницы
 							//
-							if (ScenarioBlockStyle::forBlock(currentBlock) == ScenarioBlockStyle::SceneHeading
-								|| ScenarioBlockStyle::forBlock(currentBlock) == ScenarioBlockStyle::Character) {
+							if (ScenarioBlockStyle::forBlock(currentBlock) == ScenarioBlockStyle::SceneHeading) {
 								cursor.beginEditBlock();
 								::moveBlockDown(currentBlock, cursor, currentBlock.position());
 								cursor.endEditBlock();
@@ -890,6 +888,72 @@ void ScenarioTextCorrector::correctScenarioText(ScenarioTextDocument* _document,
 									//
 									::moveBlockDown(currentBlock, cursor, startPosition);
 								}
+
+								cursor.endEditBlock();
+							}
+
+
+							//
+							// Имя персонажа
+							//
+							// переносим на следующую страницу
+							// - если в конце предыдущей страницы
+							// - если перед именем персонажа идёт заголовок сцены, переносим их вместе
+							//
+							if (ScenarioBlockStyle::forBlock(currentBlock) == ScenarioBlockStyle::Character) {
+								cursor.beginEditBlock();
+
+								int startPosition = currentBlock.position();
+
+								//
+								// Проверяем предыдущий блок
+								//
+								QTextBlock previousBlock = currentBlock.previous();
+								while (previousBlock.isValid() && !previousBlock.isVisible()) {
+									previousBlock = previousBlock.previous();
+								}
+								if (previousBlock.isValid()) {
+									//
+									// Если перед именем персонажа идёт время и место и его тоже переносим
+									//
+									if (ScenarioBlockStyle::forBlock(previousBlock) == ScenarioBlockStyle::SceneHeading) {
+										startPosition = previousBlock.position();
+										::moveBlockDown(previousBlock, cursor, startPosition);
+									}
+									//
+									// Если перед именем персонажа идут участники сцены, то их тоже переносим
+									//
+									else if (ScenarioBlockStyle::forBlock(previousBlock) == ScenarioBlockStyle::SceneCharacters) {
+										startPosition = previousBlock.position();
+
+										//
+										// Проверяем предыдущий блок
+										//
+										QTextBlock prePreviousBlock = previousBlock.previous();
+										while (prePreviousBlock.isValid() && !prePreviousBlock.isVisible()) {
+											prePreviousBlock = prePreviousBlock.previous();
+										}
+										if (prePreviousBlock.isValid()) {
+											//
+											// Если перед участниками сцены идёт время и место его тоже переносим
+											//
+											if (ScenarioBlockStyle::forBlock(prePreviousBlock) == ScenarioBlockStyle::SceneHeading) {
+												startPosition = prePreviousBlock.position();
+												::moveBlockDown(prePreviousBlock, cursor, startPosition);
+											}
+										}
+
+										//
+										// Делаем пропуски необходимые для переноса самих участников сцены
+										//
+										::moveBlockDown(previousBlock, cursor, startPosition);
+									}
+								}
+
+								//
+								// Делаем пропуски необходимые для переноса самого имени персонажа
+								//
+								::moveBlockDown(currentBlock, cursor, startPosition);
 
 								cursor.endEditBlock();
 							}
