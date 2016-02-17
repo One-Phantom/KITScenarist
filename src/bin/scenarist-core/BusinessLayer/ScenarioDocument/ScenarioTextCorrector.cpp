@@ -53,7 +53,7 @@ namespace {
 					&& punctuation.contains(_text.at(charIndex))) {
 					++charIndex;
 				}
-				result.append(_text.mid(lastSentenceEnd, charIndex - lastSentenceEnd).simplified());
+				result.append(_text.mid(lastSentenceEnd, charIndex - lastSentenceEnd));
 				lastSentenceEnd = charIndex;
 			}
 		}
@@ -768,38 +768,48 @@ void ScenarioTextCorrector::correctScenarioText(ScenarioTextDocument* _document,
 									QStringList nextPageSentences;
 									while (!prevPageSentences.isEmpty()) {
 										nextPageSentences << prevPageSentences.takeLast();
-										const QString newText = prevPageSentences.join(" ");
+										const QString newText = prevPageSentences.join("");
 										int linesCount = ::linesCount(newText, currentBlock.charFormat().font(), currentBlockInfo.width);
+										//
+										// ... если нашли место, где можно разорвать
+										//
 										if (linesCount <= currentBlockInfo.topLinesCount
 											&& linesCount >= availableLinesOnPageEnd) {
-											cursor.setPosition(currentBlock.position());
-											const QTextBlockFormat format = currentBlock.blockFormat();
+											cursor.setPosition(currentBlock.position() + newText.length());
 											//
-											// ... корректируем текст в оставшемся блоке
+											// ... если есть пробел, уберём его
 											//
-											{
-												cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
-												cursor.insertText(newText);
-												QTextBlockFormat breakFormat = format;
-												breakFormat.setProperty(ScenarioBlockStyle::PropertyIsBreakCorrectionStart, true);
-												cursor.setBlockFormat(breakFormat);
+											cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
+											if (cursor.selectedText() == " ") {
+												cursor.removeSelectedText();
+											} else {
+												cursor.movePosition(QTextCursor::PreviousCharacter);
 											}
-											//
-											// ... добавляем новый блок с оторванным текстом
-											//
-											{
-												cursor.insertBlock();
-												cursor.insertText(nextPageSentences.join(" "));
-												QTextBlockFormat breakFormat = format;
-												breakFormat.setProperty(ScenarioBlockStyle::PropertyIsBreakCorrectionEnd, true);
-												cursor.setBlockFormat(breakFormat);
 
-												cursor.endEditBlock();
-												cursor.beginEditBlock();
+											//
+											// ... разрываем блок
+											//
+											cursor.insertBlock();
 
-												QTextBlock blockForMove = cursor.block();
-												::moveBlockDown(blockForMove, cursor, cursor.block().position());
-											}
+											//
+											// ... добавляем свойства для разрывов
+											//
+											cursor.movePosition(QTextCursor::PreviousBlock);
+											QTextBlockFormat breakStartFormat = cursor.blockFormat();
+											breakStartFormat.setProperty(ScenarioBlockStyle::PropertyIsBreakCorrectionStart, true);
+											cursor.setBlockFormat(breakStartFormat);
+											//
+											cursor.movePosition(QTextCursor::NextBlock);
+											QTextBlockFormat breakEndFormat = cursor.blockFormat();
+											breakEndFormat.setProperty(ScenarioBlockStyle::PropertyIsBreakCorrectionEnd, true);
+											cursor.setBlockFormat(breakEndFormat);
+
+											cursor.endEditBlock();
+											cursor.beginEditBlock();
+
+											QTextBlock blockForMove = cursor.block();
+											::moveBlockDown(blockForMove, cursor, cursor.block().position());
+
 											breakSuccess = true;
 											break;
 										}
@@ -941,41 +951,48 @@ void ScenarioTextCorrector::correctScenarioText(ScenarioTextDocument* _document,
 									QStringList nextPageSentences;
 									while (!prevPageSentences.isEmpty()) {
 										nextPageSentences << prevPageSentences.takeLast();
-										const QString newText = prevPageSentences.join(" ");
+										const QString newText = prevPageSentences.join("");
 										int linesCount = ::linesCount(newText, currentBlock.charFormat().font(), currentBlockInfo.width);
 										//
 										// ... опять резервируем одну строку под надпись ДАЛЬШЕ
 										//
 										if (linesCount <= currentBlockInfo.topLinesCount - 1
 											&& linesCount >= availableLinesOnPageEnd) {
-											cursor.setPosition(currentBlock.position());
-											const QTextBlockFormat format = currentBlock.blockFormat();
+											cursor.setPosition(currentBlock.position() + newText.length());
 											//
-											// ... корректируем текст в оставшемся блоке
+											// ... если есть пробел, уберём его
 											//
-											{
-												cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
-												cursor.insertText(newText);
-												QTextBlockFormat breakFormat = format;
-												breakFormat.setProperty(ScenarioBlockStyle::PropertyIsBreakCorrectionStart, true);
-												cursor.setBlockFormat(breakFormat);
+											cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
+											if (cursor.selectedText() == " ") {
+												cursor.removeSelectedText();
+											} else {
+												cursor.movePosition(QTextCursor::PreviousCharacter);
 											}
-											//
-											// ... добавляем новый блок с оторванным текстом
-											//
-											{
-												cursor.insertBlock();
-												cursor.insertText(nextPageSentences.join(" "));
-												QTextBlockFormat breakFormat = format;
-												breakFormat.setProperty(ScenarioBlockStyle::PropertyIsBreakCorrectionEnd, true);
-												cursor.setBlockFormat(breakFormat);
 
-												cursor.endEditBlock();
-												cursor.beginEditBlock();
+											//
+											// ... разрываем блок
+											//
+											cursor.insertBlock();
 
-												QTextBlock blockForMove = cursor.block();
-												::moveBlockDownInDialogue(blockForMove, cursor, cursor.block().position());
-											}
+											//
+											// ... добавляем свойства для разрывов
+											//
+											cursor.movePosition(QTextCursor::PreviousBlock);
+											QTextBlockFormat breakStartFormat = cursor.blockFormat();
+											breakStartFormat.setProperty(ScenarioBlockStyle::PropertyIsBreakCorrectionStart, true);
+											cursor.setBlockFormat(breakStartFormat);
+											//
+											cursor.movePosition(QTextCursor::NextBlock);
+											QTextBlockFormat breakEndFormat = cursor.blockFormat();
+											breakEndFormat.setProperty(ScenarioBlockStyle::PropertyIsBreakCorrectionEnd, true);
+											cursor.setBlockFormat(breakEndFormat);
+
+											cursor.endEditBlock();
+											cursor.beginEditBlock();
+
+											QTextBlock blockForMove = cursor.block();
+											::moveBlockDownInDialogue(blockForMove, cursor, cursor.block().position());
+
 											breakSuccess = true;
 											break;
 										}

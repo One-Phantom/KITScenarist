@@ -118,8 +118,11 @@ QString ScenarioXml::scenarioToXml()
 
 		//
 		// Если для блока есть кэш, используем его
+		// не используем кэш для блоков с разрывами
 		//
-		if (m_xmlCache.contains(currentBlockHash)) {
+		if (m_xmlCache.contains(currentBlockHash)
+			&& !currentBlock.blockFormat().boolProperty(ScenarioBlockStyle::PropertyIsBreakCorrectionStart)
+			&& !currentBlock.blockFormat().boolProperty(ScenarioBlockStyle::PropertyIsBreakCorrectionEnd)) {
 			resultXml.append(m_xmlCache[currentBlockHash]);
 		}
 		//
