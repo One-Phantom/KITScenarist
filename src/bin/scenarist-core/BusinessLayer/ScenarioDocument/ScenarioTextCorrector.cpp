@@ -62,15 +62,20 @@ namespace {
 	}
 
 	/**
-	 * @brief Курсор находится на границе сцены
+	 * @brief Блок или курсор находится на границе сцены
 	 */
-	static bool cursorAtSceneBorder(const QTextCursor& _cursor) {
-		return ScenarioBlockStyle::forBlock(_cursor.block()) == ScenarioBlockStyle::SceneHeading
-				|| ScenarioBlockStyle::forBlock(_cursor.block()) == ScenarioBlockStyle::SceneGroupHeader
-				|| ScenarioBlockStyle::forBlock(_cursor.block()) == ScenarioBlockStyle::SceneGroupFooter
-				|| ScenarioBlockStyle::forBlock(_cursor.block()) == ScenarioBlockStyle::FolderHeader
-				|| ScenarioBlockStyle::forBlock(_cursor.block()) == ScenarioBlockStyle::FolderFooter;
+	/** @{ */
+	static bool blockIsSceneBorder(const QTextBlock& _block) {
+		return ScenarioBlockStyle::forBlock(_block) == ScenarioBlockStyle::SceneHeading
+				|| ScenarioBlockStyle::forBlock(_block) == ScenarioBlockStyle::SceneGroupHeader
+				|| ScenarioBlockStyle::forBlock(_block) == ScenarioBlockStyle::SceneGroupFooter
+				|| ScenarioBlockStyle::forBlock(_block) == ScenarioBlockStyle::FolderHeader
+				|| ScenarioBlockStyle::forBlock(_block) == ScenarioBlockStyle::FolderFooter;
 	}
+	static bool cursorAtSceneBorder(const QTextCursor& _cursor) {
+		return blockIsSceneBorder(_cursor.block());
+	}
+	/** @} */
 
 	/**
 	 * @brief Удалить заданные блок
@@ -365,7 +370,7 @@ namespace {
 			}
 
 			//
-			// Когда перешли на новую страницу - добавляем блок с именем персонажа и (ПРОД)
+			// Когда перешли на новую страницу - добавляем блок с именем персонажа и (ПРОД.)
 			// и делаем его декорацией
 			//
 			QTextBlock characterBlock = _block.previous();
@@ -503,7 +508,7 @@ void ScenarioTextCorrector::correctScenarioText(ScenarioTextDocument* _document,
 
 
 		//
-		// Для имён персонажей, нужно добавлять ПРОД (только, если имя полностью идентично предыдущему)
+		// Для имён персонажей, нужно добавлять ПРОД. (только, если имя полностью идентично предыдущему)
 		//
 		{
 			QTextCursor cursor = mainCursor;
@@ -580,18 +585,31 @@ void ScenarioTextCorrector::correctScenarioText(ScenarioTextDocument* _document,
 			// был перенесён на следующую страницу из-за того что не влез на предыдущую, а потом
 			// пользователь изменил его, оставив там меньше строк и теперь текст влезет
 			//
+			// и до конца сцены
+			//
+			// А это делается для того, чтобы корректно отрабатывать ситуации, когда разрыв состоит
+			// из нескольких строк, но текст перед ним уменьшился, или увеличился наоборот
+			//
 			{
-				//
-				// ... это ситуация, когда удаляем декорации от начала сцены
-				//
 				int removeDecorationsFrom = cursor.position();
-				//
-				// ... или, если это не первая сцена за один блок до начала сцены
-				//
 				if (!cursor.atStart()) {
 					removeDecorationsFrom = cursor.block().previous().position();
 				}
-				removeDecorations(cursor, removeDecorationsFrom, _startPosition);
+
+				int removeDecorationsTo = _startPosition;
+				{
+					QTextBlock nextSceneStartBlock = cursor.block().next();
+					while (nextSceneStartBlock.isValid()
+						   && !::blockIsSceneBorder(nextSceneStartBlock)) {
+						removeDecorationsTo = nextSceneStartBlock.position() + nextSceneStartBlock.length();
+						nextSceneStartBlock = nextSceneStartBlock.next();
+					}
+					if (_startPosition > removeDecorationsTo) {
+						removeDecorationsTo = _startPosition;
+					}
+				}
+
+				removeDecorations(cursor, removeDecorationsFrom, removeDecorationsTo);
 			}
 
 			//
@@ -1047,6 +1065,11 @@ void ScenarioTextCorrector::correctScenarioText(ScenarioTextDocument* _document,
 												//
 												else {
 													::moveBlockDownInDialogue(previousBlock, cursor, startPosition);
+													//
+													// ... смещаем позицию, куда будут вставлены пустые строки от диалога,
+													//	   чтобы они не сместили текст ДАЛЬШЕ
+													//
+													startPosition += ::moreTerm().length() + 1;
 												}
 											}
 										}
