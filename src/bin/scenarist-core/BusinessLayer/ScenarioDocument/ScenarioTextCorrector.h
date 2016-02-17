@@ -25,7 +25,7 @@ namespace BusinessLogic
 		/**
 		 * @brief Скорректировать документ на разрывах страниц
 		 */
-		static void correctScenarioText(ScenarioTextDocument* _document, int _startPosition);
+		static void correctScenarioText(ScenarioTextDocument* _document, int _startPosition, bool _force = false);
 	};
 }
 

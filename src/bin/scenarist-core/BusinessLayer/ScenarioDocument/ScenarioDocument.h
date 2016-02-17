@@ -174,7 +174,7 @@ namespace BusinessLogic
 		/**
 		 * @brief Скорректировать текст сценария
 		 */
-		void correctText();
+		void aboutCorrectText();
 
 	private:
 		/**

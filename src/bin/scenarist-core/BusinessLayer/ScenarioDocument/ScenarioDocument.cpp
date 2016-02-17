@@ -792,7 +792,7 @@ void ScenarioDocument::aboutContentsChange(int _position, int _charsRemoved, int
 	updateDocumentScenesNumbers();
 }
 
-void ScenarioDocument::correctText()
+void ScenarioDocument::aboutCorrectText()
 {
 	ScenarioTextCorrector::correctScenarioText(m_document, m_lastChangeStartPosition);
 }
@@ -800,13 +800,13 @@ void ScenarioDocument::correctText()
 void ScenarioDocument::initConnections()
 {
 	connect(m_document, &ScenarioTextDocument::contentsChange, this, &ScenarioDocument::aboutContentsChange);
-	connect(m_document, &ScenarioTextDocument::contentsChanged, this, &ScenarioDocument::correctText);
+	connect(m_document, &ScenarioTextDocument::contentsChanged, this, &ScenarioDocument::aboutCorrectText);
 }
 
 void ScenarioDocument::removeConnections()
 {
 	disconnect(m_document, &ScenarioTextDocument::contentsChange, this, &ScenarioDocument::aboutContentsChange);
-	disconnect(m_document, &ScenarioTextDocument::contentsChanged, this, &ScenarioDocument::correctText);
+	disconnect(m_document, &ScenarioTextDocument::contentsChanged, this, &ScenarioDocument::aboutCorrectText);
 }
 
 void ScenarioDocument::updateItem(ScenarioModelItem* _item, int _itemStartPos, int _itemEndPos)

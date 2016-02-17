@@ -13,6 +13,7 @@
 #include <BusinessLayer/ScenarioDocument/ScenarioTextDocument.h>
 #include <BusinessLayer/ScenarioDocument/ScenarioTemplate.h>
 #include <BusinessLayer/ScenarioDocument/ScenarioTextBlockParsers.h>
+#include <BusinessLayer/ScenarioDocument/ScenarioTextCorrector.h>
 #include <BusinessLayer/Chronometry/ChronometerFacade.h>
 
 #include <DataLayer/Database/Database.h>
@@ -49,6 +50,7 @@ using ManagementLayer::ScenarioDataEditManager;
 using ManagementLayer::ScenarioTextEditManager;
 using BusinessLogic::ScenarioDocument;
 using BusinessLogic::ScenarioBlockStyle;
+using BusinessLogic::ScenarioTextCorrector;
 
 namespace {
 
@@ -401,6 +403,13 @@ void ScenarioManager::aboutTextEditSettingsUpdated()
 
 	::updateDocumentBlocksColors(m_scenario->document());
 	::updateDocumentBlocksColors(m_scenarioDraft->document());
+
+	//
+	// Корректируем текст, т.к. могли измениться настройки отображения, или используемого шаблона
+	//
+	const int START_POSITION = 0;
+	const bool FORCE = true;
+	ScenarioTextCorrector::correctScenarioText(m_scenario->document(), START_POSITION, FORCE);
 }
 
 void ScenarioManager::aboutNavigatorSettingsUpdated()

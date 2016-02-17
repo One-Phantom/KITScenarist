@@ -475,14 +475,15 @@ void ScenarioTextCorrector::removeDecorations(const QTextCursor& _cursor, int _s
 	cursor.endEditBlock();
 }
 
-void ScenarioTextCorrector::correctScenarioText(ScenarioTextDocument* _document, int _startPosition)
+void ScenarioTextCorrector::correctScenarioText(ScenarioTextDocument* _document, int _startPosition, bool _force)
 {
 	//
 	// Вводим карту с текстами обрабатываемых документов, чтобы не выполнять лишнюю работу,
 	// повторно обрабатывая один и тот же документ
 	//
 	static QMap<QTextDocument*, QString> s_documentHash;
-	if (s_documentHash.contains(_document)
+	if (_force == false
+		&& s_documentHash.contains(_document)
 		&& s_documentHash.value(_document) == _document->scenarioXmlHash()) {
 		return;
 	}
