@@ -76,6 +76,7 @@ namespace BusinessLogic
 			PropertyCommentsDates,	//!< Список дат комментариев
 			//
 			PropertyIsCorrection,	//!< Не разрывающий текст блок
+			PropertyIsCorrectionContinued,	//!< Блок с текстом ПРОД., вставляемый на обрыве реплики
 			PropertyIsCorrectionCharacter,	//!< Блок с именем персонажа, вставляемый на новой странице
 			PropertyIsBreakCorrectionStart,	//!< Разрывающий текст блок в начале разрыва
 			PropertyIsBreakCorrectionEnd	//!< Разрывающий текст блок в конце разрыва

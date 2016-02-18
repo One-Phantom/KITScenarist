@@ -186,7 +186,8 @@ namespace {
 		QTextBlock currentBlock = _block;
 		QTextBlock nextBlock = _block.next();
 
-		while (nextBlock.isValid()) {
+		while (currentBlock != nextBlock
+			   && nextBlock.isValid()) {
 			BlockInfo currentBlockInfo = getBlockInfo(currentBlock);
 			BlockInfo nextBlockInfo = getBlockInfo(nextBlock);
 
@@ -195,9 +196,21 @@ namespace {
 			//
 			if (currentBlockInfo.topPage != nextBlockInfo.topPage) {
 				//
+				// Декорация с именем персонажа не может быть в конце страницы
+				// Декорация с ДАЛЬШЕ не может быть в начале страницы
+				//
+				if (currentBlock.blockFormat().boolProperty(ScenarioBlockStyle::PropertyIsCorrectionCharacter)
+					|| nextBlock.blockFormat().boolProperty(ScenarioBlockStyle::PropertyIsCorrectionContinued)) {
+					//
+					// Декорация находится не по месту
+					//
+					result = false;
+					break;
+				}
+				//
 				// Если следующий блок декорация
 				//
-				if (nextBlock.blockFormat().boolProperty(ScenarioBlockStyle::PropertyIsCorrection)
+				else if (nextBlock.blockFormat().boolProperty(ScenarioBlockStyle::PropertyIsCorrection)
 					&& !nextBlock.blockFormat().boolProperty(ScenarioBlockStyle::PropertyIsCorrectionCharacter)) {
 					//
 					// ... то удалим его и проверим новый следующий
@@ -206,7 +219,7 @@ namespace {
 					nextBlock = currentBlock.next();
 				}
 				//
-				// Если следующий блок не декорация
+				// Если следующий блок не декорация или декорация с именем персонажа
 				//
 				else {
 					//
@@ -354,6 +367,7 @@ namespace {
 					ScenarioBlockStyle parentheticalStyle =
 						ScenarioTemplateFacade::getTemplate().blockStyle(ScenarioBlockStyle::Parenthetical);
 					format = parentheticalStyle.blockFormat();
+					format.setProperty(ScenarioBlockStyle::PropertyIsCorrectionContinued, true);
 
 					_cursor.insertText(moreTerm());
 
@@ -361,7 +375,12 @@ namespace {
 					// Обновляем позицию курсора, чтобы остальной текст добавлялся ниже блока с текстом ДАЛЬШЕ
 					//
 					_position += moreTerm().length() + 1;
-				} else {
+				}
+				//
+				// Остальные блоки вставляются, как обычные корректировки
+				//
+				else {
+					format.setProperty(ScenarioBlockStyle::PropertyIsCorrectionContinued, QVariant());
 					_position += 1;
 				}
 
@@ -580,6 +599,12 @@ void ScenarioTextCorrector::correctScenarioText(ScenarioTextDocument* _document,
 			QTextCursor cursor = mainCursor;
 
 			//
+			// Ставим курсор в блок, в котором происходит редактирование
+			//
+			cursor.setPosition(_startPosition);
+			cursor.movePosition(QTextCursor::StartOfBlock);
+
+			//
 			// Удаляем декорации перед редактируемым элементом
 			//
 			// Делать это нужно для того, чтобы корректно реагировать на ситуации, когда текст
@@ -679,12 +704,24 @@ void ScenarioTextCorrector::correctScenarioText(ScenarioTextDocument* _document,
 
 								cursor.setPosition(currentBlock.position());
 								cursor.movePosition(QTextCursor::EndOfBlock);
-								cursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
-								cursor.insertText(" ");
-								QTextBlockFormat format = cursor.blockFormat();
-								format.setProperty(ScenarioBlockStyle::PropertyIsBreakCorrectionStart, QVariant());
-								format.setProperty(ScenarioBlockStyle::PropertyIsBreakCorrectionEnd, QVariant());
-								cursor.setBlockFormat(format);
+								//
+								// ... проходим сквозь все корректирующие блоки
+								//
+								QTextCursor breakCursor = cursor;
+								do {
+									breakCursor.movePosition(QTextCursor::NextBlock);
+								} while (breakCursor.blockFormat().boolProperty(ScenarioBlockStyle::PropertyIsCorrection));
+								//
+								// ... если дошли до конца разрыва, то сшиваем его
+								//
+								if (breakCursor.blockFormat().boolProperty(ScenarioBlockStyle::PropertyIsBreakCorrectionEnd)) {
+									cursor.setPosition(breakCursor.position(), QTextCursor::KeepAnchor);
+									cursor.insertText(" ");
+									QTextBlockFormat format = cursor.blockFormat();
+									format.setProperty(ScenarioBlockStyle::PropertyIsBreakCorrectionStart, QVariant());
+									format.setProperty(ScenarioBlockStyle::PropertyIsBreakCorrectionEnd, QVariant());
+									cursor.setBlockFormat(format);
+								}
 
 								currentBlock = previuosBlock.next();
 								continue;
