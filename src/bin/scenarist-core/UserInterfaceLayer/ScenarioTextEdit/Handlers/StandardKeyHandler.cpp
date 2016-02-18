@@ -373,6 +373,43 @@ void StandardKeyHandler::removeCharacters(bool _backward)
 			topCursorPosition = qMin(cursor.selectionStart(), cursor.selectionEnd());
 		} else {
 			topCursorPosition = cursor.position() - (_backward ? 1 : 0);
+
+			//
+			// Если курсор попадает в корректирующий блок, смещаем крайнюю позицию
+			//
+			if (_backward) {
+				QTextCursor checkCursor = cursor;
+				checkCursor.setPosition(topCursorPosition);
+
+				//
+				// ... если попали в разрыв без корректирующих блоков, захватим ещё один символ
+				//
+				if (checkCursor.blockFormat().boolProperty(ScenarioBlockStyle::PropertyIsBreakCorrectionStart)) {
+					checkCursor.movePosition(QTextCursor::PreviousCharacter);
+				}
+				//
+				// ... в противном случае, возможно есть корректирующие блоки
+				//
+				else {
+					//
+					// ... переходим через корректирующие блоки блоки
+					//
+					while (!checkCursor.atStart()
+						   && checkCursor.blockFormat().boolProperty(ScenarioBlockStyle::PropertyIsCorrection)) {
+						checkCursor.movePosition(QTextCursor::StartOfBlock);
+						//
+						// ... предыдущий блок
+						//
+						checkCursor.movePosition(QTextCursor::PreviousCharacter);
+						//
+						// ... на один символ назад
+						//
+						checkCursor.movePosition(QTextCursor::PreviousCharacter);
+					}
+				}
+
+				topCursorPosition = checkCursor.position();
+			}
 		}
 	}
 	//
@@ -384,6 +421,43 @@ void StandardKeyHandler::removeCharacters(bool _backward)
 			bottomCursorPosition = qMax(cursor.selectionStart(), cursor.selectionEnd());
 		} else {
 			bottomCursorPosition = cursor.position() + (_backward ? 0 : 1);
+
+			//
+			// Если курсор попадает в корректирующий блок, смещаем крайнюю позицию
+			//
+			if (!_backward) {
+				QTextCursor checkCursor = cursor;
+				checkCursor.setPosition(bottomCursorPosition);
+
+				//
+				// ... если попали в разрыв без корректирующих блоков, захватим ещё один символ
+				//
+				if (checkCursor.blockFormat().boolProperty(ScenarioBlockStyle::PropertyIsBreakCorrectionEnd)) {
+					checkCursor.movePosition(QTextCursor::NextCharacter);
+				}
+				//
+				// ... в противном случае, возможно есть корректирующие блоки
+				//
+				else {
+					//
+					// ... переходим через корректирующие блоки блоки
+					//
+					while (!checkCursor.atStart()
+						   && checkCursor.blockFormat().boolProperty(ScenarioBlockStyle::PropertyIsCorrection)) {
+						checkCursor.movePosition(QTextCursor::EndOfBlock);
+						//
+						// ... следующий блок
+						//
+						checkCursor.movePosition(QTextCursor::NextCharacter);
+						//
+						// ... на один символ вперёд
+						//
+						checkCursor.movePosition(QTextCursor::NextCharacter);
+					}
+				}
+
+				bottomCursorPosition = checkCursor.position();
+			}
 		}
 	}
 
