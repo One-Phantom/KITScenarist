@@ -2,6 +2,8 @@
 
 #include "../ScenarioTextEdit.h"
 
+#include <BusinessLayer/ScenarioDocument/ScenarioTextCorrector.h>
+
 #include <DataLayer/DataStorageLayer/StorageFacade.h>
 #include <DataLayer/DataStorageLayer/SettingsStorage.h>
 
@@ -458,6 +460,20 @@ void StandardKeyHandler::removeCharacters(bool _backward)
 
 				bottomCursorPosition = checkCursor.position();
 			}
+		}
+	}
+
+	//
+	// Если удаление распространяется на несколько блоков и его конец заходит
+	// на разорванный блок, то сшиваем его перед удалением
+	//
+	{
+		QTextCursor checkCursor = cursor;
+		checkCursor.setPosition(bottomCursorPosition);
+		if (topCursorPosition < checkCursor.block().position()
+			&& checkCursor.blockFormat().boolProperty(ScenarioBlockStyle::PropertyIsBreakCorrectionStart)) {
+			const int nextBlockStartPos = checkCursor.block().position() + checkCursor.block().length();
+			ScenarioTextCorrector::removeDecorations(checkCursor, bottomCursorPosition, nextBlockStartPos);
 		}
 	}
 

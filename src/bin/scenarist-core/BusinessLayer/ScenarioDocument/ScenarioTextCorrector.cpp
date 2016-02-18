@@ -618,8 +618,12 @@ void ScenarioTextCorrector::correctScenarioText(ScenarioTextDocument* _document,
 			//
 			{
 				int removeDecorationsFrom = cursor.position();
-				if (!cursor.atStart()) {
-					removeDecorationsFrom = cursor.block().previous().position();
+				if (cursor.block().previous().isValid()) {
+					if (cursor.block().previous().previous().isValid()) {
+						removeDecorationsFrom = cursor.block().previous().previous().position();
+					} else {
+						removeDecorationsFrom = cursor.block().previous().position();
+					}
 				}
 
 				int removeDecorationsTo = _startPosition;
@@ -765,7 +769,7 @@ void ScenarioTextCorrector::correctScenarioText(ScenarioTextDocument* _document,
 							// - если в конце предыдущей страницы
 							// - если перед участниками стоит время и место, переносим и его тоже
 							//
-							if (ScenarioBlockStyle::forBlock(currentBlock) == ScenarioBlockStyle::SceneCharacters) {
+							else if (ScenarioBlockStyle::forBlock(currentBlock) == ScenarioBlockStyle::SceneCharacters) {
 								cursor.beginEditBlock();
 
 								int startPosition = currentBlock.position();
@@ -938,7 +942,7 @@ void ScenarioTextCorrector::correctScenarioText(ScenarioTextDocument* _document,
 							// - если в конце предыдущей страницы
 							// - если перед именем персонажа идёт заголовок сцены, переносим их вместе
 							//
-							if (ScenarioBlockStyle::forBlock(currentBlock) == ScenarioBlockStyle::Character) {
+							else if (ScenarioBlockStyle::forBlock(currentBlock) == ScenarioBlockStyle::Character) {
 								cursor.beginEditBlock();
 
 								int startPosition = currentBlock.position();
@@ -1053,8 +1057,7 @@ void ScenarioTextCorrector::correctScenarioText(ScenarioTextDocument* _document,
 							// --- если перед ремаркой идёт диалог, то разрываем по ремарке, пишем вместо неё
 							//	   ДАЛЬШЕ, а на следующей странице имя персонажа с (ПРОД), ремарку и сам диалог
 							//
-							else if (ScenarioBlockStyle::forBlock(currentBlock) == ScenarioBlockStyle::Dialogue
-									 && currentBlockInfo.topPage != currentBlockInfo.bottomPage) {
+							else if (ScenarioBlockStyle::forBlock(currentBlock) == ScenarioBlockStyle::Dialogue) {
 								cursor.beginEditBlock();
 
 								//

@@ -198,6 +198,10 @@ void ScenarioTextDocument::applyPatch(const QString& _patch)
 		// Увеличиваем стартовую позицию на количество разрывов
 		//
 		cursor.setPosition(selectionStartPos);
+		//
+		// Считать начинаем с предыдущего блока, т.к. в текущем блоке все декорации будут убраны
+		//
+		cursor.movePosition(QTextCursor::PreviousBlock);
 		while (!cursor.atStart()) {
 			if (cursor.block().blockFormat().boolProperty(ScenarioBlockStyle::PropertyIsCorrection)) {
 				selectionStartPos += cursor.block().length();
