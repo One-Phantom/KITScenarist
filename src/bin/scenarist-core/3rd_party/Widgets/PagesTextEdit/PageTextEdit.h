@@ -39,6 +39,7 @@
 #include <QtGui/qtextoption.h>
 #include <QtGui/qtextcursor.h>
 #include <QtGui/qtextformat.h>
+#include <QtGui/qtextobject.h>
 #include <QtGui/qpagesize.h>
 
 #ifndef QT_NO_TEXTEDIT
@@ -94,6 +95,10 @@ public:
 	};
 
 	Q_DECLARE_FLAGS(AutoFormatting, AutoFormattingFlag)
+
+	enum TextBlockProperty {
+		PropertyDontShowCursor = QTextFormat::UserProperty + 1
+	};
 
 	explicit PageTextEdit(QWidget *parent = 0);
 	explicit PageTextEdit(const QString &text, QWidget *parent = 0);

@@ -961,21 +961,6 @@ void ScenarioTextEdit::mouseMoveEvent(QMouseEvent* _event)
 	}
 }
 
-void ScenarioTextEdit::mouseReleaseEvent(QMouseEvent* _event)
-{
-	CompletableTextEdit::mouseReleaseEvent(_event);
-
-	//
-	// Смещаем курсор с блока с декорацией
-	//
-	while (!textCursor().atEnd()
-		   && (!textCursor().block().isVisible()
-			   || textCursor().blockFormat().boolProperty(ScenarioBlockStyle::PropertyIsCorrection))) {
-		moveCursor(QTextCursor::EndOfBlock);
-		moveCursor(QTextCursor::NextCharacter);
-	}
-}
-
 bool ScenarioTextEdit::canInsertFromMimeData(const QMimeData* _source) const
 {
 	bool canInsert = false;

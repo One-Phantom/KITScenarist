@@ -1963,9 +1963,19 @@ QMouseEvent* PageTextEditPrivate::correctMousePosition(QMouseEvent* _event)
 	// Просто идём назад, до первого видимого блока
 	//
 	if (cursor.atEnd() && !cursor.block().isVisible()) {
-		while (!cursor.atStart() && !cursor.block().isVisible()) {
+		while (!cursor.atStart()
+			   && !cursor.block().isVisible()) {
 			cursor.movePosition(QTextCursor::PreviousBlock);
 		}
+	}
+
+	//
+	// Прорабатываем случай, когда курсор попал в блок, в котором запрещено позиционирование курсора
+	// Просто идём вниз до первого блока, в который возможно установить курсор
+	//
+	while (!cursor.atEnd()
+		   && cursor.blockFormat().boolProperty(PageTextEdit::PropertyDontShowCursor)) {
+		cursor.movePosition(QTextCursor::NextBlock);
 	}
 
 	//

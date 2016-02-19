@@ -4,6 +4,8 @@
 #include "ScenarioTextBlockParsers.h"
 #include "ScenarioTextDocument.h"
 
+#include <3rd_party/Widgets/PagesTextEdit/PageTextEdit.h>
+
 #include <QAbstractTextDocumentLayout>
 #include <QApplication>
 #include <QDebug>
@@ -335,6 +337,7 @@ namespace {
 				if (ScenarioBlockStyle::forBlock(_block) == ScenarioBlockStyle::SceneHeading) {
 					format.setProperty(ScenarioBlockStyle::PropertyType, ScenarioBlockStyle::SceneHeadingShadow);
 				}
+				format.setProperty(PageTextEdit::PropertyDontShowCursor, true);
 				format.setProperty(ScenarioBlockStyle::PropertyIsCorrection, true);
 				_cursor.setBlockFormat(format);
 			}
@@ -384,6 +387,7 @@ namespace {
 					_position += 1;
 				}
 
+				format.setProperty(PageTextEdit::PropertyDontShowCursor, true);
 				format.setProperty(ScenarioBlockStyle::PropertyIsCorrection, true);
 				_cursor.setBlockFormat(format);
 			}
@@ -407,6 +411,7 @@ namespace {
 				ScenarioBlockStyle characterStyle =
 						ScenarioTemplateFacade::getTemplate().blockStyle(ScenarioBlockStyle::Character);
 				QTextBlockFormat format = characterStyle.blockFormat();
+				format.setProperty(PageTextEdit::PropertyDontShowCursor, true);
 				format.setProperty(ScenarioBlockStyle::PropertyIsCorrection, true);
 				format.setProperty(ScenarioBlockStyle::PropertyIsCorrectionCharacter, true);
 				_cursor.setBlockFormat(format);
@@ -479,6 +484,7 @@ void ScenarioTextCorrector::removeDecorations(const QTextCursor& _cursor, int _s
 			// ... очищаем значения обрывов
 			//
 			QTextBlockFormat cleanFormat = blockFormat;
+			cleanFormat.setProperty(PageTextEdit::PropertyDontShowCursor, QVariant());
 			cleanFormat.setProperty(ScenarioBlockStyle::PropertyIsBreakCorrectionStart, QVariant());
 			cleanFormat.setProperty(ScenarioBlockStyle::PropertyIsBreakCorrectionStart, QVariant());
 			cursor.setBlockFormat(cleanFormat);
