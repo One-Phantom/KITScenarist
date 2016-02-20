@@ -552,9 +552,16 @@ void ScenarioTextCorrector::correctScenarioText(ScenarioTextDocument* _document,
 		s_proccessedNow = false;
 	}
 }
-
+#include <QDebug>
 void ScenarioTextCorrector::correctDocumentText(QTextDocument* _document, int _startPosition)
 {
+	qDebug() << _document->size();
+
+	//
+	// Храним последнюю высоту документа, для минимизации проверок
+	//
+	static QMap<QTextDocument*, QSizeF> s_documentSize;
+
 	QTextCursor mainCursor(_document);
 	mainCursor.setPosition(_startPosition);
 
@@ -652,23 +659,26 @@ void ScenarioTextCorrector::correctDocumentText(QTextDocument* _document, int _s
 		// был перенесён на следующую страницу из-за того что не влез на предыдущую, а потом
 		// пользователь изменил его, оставив там меньше строк и теперь текст влезет
 		//
-		// и до конца сцены
+		// и до конца сцены, если была изменена высота документа
 		//
 		// А это делается для того, чтобы корректно отрабатывать ситуации, когда разрыв состоит
 		// из нескольких строк, но текст перед ним уменьшился, или увеличился наоборот
 		//
 		{
 			int removeDecorationsFrom = cursor.position();
-			if (cursor.block().previous().isValid()) {
-				if (cursor.block().previous().previous().isValid()) {
-					removeDecorationsFrom = cursor.block().previous().previous().position();
-				} else {
-					removeDecorationsFrom = cursor.block().previous().position();
+			if (!cursor.block().previous().blockFormat().boolProperty(ScenarioBlockStyle::PropertyIsBreakCorrectionEnd)) {
+				if (cursor.block().previous().isValid()) {
+					if (cursor.block().previous().previous().isValid()
+						&& cursor.block().previous().previous().blockFormat().boolProperty(ScenarioBlockStyle::PropertyIsCorrection)) {
+						removeDecorationsFrom = cursor.block().previous().previous().position();
+					} else if (cursor.block().previous().blockFormat().boolProperty(ScenarioBlockStyle::PropertyIsCorrection)) {
+						removeDecorationsFrom = cursor.block().previous().position();
+					}
 				}
 			}
 
-			int removeDecorationsTo = _startPosition;
-			{
+			int removeDecorationsTo = cursor.position();
+			if (s_documentSize[_document] != _document->size()) {
 				QTextBlock nextSceneStartBlock = cursor.block().next();
 				while (nextSceneStartBlock.isValid()
 					   && !::blockIsSceneBorder(nextSceneStartBlock)) {
@@ -681,6 +691,7 @@ void ScenarioTextCorrector::correctDocumentText(QTextDocument* _document, int _s
 			}
 
 			removeDecorations(cursor, removeDecorationsFrom, removeDecorationsTo);
+
 			cursor.setPosition(removeDecorationsFrom);
 		}
 
@@ -799,9 +810,9 @@ void ScenarioTextCorrector::correctDocumentText(QTextDocument* _document, int _s
 						// - если в конце предыдущей страницы
 						//
 						if (ScenarioBlockStyle::forBlock(currentBlock) == ScenarioBlockStyle::SceneHeading) {
-							cursor.beginEditBlock();
+//							cursor.beginEditBlock();
 							::moveBlockDown(currentBlock, cursor, currentBlock.position());
-							cursor.endEditBlock();
+//							cursor.endEditBlock();
 						}
 
 
@@ -813,7 +824,7 @@ void ScenarioTextCorrector::correctDocumentText(QTextDocument* _document, int _s
 						// - если перед участниками стоит время и место, переносим и его тоже
 						//
 						else if (ScenarioBlockStyle::forBlock(currentBlock) == ScenarioBlockStyle::SceneCharacters) {
-							cursor.beginEditBlock();
+//							cursor.beginEditBlock();
 
 							int startPosition = currentBlock.position();
 
@@ -841,7 +852,7 @@ void ScenarioTextCorrector::correctDocumentText(QTextDocument* _document, int _s
 							//
 							::moveBlockDown(currentBlock, cursor, startPosition);
 
-							cursor.endEditBlock();
+//							cursor.endEditBlock();
 						}
 
 
@@ -857,7 +868,7 @@ void ScenarioTextCorrector::correctDocumentText(QTextDocument* _document, int _s
 						//
 						else if (ScenarioBlockStyle::forBlock(currentBlock) == ScenarioBlockStyle::Action
 								 && currentBlockInfo.topPage != currentBlockInfo.bottomPage) {
-							cursor.beginEditBlock();
+//							cursor.beginEditBlock();
 
 							//
 							// Пробуем разорвать так, чтобы часть текста осталась на предыдущей странице
@@ -972,7 +983,7 @@ void ScenarioTextCorrector::correctDocumentText(QTextDocument* _document, int _s
 								::moveBlockDown(currentBlock, cursor, startPosition);
 							}
 
-							cursor.endEditBlock();
+//							cursor.endEditBlock();
 						}
 
 
@@ -984,7 +995,7 @@ void ScenarioTextCorrector::correctDocumentText(QTextDocument* _document, int _s
 						// - если перед именем персонажа идёт заголовок сцены, переносим их вместе
 						//
 						else if (ScenarioBlockStyle::forBlock(currentBlock) == ScenarioBlockStyle::Character) {
-							cursor.beginEditBlock();
+//							cursor.beginEditBlock();
 
 							int startPosition = currentBlock.position();
 
@@ -1038,7 +1049,7 @@ void ScenarioTextCorrector::correctDocumentText(QTextDocument* _document, int _s
 							//
 							::moveBlockDown(currentBlock, cursor, startPosition);
 
-							cursor.endEditBlock();
+//							cursor.endEditBlock();
 						}
 
 
@@ -1049,7 +1060,7 @@ void ScenarioTextCorrector::correctDocumentText(QTextDocument* _document, int _s
 						//	 страницу добавляем сперва имя персонажа с (ПРОД), а затем саму ремарку
 						//
 						else if (ScenarioBlockStyle::forBlock(currentBlock) == ScenarioBlockStyle::Parenthetical) {
-							cursor.beginEditBlock();
+//							cursor.beginEditBlock();
 
 							int startPosition = currentBlock.position();
 
@@ -1083,7 +1094,7 @@ void ScenarioTextCorrector::correctDocumentText(QTextDocument* _document, int _s
 								}
 							}
 
-							cursor.endEditBlock();
+//							cursor.endEditBlock();
 						}
 
 
@@ -1111,7 +1122,7 @@ void ScenarioTextCorrector::correctDocumentText(QTextDocument* _document, int _s
 									&& (ScenarioBlockStyle::forBlock(nextBlock) == ScenarioBlockStyle::Parenthetical
 										|| ScenarioBlockStyle::forBlock(nextBlock) != ScenarioBlockStyle::Dialogue);
 							if (blockOnPageBreak || blockNeedGlueWithNext) {
-								cursor.beginEditBlock();
+//								cursor.beginEditBlock();
 
 								//
 								// Пробуем разорвать так, чтобы часть текста осталась на предыдущей странице.
@@ -1165,7 +1176,7 @@ void ScenarioTextCorrector::correctDocumentText(QTextDocument* _document, int _s
 
 											QTextBlock blockForMove = cursor.block();
 											const int moveLines = currentBlockInfo.topLinesCount - linesCount;
-											::moveBlockDownInDialogue(blockForMove, cursor, cursor.block().position(), moveLines);
+											::moveBlockDownInDialogue(blockForMove, cursor, cursor.block().position()/*, moveLines*/);
 
 											breakSuccess = true;
 											break;
@@ -1237,7 +1248,7 @@ void ScenarioTextCorrector::correctDocumentText(QTextDocument* _document, int _s
 									::moveBlockDown(currentBlock, cursor, startPosition);
 								}
 
-								cursor.endEditBlock();
+//								cursor.endEditBlock();
 							}
 						}
 					}
@@ -1246,6 +1257,8 @@ void ScenarioTextCorrector::correctDocumentText(QTextDocument* _document, int _s
 
 			currentBlock = nextBlock;
 		}
+
+		s_documentSize[_document] = _document->size();
 	}
 	//
 	// В противном случае просто удаляем блоки с декорациями

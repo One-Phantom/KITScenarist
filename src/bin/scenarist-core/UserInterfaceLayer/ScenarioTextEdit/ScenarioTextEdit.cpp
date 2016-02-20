@@ -487,7 +487,7 @@ void ScenarioTextEdit::redoReimpl()
 {
 	m_document->redoReimpl();
 }
-
+#include <QDebug>
 void ScenarioTextEdit::keyPressEvent(QKeyEvent* _event)
 {
 	//
@@ -497,8 +497,7 @@ void ScenarioTextEdit::keyPressEvent(QKeyEvent* _event)
 	//
 	// FIXME: События не успевают обработаться из-за корректировок на лету
 	//
-
-
+qDebug() << QDateTime::currentDateTime().toString(Qt::ISODate) << _event->text();
 
 	//
 	// Отмену и повтор последнего действия, делаем без последующей обработки
@@ -589,6 +588,7 @@ void ScenarioTextEdit::keyPressEvent(QKeyEvent* _event)
 	if (handler->needPrehandle()) {
 		handler->prehandle();
 	}
+	qDebug() << QDateTime::currentDateTime().toString(Qt::ISODate) << _event->text();
 }
 
 void ScenarioTextEdit::inputMethodEvent(QInputMethodEvent *_event)
