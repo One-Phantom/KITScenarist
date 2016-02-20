@@ -662,6 +662,7 @@ void ScenarioTextCorrector::correctDocumentText(QTextDocument* _document, int _s
 			}
 
 			removeDecorations(cursor, removeDecorationsFrom, removeDecorationsTo);
+			cursor.setPosition(removeDecorationsFrom);
 		}
 
 		//
