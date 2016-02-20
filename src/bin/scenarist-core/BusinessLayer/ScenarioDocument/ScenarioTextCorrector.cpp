@@ -322,13 +322,13 @@ namespace {
 	/**
 	 * @brief Сместить блок вниз при помощи блоков декораций
 	 */
-	static void moveBlockDown(QTextBlock& _block, QTextCursor& _cursor, int _position) {
-		BlockInfo blockInfo = getBlockInfo(_block);
+	/** @{ */
+	static void moveBlockDown(QTextBlock& _block, QTextCursor& _cursor, int _position, int _linesCount) {
 		//
 		// Смещаем блок, если он не в начале страницы
 		//
-		if (!blockInfo.onPageTop) {
-			int emptyBlocksCount = neededEmptyBlocks(_block.blockFormat(), blockInfo.topLinesCount);
+		if (_linesCount > 0) {
+			int emptyBlocksCount = neededEmptyBlocks(_block.blockFormat(), _linesCount);
 			while (emptyBlocksCount-- > 0) {
 				_cursor.setPosition(_position);
 				_cursor.insertBlock();
@@ -343,17 +343,27 @@ namespace {
 			}
 		}
 	}
+	static void moveBlockDown(QTextBlock& _block, QTextCursor& _cursor, int _position) {
+		const BlockInfo blockInfo = getBlockInfo(_block);
+		//
+		// Смещаем блок, если он не в начале страницы
+		//
+		if (!blockInfo.onPageTop) {
+			moveBlockDown(_block, _cursor, _position, blockInfo.topLinesCount);
+		}
+	}
+	/** @} */
 
 	/**
 	 * @brief Сместить блок вниз при помощи блоков декораций внутри диалога
 	 * @note Этот метод используется только для блоков ремарки и диалога
 	 */
-	static void moveBlockDownInDialogue(QTextBlock& _block, QTextCursor& _cursor, int _position) {
+	/** @{ */
+	static void moveBlockDownInDialogue(QTextBlock& _block, QTextCursor& _cursor, int _position, int _linesCount) {
 		if (ScenarioBlockStyle::forBlock(_block) == ScenarioBlockStyle::Parenthetical
 			|| ScenarioBlockStyle::forBlock(_block) == ScenarioBlockStyle::Dialogue) {
 
-			BlockInfo blockInfo = getBlockInfo(_block);
-			int emptyBlocksCount = neededEmptyBlocks(_block.blockFormat(), blockInfo.topLinesCount);
+			int emptyBlocksCount = neededEmptyBlocks(_block.blockFormat(), _linesCount);
 			bool isFirstDecoration = true;
 			while (emptyBlocksCount-- > 0) {
 				_cursor.setPosition(_position);
@@ -421,6 +431,15 @@ namespace {
 			}
 		}
 	}
+	static void moveBlockDownInDialogue(QTextBlock& _block, QTextCursor& _cursor, int _position) {
+		if (ScenarioBlockStyle::forBlock(_block) == ScenarioBlockStyle::Parenthetical
+			|| ScenarioBlockStyle::forBlock(_block) == ScenarioBlockStyle::Dialogue) {
+
+			BlockInfo blockInfo = getBlockInfo(_block);
+			moveBlockDownInDialogue(_block, _cursor, _position, blockInfo.topLinesCount);
+		}
+	}
+	/** @} */
 }
 
 
@@ -665,6 +684,7 @@ void ScenarioTextCorrector::correctDocumentText(QTextDocument* _document, int _s
 			cursor.setPosition(removeDecorationsFrom);
 		}
 
+
 		//
 		// Корректируем обрывы строк
 		//
@@ -885,11 +905,9 @@ void ScenarioTextCorrector::correctDocumentText(QTextDocument* _document, int _s
 										breakEndFormat.setProperty(ScenarioBlockStyle::PropertyIsBreakCorrectionEnd, true);
 										cursor.setBlockFormat(breakEndFormat);
 
-										cursor.endEditBlock();
-										cursor.beginEditBlock();
-
 										QTextBlock blockForMove = cursor.block();
-										::moveBlockDown(blockForMove, cursor, cursor.block().position());
+										const int moveLines = currentBlockInfo.topLinesCount - linesCount;
+										::moveBlockDown(blockForMove, cursor, cursor.block().position(), moveLines);
 
 										breakSuccess = true;
 										break;
@@ -1145,25 +1163,14 @@ void ScenarioTextCorrector::correctDocumentText(QTextDocument* _document, int _s
 											breakEndFormat.setProperty(ScenarioBlockStyle::PropertyIsBreakCorrectionEnd, true);
 											cursor.setBlockFormat(breakEndFormat);
 
-											cursor.endEditBlock();
-											cursor.beginEditBlock();
-
 											QTextBlock blockForMove = cursor.block();
-											::moveBlockDownInDialogue(blockForMove, cursor, cursor.block().position());
+											const int moveLines = currentBlockInfo.topLinesCount - linesCount;
+											::moveBlockDownInDialogue(blockForMove, cursor, cursor.block().position(), moveLines);
 
 											breakSuccess = true;
 											break;
 										}
 									}
-								}
-								//
-								// Если весь блок помещается в конце страницы, и после него не следует
-								// блок ремарка, или реплика, ничего не делаем
-								//
-								else if (currentBlockInfo.topPage == currentBlockInfo.bottomPage
-										 && ScenarioBlockStyle::forBlock(nextBlock) != ScenarioBlockStyle::Parenthetical
-										 && ScenarioBlockStyle::forBlock(nextBlock) != ScenarioBlockStyle::Dialogue) {
-									breakSuccess = true;
 								}
 
 								//

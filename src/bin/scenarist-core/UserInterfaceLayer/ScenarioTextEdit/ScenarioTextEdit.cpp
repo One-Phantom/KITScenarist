@@ -491,94 +491,123 @@ void ScenarioTextEdit::redoReimpl()
 void ScenarioTextEdit::keyPressEvent(QKeyEvent* _event)
 {
 	//
-	// Отмену и повтор последнего действия, делаем без последующей обработки
+	// Защищаемся от слишком частых событий.
 	//
-	// Если так не делать, то это приведёт к вставке странных символов, которые непонятно откуда берутся :(
-	// Например:
-	// 1. после реплики идёт время и место
-	// 2. вставляем после реплики описание действия
-	// 3. отменяем последнее действие
-	// 4. в последующем времени и месте появляется символ "кружочек со стрелочкой"
+	// События о нажатии клавиш, которые приходят слишком часто, иногда не успевают обработаться
+	// до того момента, как придёт следующее, поэтому такие события отправляем обратно в цикл событий
+	// для их последующей обработки
 	//
-	// FIXME: разобраться
+	// FIXME: События не успевают обработаться из-за корректировок на лету
 	//
-	if (_event == QKeySequence::Undo
-		|| _event == QKeySequence::Redo) {
-		if (_event == QKeySequence::Undo) {
-			undoReimpl();
-		}
-		else if (_event == QKeySequence::Redo) {
-			redoReimpl();
-		}
+	static bool s_proccessedNow = false;
+
+	//
+	// Если обработка предыдущего события ещё не завершилась, возвращаем новое событие обратно для его последующей обработки
+	//
+	if (s_proccessedNow == true) {
+		QApplication::postEvent(this,
+			new QKeyEvent(_event->type(), _event->key(), _event->modifiers(), _event->text(), _event->isAutoRepeat(), _event->count()));
 		_event->accept();
-		return;
 	}
+	//
+	// Если предыдущее событие уже обработано, то обработаем новое
+	//
+	else {
+		s_proccessedNow = true;
 
-
-	//
-	// Получим обработчик
-	//
-	KeyProcessingLayer::KeyPressHandlerFacade* handler =
-			KeyProcessingLayer::KeyPressHandlerFacade::instance(this);
-
-	//
-	// Получим курсор в текущем положении
-	// Начнём блок операций
-	//
-	QTextCursor cursor = textCursor();
-	cursor.beginEditBlock();
-
-	//
-	// Подготовка к обработке
-	//
-	handler->prepare(_event);
-
-	//
-	// Предварительная обработка
-	//
-	handler->prepareForHandle(_event);
-
-	//
-	// Отправить событие в базовый класс
-	//
-	if (handler->needSendEventToBaseClass()) {
-		if (!keyPressEventReimpl(_event)) {
-			SpellCheckTextEdit::keyPressEvent(_event);
+		//
+		// Отмену и повтор последнего действия, делаем без последующей обработки
+		//
+		// Если так не делать, то это приведёт к вставке странных символов, которые непонятно откуда берутся :(
+		// Например:
+		// 1. после реплики идёт время и место
+		// 2. вставляем после реплики описание действия
+		// 3. отменяем последнее действие
+		// 4. в последующем времени и месте появляется символ "кружочек со стрелочкой"
+		//
+		// FIXME: разобраться
+		//
+		if (_event == QKeySequence::Undo
+			|| _event == QKeySequence::Redo) {
+			if (_event == QKeySequence::Undo) {
+				undoReimpl();
+			}
+			else if (_event == QKeySequence::Redo) {
+				redoReimpl();
+			}
+			_event->accept();
+			return;
 		}
 
-		updateEnteredText(_event);
 
-		TextEditHelper::beautifyDocument(textCursor(), _event->text(), m_replaceThreeDots, m_smartQuotes);
+		//
+		// Получим обработчик
+		//
+		KeyProcessingLayer::KeyPressHandlerFacade* handler =
+				KeyProcessingLayer::KeyPressHandlerFacade::instance(this);
+
+		//
+		// Получим курсор в текущем положении
+		// Начнём блок операций
+		//
+		QTextCursor cursor = textCursor();
+		cursor.beginEditBlock();
+
+		//
+		// Подготовка к обработке
+		//
+		handler->prepare(_event);
+
+		//
+		// Предварительная обработка
+		//
+		handler->prepareForHandle(_event);
+
+		//
+		// Отправить событие в базовый класс
+		//
+		if (handler->needSendEventToBaseClass()) {
+			if (!keyPressEventReimpl(_event)) {
+				SpellCheckTextEdit::keyPressEvent(_event);
+			}
+
+			updateEnteredText(_event);
+
+			TextEditHelper::beautifyDocument(textCursor(), _event->text(), m_replaceThreeDots, m_smartQuotes);
+		}
+
+		//
+		// Обработка
+		//
+		handler->handle(_event);
+
+		//
+		// Событие дошло по назначению
+		//
+		_event->accept();
+
+		//
+		// Завершим блок операций
+		//
+		cursor.endEditBlock();
+
+		//
+		// Убедимся, что курсор виден
+		//
+		if (handler->needEnsureCursorVisible()) {
+			ensureCursorVisible();
+		}
+
+		//
+		// Подготовим следующий блок к обработке
+		//
+		if (handler->needPrehandle()) {
+			handler->prehandle();
+		}
+
+		s_proccessedNow = false;
 	}
 
-	//
-	// Обработка
-	//
-	handler->handle(_event);
-
-	//
-	// Событие дошло по назначению
-	//
-	_event->accept();
-
-	//
-	// Завершим блок операций
-	//
-	cursor.endEditBlock();
-
-	//
-	// Убедимся, что курсор виден
-	//
-	if (handler->needEnsureCursorVisible()) {
-		ensureCursorVisible();
-	}
-
-	//
-	// Подготовим следующий блок к обработке
-	//
-	if (handler->needPrehandle()) {
-		handler->prehandle();
-	}
 }
 
 void ScenarioTextEdit::inputMethodEvent(QInputMethodEvent *_event)

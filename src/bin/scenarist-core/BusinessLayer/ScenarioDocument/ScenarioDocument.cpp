@@ -480,7 +480,7 @@ void ScenarioDocument::aboutContentsChange(int _position, int _charsRemoved, int
 
 			if (itemToDelete != 0) {
 				//
-				// Расширяем диапозон последующего построения дерева, для включения в него всех
+				// Расширяем диапазон последующего построения дерева, для включения в него всех
 				// кто был удалён тут по причине не самого оптимального алгоритма
 				//
 				if (itemToDelete->hasChildren()) {
