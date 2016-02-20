@@ -23,9 +23,15 @@ namespace BusinessLogic
 		static void removeDecorations(const QTextCursor& _cursor, int _startPosition = 0, int _endPosition = 0);
 
 		/**
-		 * @brief Скорректировать документ на разрывах страниц
+		 * @brief Скорректировать сценарий на разрывах страниц
 		 */
 		static void correctScenarioText(ScenarioTextDocument* _document, int _startPosition, bool _force = false);
+
+		/**
+		 * @brief Скорректировать документ на разрывах страниц
+		 * @note Используется при экспорте
+		 */
+		static void correctDocumentText(QTextDocument* _document, int _startPosition = 0);
 	};
 }
 

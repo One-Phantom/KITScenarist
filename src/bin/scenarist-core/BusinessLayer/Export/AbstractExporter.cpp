@@ -4,6 +4,7 @@
 #include <BusinessLayer/ScenarioDocument/ScenarioTemplate.h>
 #include <BusinessLayer/ScenarioDocument/ScenarioTextDocument.h>
 #include <BusinessLayer/ScenarioDocument/ScenarioTextBlockInfo.h>
+#include <BusinessLayer/ScenarioDocument/ScenarioTextCorrector.h>
 
 #include <Domain/Scenario.h>
 
@@ -12,6 +13,7 @@
 
 #include <3rd_party/Helpers/TextEditHelper.h>
 #include <3rd_party/Widgets/PagesTextEdit/PageMetrics.h>
+#include <3rd_party/Widgets/PagesTextEdit/PageTextEdit.h>
 
 #include <QApplication>
 #include <QTextBlock>
@@ -35,7 +37,7 @@ namespace {
 	/**
 	 * @brief Определить размер страницы документа
 	 */
-	static QSizeF documentSize() {
+	static QSizeF exportPageSize() {
 		QSizeF pageSize = QPageSize(exportStyle().pageSizeId()).size(QPageSize::Millimeter);
 		QMarginsF pageMargins = exportStyle().pageMargins();
 
@@ -178,40 +180,95 @@ QTextDocument* AbstractExporter::prepareDocument(const BusinessLogic::ScenarioDo
 	ScenarioTemplate exportStyle = ::exportStyle();
 
 	//
+	// Формируем копию сценария, в экпортируемом стиле
+	//
+	QTextDocument* scenarioDocument = new QTextDocument;
+	{
+		//
+		// Используем тексовый редактор, чтобы в последствии корректно сформировать переносы блоков
+		//
+		PageTextEdit edit;
+		edit.setUsePageMode(true);
+		edit.setPageFormat(exportStyle.pageSizeId());
+		edit.setPageMargins(exportStyle.pageMargins());
+		edit.setDocument(scenarioDocument);
+
+		//
+		// Копируем содержимое
+		//
+		QTextCursor sourceCursor(_scenario->document());
+		QTextCursor destCursor(scenarioDocument);
+		ScenarioBlockStyle::Type currentBlockType = ScenarioBlockStyle::Undefined;
+		while (!sourceCursor.atEnd()) {
+			//
+			// Копируем содержимое блока, если нужно
+			//
+			currentBlockType = ScenarioBlockStyle::forBlock(sourceCursor.block());
+			if (::needPrintBlock(currentBlockType, _exportParameters.outline)) {
+				//
+				// ... настраиваем стиль блока
+				//
+				ScenarioBlockStyle blockStyle = exportStyle.blockStyle(currentBlockType);
+				if (sourceCursor.atStart()) {
+					destCursor.setBlockFormat(sourceCursor.blockFormat());
+					destCursor.setCharFormat(sourceCursor.blockCharFormat());
+				} else {
+					destCursor.insertBlock(sourceCursor.blockFormat(), sourceCursor.blockCharFormat());
+				}
+				destCursor.mergeBlockFormat(blockStyle.blockFormat());
+				destCursor.mergeBlockCharFormat(blockStyle.charFormat());
+				//
+				// ... копируем текст
+				//
+				destCursor.insertText(sourceCursor.block().text());
+				//
+				// ... выделения
+				//
+				if (!sourceCursor.block().textFormats().isEmpty()) {
+					const int startBlockPosition = destCursor.block().position();
+					foreach (const QTextLayout::FormatRange& range, sourceCursor.block().textFormats()) {
+						if (range.format.boolProperty(ScenarioBlockStyle::PropertyIsReviewMark)) {
+							destCursor.setPosition(startBlockPosition + range.start);
+							destCursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, range.length);
+							destCursor.mergeCharFormat(range.format);
+						}
+					}
+					destCursor.movePosition(QTextCursor::EndOfBlock);
+				}
+				//
+				// ... пользовательские данные
+				//
+				if (ScenarioTextBlockInfo* sceneInfo = dynamic_cast<ScenarioTextBlockInfo*>(sourceCursor.block().userData())) {
+					destCursor.block().setUserData(sceneInfo->clone());
+				}
+			}
+
+			sourceCursor.movePosition(QTextCursor::EndOfBlock);
+			sourceCursor.movePosition(QTextCursor::NextCharacter);
+		}
+
+		//
+		// Убираем старые декорации
+		//
+		ScenarioTextCorrector::removeDecorations(destCursor);
+
+		//
+		// И корректируем документ в соответсвии с экспортируемым шаблоном
+		//
+		ScenarioTextCorrector::correctDocumentText(scenarioDocument);
+	}
+
+
+	//
 	// Настроим новый документ
 	//
 	QTextDocument* preparedDocument = new QTextDocument;
 	preparedDocument->setDocumentMargin(0);
 	preparedDocument->setIndentWidth(0);
+	preparedDocument->setPageSize(::exportPageSize());
 
-	//
-	// Настроим размер страниц
-	//
-	preparedDocument->setPageSize(::documentSize());
-
-	//
-	// Данные считываются из исходного документа, если необходимо преобразовываются,
-	// и записываются в новый документ
-	// NOTE: делаем копию документа, т.к. данные могут быть изменены, удаляем, при выходе
-	//
-	QTextDocument* scenarioDocument = _scenario->document()->clone();
-	//
-	// ... копируем пользовательские данные из блоков
-	//
-	{
-		QTextBlock sourceDocumentBlock = _scenario->document()->begin();
-		QTextBlock copyDocumentBlock = scenarioDocument->begin();
-		while (sourceDocumentBlock.isValid()) {
-			if (ScenarioTextBlockInfo* sceneInfo = dynamic_cast<ScenarioTextBlockInfo*>(sourceDocumentBlock.userData())) {
-				copyDocumentBlock.setUserData(sceneInfo->clone());
-			}
-			sourceDocumentBlock = sourceDocumentBlock.next();
-			copyDocumentBlock = copyDocumentBlock.next();
-		}
-	}
 	QTextCursor sourceDocumentCursor(scenarioDocument);
 	QTextCursor destDocumentCursor(preparedDocument);
-
 
 	//
 	// Формирование титульной страницы
