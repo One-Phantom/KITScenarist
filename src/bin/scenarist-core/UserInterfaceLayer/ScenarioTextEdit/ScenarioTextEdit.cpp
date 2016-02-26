@@ -562,7 +562,7 @@ void ScenarioTextEdit::keyPressEvent(QKeyEvent* _event)
 	//
 	// Событие дошло по назначению
 	//
-    _event->accept();
+	_event->accept();
 
 	//
 	// Завершим блок операций
@@ -732,22 +732,22 @@ bool ScenarioTextEdit::keyPressEventReimpl(QKeyEvent* _event)
 		verticalScrollBar()->setValue(lastVBarValue);
 	}
 #ifdef Q_OS_MAC
-    //
-    // Особая комбинация для вставки точки независимо от раскладки
-    //
-    else if (_event->modifiers().testFlag(Qt::MetaModifier)
-             && _event->modifiers().testFlag(Qt::AltModifier)
-             && _event->key() == Qt::Key_Period) {
-        insertPlainText(".");
-    }
-    //
-    // Особая комбинация для вставки запятой независимо от раскладки
-    //
-    else if (_event->modifiers().testFlag(Qt::MetaModifier)
-             && _event->modifiers().testFlag(Qt::AltModifier)
-             && _event->key() == Qt::Key_Comma) {
-        insertPlainText(",");
-    }
+	//
+	// Особая комбинация для вставки точки независимо от раскладки
+	//
+	else if (_event->modifiers().testFlag(Qt::MetaModifier)
+			 && _event->modifiers().testFlag(Qt::AltModifier)
+			 && _event->key() == Qt::Key_Period) {
+		insertPlainText(".");
+	}
+	//
+	// Особая комбинация для вставки запятой независимо от раскладки
+	//
+	else if (_event->modifiers().testFlag(Qt::MetaModifier)
+			 && _event->modifiers().testFlag(Qt::AltModifier)
+			 && _event->key() == Qt::Key_Comma) {
+		insertPlainText(",");
+	}
 #endif
 	else {
 		isEventHandled = false;
@@ -1534,6 +1534,8 @@ void ScenarioTextEdit::updateEnteredText(QKeyEvent* _event)
 				if (!right3Characters.contains(" ")
 					&& right3Characters.length() == 3
 					&& right3Characters.left(2) == right3Characters.left(2).toUpper()
+					&& right3Characters.left(2).at(0).isLetter()
+					&& right3Characters.left(2).at(1).isLetter()
 					&& eventText != eventText.toUpper()) {
 					//
 					// Сделаем предпоследнюю букву строчной
