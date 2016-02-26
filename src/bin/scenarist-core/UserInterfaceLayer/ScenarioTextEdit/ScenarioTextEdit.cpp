@@ -4,8 +4,9 @@
 #include "Handlers/KeyPressHandlerFacade.h"
 
 #include <BusinessLayer/ScenarioDocument/ScenarioDocument.h>
-#include <BusinessLayer/ScenarioDocument/ScenarioTextDocument.h>
 #include <BusinessLayer/ScenarioDocument/ScenarioTextBlockInfo.h>
+#include <BusinessLayer/ScenarioDocument/ScenarioTextCorrector.h>
+#include <BusinessLayer/ScenarioDocument/ScenarioTextDocument.h>
 #include <BusinessLayer/ScenarioDocument/ScenarioReviewModel.h>
 
 #include <3rd_party/Helpers/TextEditHelper.h>
@@ -97,14 +98,16 @@ void ScenarioTextEdit::setScenarioDocument(ScenarioTextDocument* _document)
 
 	m_document = _document;
 	setDocument(m_document);
+	setHighlighterDocument(m_document);
 
 	if (m_document != 0) {
 		initEditor();
+
+		TextEditHelper::beautifyDocument(m_document, m_replaceThreeDots, m_smartQuotes);
+
+		ScenarioTextCorrector::removeDecorations(_document);
+		ScenarioTextCorrector::correctScenarioText(_document, 0, true);
 	}
-
-	setHighlighterDocument(m_document);
-
-	TextEditHelper::beautifyDocument(m_document, m_replaceThreeDots, m_smartQuotes);
 
 	s_firstRepaintUpdate = true;
 }
@@ -487,18 +490,9 @@ void ScenarioTextEdit::redoReimpl()
 {
 	m_document->redoReimpl();
 }
-#include <QDebug>
+
 void ScenarioTextEdit::keyPressEvent(QKeyEvent* _event)
 {
-	//
-	// События о нажатии клавиш, которые приходят слишком часто, иногда не успевают обработаться
-	// до того момента, как придёт следующее, поэтому после них сбивается нумерация внутри
-	// редактора сценария, т.к. не приходит событие contentChange от документа
-	//
-	// FIXME: События не успевают обработаться из-за корректировок на лету
-	//
-qDebug() << QDateTime::currentDateTime().toString(Qt::ISODate) << _event->text();
-
 	//
 	// Отмену и повтор последнего действия, делаем без последующей обработки
 	//
@@ -588,7 +582,6 @@ qDebug() << QDateTime::currentDateTime().toString(Qt::ISODate) << _event->text()
 	if (handler->needPrehandle()) {
 		handler->prehandle();
 	}
-	qDebug() << QDateTime::currentDateTime().toString(Qt::ISODate) << _event->text();
 }
 
 void ScenarioTextEdit::inputMethodEvent(QInputMethodEvent *_event)

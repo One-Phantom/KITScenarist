@@ -250,7 +250,7 @@ QTextDocument* AbstractExporter::prepareDocument(const BusinessLogic::ScenarioDo
 		//
 		// Убираем старые декорации
 		//
-		ScenarioTextCorrector::removeDecorations(destCursor);
+		ScenarioTextCorrector::removeDecorations(scenarioDocument);
 
 		//
 		// И корректируем документ в соответсвии с экспортируемым шаблоном

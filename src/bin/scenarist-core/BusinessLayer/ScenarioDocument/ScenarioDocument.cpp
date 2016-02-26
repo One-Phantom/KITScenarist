@@ -415,10 +415,9 @@ int ScenarioDocument::positionToInsertMime(ScenarioModelItem* _insertParent, Sce
 
 	return insertPosition;
 }
-#include <QDebug>
+
 void ScenarioDocument::aboutContentsChange(int _position, int _charsRemoved, int _charsAdded)
 {
-	qDebug() << _position << _charsRemoved << _charsAdded;
 	//
 	// Сохраняем изменённый xml и его хэш
 	//
@@ -798,7 +797,12 @@ void ScenarioDocument::aboutContentsChange(int _position, int _charsRemoved, int
 
 void ScenarioDocument::aboutCorrectText()
 {
-	ScenarioTextCorrector::correctScenarioText(m_document, m_lastChangeStartPosition);
+	//
+	// Запускаем корректировки, когда цикл событий освободится
+	//
+	QTimer::singleShot(0, [=] {
+		ScenarioTextCorrector::correctScenarioText(m_document, m_lastChangeStartPosition);
+	});
 }
 
 void ScenarioDocument::initConnections()
