@@ -562,7 +562,7 @@ void ScenarioTextEdit::keyPressEvent(QKeyEvent* _event)
 	//
 	// Событие дошло по назначению
 	//
-	_event->accept();
+    _event->accept();
 
 	//
 	// Завершим блок операций
@@ -731,6 +731,24 @@ bool ScenarioTextEdit::keyPressEventReimpl(QKeyEvent* _event)
 		paste();
 		verticalScrollBar()->setValue(lastVBarValue);
 	}
+#ifdef Q_OS_MAC
+    //
+    // Особая комбинация для вставки точки независимо от раскладки
+    //
+    else if (_event->modifiers().testFlag(Qt::MetaModifier)
+             && _event->modifiers().testFlag(Qt::AltModifier)
+             && _event->key() == Qt::Key_Period) {
+        insertPlainText(".");
+    }
+    //
+    // Особая комбинация для вставки запятой независимо от раскладки
+    //
+    else if (_event->modifiers().testFlag(Qt::MetaModifier)
+             && _event->modifiers().testFlag(Qt::AltModifier)
+             && _event->key() == Qt::Key_Comma) {
+        insertPlainText(",");
+    }
+#endif
 	else {
 		isEventHandled = false;
 	}
