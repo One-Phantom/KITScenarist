@@ -23,7 +23,6 @@ namespace BusinessLogic
 		enum Type {
 			Undefined,		//!< Неопределён
 			SceneHeading,	//!< Время - место
-			SceneHeadingShadow,	//!< Время - место, для вспомогательных разрывов
 			SceneCharacters,//!< Персонажи сцены
 			Action,			//!< Описание действия
 			Character,		//!< Имя героя
@@ -38,7 +37,9 @@ namespace BusinessLogic
 			SceneGroupFooter,	//!< Окончание группы сцен
 			FolderHeader,	//!< Заголовок папки
 			FolderFooter,	//!< Окончание папки
-			SceneDescription	//!< Описание элемента сценария
+			SceneDescription,	//!< Описание элемента сценария
+			//
+			SceneHeadingShadow	//!< Время - место, для вспомогательных разрывов
 		};
 
 		/**

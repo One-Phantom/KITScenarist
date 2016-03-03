@@ -161,7 +161,8 @@ void ScenarioFastFormatWidget::aboutGoToNextBlock()
 			cursor.movePosition(QTextCursor::NextBlock);
 			cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
 		} while (!cursor.atEnd()
-				 && !cursor.block().isVisible());
+				 && (!cursor.block().isVisible()
+					 || cursor.blockFormat().boolProperty(ScenarioBlockStyle::PropertyIsCorrection)));
 		m_editor->setTextCursor(cursor);
 		catchFocusIfNeeded();
 	}
@@ -175,7 +176,8 @@ void ScenarioFastFormatWidget::aboutGoToPrevBlock()
 			cursor.movePosition(QTextCursor::PreviousBlock);
 			cursor.movePosition(QTextCursor::EndOfBlock, QTextCursor::KeepAnchor);
 		} while (cursor.selectionStart() != 0
-				 && !cursor.block().isVisible());
+				 && (!cursor.block().isVisible()
+					 || cursor.blockFormat().boolProperty(ScenarioBlockStyle::PropertyIsCorrection)));
 		m_editor->setTextCursor(cursor);
 		catchFocusIfNeeded();
 	}
