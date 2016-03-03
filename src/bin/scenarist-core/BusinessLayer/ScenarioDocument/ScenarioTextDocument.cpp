@@ -207,6 +207,7 @@ void ScenarioTextDocument::applyPatch(const QString& _patch)
 				selectionStartPos += cursor.block().length();
 			}
 			cursor.movePosition(QTextCursor::PreviousBlock);
+			cursor.movePosition(QTextCursor::StartOfBlock);
 		}
 	}
 	const int selectionEndPos = selectionStartPos + xmlsForUpdate.first.plainLength;

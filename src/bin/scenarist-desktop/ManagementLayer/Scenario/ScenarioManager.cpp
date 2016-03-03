@@ -111,7 +111,7 @@ namespace {
 						if (checkCursor.atBlockStart()) {
 							atLeftAllOk = true;
 						} else {
-							checkCursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor);
+							checkCursor.movePosition(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor);
 							if (checkCursor.selectedText() == " "
 								|| checkCursor.selectedText() == ",") {
 								atLeftAllOk = true;
@@ -125,7 +125,7 @@ namespace {
 						if (checkCursor.atBlockEnd()) {
 							atRightAllOk = true;
 						} else {
-							checkCursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+							checkCursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor);
 							if (checkCursor.selectedText() == " "
 								|| checkCursor.selectedText() == ",") {
 								atRightAllOk = true;
@@ -773,14 +773,14 @@ void ScenarioManager::aboutSaveScenarioChanges()
 	}
 
 #ifdef Q_OS_MAC
-    //
-    // Если есть открытый диалог сохранения, или открытия, то он закрывается
-    // после испускания последующих сигналов, так что мы просто их игнорируем,
-    // пока не будет закрыт диалог
-    //
-    if (QApplication::activeModalWidget() != 0) {
-        return;
-    }
+	//
+	// Если есть открытый диалог сохранения, или открытия, то он закрывается
+	// после испускания последующих сигналов, так что мы просто их игнорируем,
+	// пока не будет закрыт диалог
+	//
+	if (QApplication::activeModalWidget() != 0) {
+		return;
+	}
 #endif
 
 	emit scenarioChangesSaved();

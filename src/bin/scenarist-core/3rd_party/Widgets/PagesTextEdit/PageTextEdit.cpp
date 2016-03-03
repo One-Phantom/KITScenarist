@@ -1661,7 +1661,7 @@ void PageTextEditPrivate::paintPagesView(QPainter *_painter)
 		qreal pageWidth = m_pageMetrics.pxPageSize().width();
 		qreal pageHeight = m_pageMetrics.pxPageSize().height();
 
-        QPen spacePen(control->palette().window(), 8);
+		QPen spacePen(control->palette().window(), 8);
 		QPen borderPen(control->palette().dark(), 1);
 
 		qreal curHeight = pageHeight - (vbar->value() % (int)pageHeight);
@@ -1688,7 +1688,7 @@ void PageTextEditPrivate::paintPagesView(QPainter *_painter)
 			// Фон разрыва страниц
 			//
 			_painter->setPen(spacePen);
-            _painter->drawLine(0, curHeight-4, q->width(), curHeight-4);
+			_painter->drawLine(0, curHeight-4, q->width(), curHeight-4);
 
 			//
 			// Границы страницы
@@ -1762,7 +1762,7 @@ void PageTextEditPrivate::paintPageNumbers(QPainter* _painter)
 		//
 		// Номер первой видимой на экране страницы
 		//
-        int pageNumber = vbar->value() / (int)pageSize.height() + 1;
+		int pageNumber = vbar->value() / (int)pageSize.height() + 1;
 
 		//
 		// Верхнее поле первой страницы на экране, когда не видно предыдущей страницы
@@ -1910,6 +1910,7 @@ QMouseEvent* PageTextEditPrivate::correctMousePosition(QMouseEvent* _event)
 					if (cursor.atBlockStart()) {
 						do {
 							cursor.movePosition(QTextCursor::PreviousBlock);
+							cursor.movePosition(QTextCursor::StartOfBlock);
 						} while (!cursor.atStart() && !cursor.block().isVisible());
 					}
 					break;
@@ -1966,6 +1967,7 @@ QMouseEvent* PageTextEditPrivate::correctMousePosition(QMouseEvent* _event)
 		while (!cursor.atStart()
 			   && !cursor.block().isVisible()) {
 			cursor.movePosition(QTextCursor::PreviousBlock);
+			cursor.movePosition(QTextCursor::StartOfBlock);
 		}
 	}
 
@@ -3117,6 +3119,7 @@ void PageTextEdit::ensureCursorVisible()
 		QTextCursor cursor = textCursor();
 		while (!cursor.atStart() && !cursor.block().isVisible()) {
 			cursor.movePosition(QTextCursor::PreviousBlock);
+			cursor.movePosition(QTextCursor::StartOfBlock);
 		}
 		if (cursor.position() != textCursor().position()) {
 			setTextCursor(cursor);
