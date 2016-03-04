@@ -702,6 +702,17 @@ namespace {
 }
 
 
+void ScenarioTextCorrector::configure(bool _continueDialogues, bool _correctTextOnPageBreaks)
+{
+	if (s_continueDialogues != _continueDialogues) {
+		s_continueDialogues = _continueDialogues;
+	}
+
+	if (s_correctTextOnPageBreaks != _correctTextOnPageBreaks) {
+		s_correctTextOnPageBreaks = _correctTextOnPageBreaks;
+	}
+}
+
 void ScenarioTextCorrector::removeDecorations(QTextDocument* _document, int _startPosition, int _endPosition)
 {
 	QTextCursor cursor(_document);
@@ -804,7 +815,7 @@ void ScenarioTextCorrector::correctDocumentText(QTextDocument* _document, int _s
 	//
 	// Для имён персонажей, нужно добавлять ПРОД. (только, если имя полностью идентично предыдущему)
 	//
-	{
+	if (s_continueDialogues) {
 		//
 		// Сперва нужно подняться до начала сцены и начинать корректировки с этого положения
 		//
@@ -872,9 +883,11 @@ void ScenarioTextCorrector::correctDocumentText(QTextDocument* _document, int _s
 
 
 	//
-	// Если используется постраничный режим, то обрабатываем блоки находящиеся в конце страницы
+	// Если нужно корректировать текст на разрывах и используется постраничный режим,
+	// то обрабатываем блоки находящиеся в конце страницы
 	//
-	if (_document->pageSize().isValid()) {
+	if (s_correctTextOnPageBreaks
+		&& _document->pageSize().isValid()) {
 
 		//
 		// Ставим курсор в блок, в котором происходит редактирование
@@ -1533,3 +1546,6 @@ void ScenarioTextCorrector::correctDocumentText(QTextDocument* _document, int _s
 		removeDecorations(_document);
 	}
 }
+
+bool ScenarioTextCorrector::s_continueDialogues = true;
+bool ScenarioTextCorrector::s_correctTextOnPageBreaks = true;

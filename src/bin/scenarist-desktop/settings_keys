@@ -11,6 +11,8 @@ scenario-editor/zoom-range - коэффициент масштабировани
 scenario-editor/page-view - используется ли режим постраничного отображения
 scenario-editor/show-scenes-numbers - показывать номера сцен в редакторе сценария
 scenario-editor/highlight-current-line - подсвечивать текущую строку редактора
+scenario-editor/auto-continue-dialogue - продолжать реплики персонажей в сцене
+scenario-editor/auto-corrections-on-page-breaks - корректировать текст на разрывах страниц
 scenario-editor/capitalize-first-word - делать первые буквы предложений заглавными
 scenario-editor/correct-double-capitals - корректировать двойные заглавные буквы в словах
 scenario-editor/replace-three-dots - заменять три точки на символ многоточия

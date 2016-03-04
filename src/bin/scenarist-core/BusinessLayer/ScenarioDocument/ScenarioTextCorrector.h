@@ -17,6 +17,11 @@ namespace BusinessLogic
 	{
 	public:
 		/**
+		 * @brief Настроить работу корректора
+		 */
+		static void configure(bool _continueDialogues, bool _correctTextOnPageBreaks);
+
+		/**
 		 * @brief Удалить декорации в заданном интервале текста. Если _endPosition равен нулю, то
 		 *		  удалять до конца.
 		 */
@@ -32,6 +37,17 @@ namespace BusinessLogic
 		 * @note Используется при экспорте
 		 */
 		static void correctDocumentText(QTextDocument* _document, int _startPosition = 0);
+
+	private:
+		/**
+		 * @brief Продолжать диалоги
+		 */
+		static bool s_continueDialogues;
+
+		/**
+		 * @brief Корректировать текст на разрывах страниц
+		 */
+		static bool s_correctTextOnPageBreaks;
 	};
 }
 

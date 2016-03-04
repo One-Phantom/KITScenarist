@@ -65,6 +65,8 @@ namespace ManagementLayer
 		void scenarioEditPageViewChanged(bool  _value);
 		void scenarioEditShowScenesNumbersChanged(bool  _value);
 		void scenarioEditHighlightCurrentLineChanged(bool _value);
+		void scenarioEditAutoContinueDialogueChanged(bool _value);
+		void scenarioEditAutoCorrectionsOnPageBreaksChanged(bool _value);
 		void scenarioEditCapitalizeFirstWordChanged(bool _value);
 		void scenarioEditCorrectDoubleCapitalsChanged(bool _value);
 		void scenarioEditReplaceThreeDotsChanged(bool _value);

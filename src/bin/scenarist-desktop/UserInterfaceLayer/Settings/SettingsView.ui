@@ -136,7 +136,7 @@
        <item>
         <widget class="QStackedWidget" name="categoriesWidgets">
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="applicationPage">
           <layout class="QGridLayout" name="applicationPageLayout">
@@ -471,7 +471,7 @@
            <item row="2" column="0" colspan="2">
             <widget class="QStackedWidget" name="scenarioEditPageStack">
              <property name="currentIndex">
-              <number>0</number>
+              <number>1</number>
              </property>
              <widget class="QWidget" name="scenarioEditCommon">
               <layout class="QGridLayout" name="gridLayout_10">
@@ -1144,9 +1144,23 @@
                <item row="2" column="0" colspan="3">
                 <widget class="QGroupBox" name="groupBox_2">
                  <property name="title">
-                  <string>Automatically replacing</string>
+                  <string>Text corrections</string>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_3">
+                  <item>
+                   <widget class="QCheckBox" name="autoContinueDialogue">
+                    <property name="text">
+                     <string>Automatically continue dialogue</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QCheckBox" name="autoCorrectionsOnPageBreaks">
+                    <property name="text">
+                     <string>Automatically corrections on page breaks</string>
+                    </property>
+                   </widget>
+                  </item>
                   <item>
                    <widget class="QCheckBox" name="capitalizeFirstWord">
                     <property name="text">
@@ -1240,6 +1254,13 @@
                  </item>
                 </layout>
                </item>
+               <item row="5" column="0" colspan="3">
+                <widget class="QCheckBox" name="reviewUseWordHighlight">
+                 <property name="text">
+                  <string>Use MS Word like review highlighting colors</string>
+                 </property>
+                </widget>
+               </item>
                <item row="4" column="0" colspan="3">
                 <widget class="QCheckBox" name="showSuggestionsInEmptyBlocks">
                  <property name="text">
@@ -1247,13 +1268,6 @@
                  </property>
                  <property name="checked">
                   <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="5" column="0" colspan="3">
-                <widget class="QCheckBox" name="reviewUseWordHighlight">
-                 <property name="text">
-                  <string>Use MS Word like review highlighting colors</string>
                  </property>
                 </widget>
                </item>
@@ -2299,6 +2313,38 @@ Paragraph</string>
   <tabstop>charactersChronometry</tabstop>
   <tabstop>applyTemplate</tabstop>
   <tabstop>sceneDescriptionHeight</tabstop>
+  <tabstop>useDarkTheme</tabstop>
+  <tabstop>applicationTwoPanelMode</tabstop>
+  <tabstop>changeLanguage</tabstop>
+  <tabstop>applicationModuleResearch</tabstop>
+  <tabstop>applicationModuleScenario</tabstop>
+  <tabstop>applicationModuleCharacters</tabstop>
+  <tabstop>applicationModuleLocations</tabstop>
+  <tabstop>applicationModuleStatistics</tabstop>
+  <tabstop>pageView</tabstop>
+  <tabstop>textColor</tabstop>
+  <tabstop>textColorDark</tabstop>
+  <tabstop>backgroundColor</tabstop>
+  <tabstop>backgroundColorDark</tabstop>
+  <tabstop>folderTextColor</tabstop>
+  <tabstop>folderTextColorDark</tabstop>
+  <tabstop>folderBackgroundColor</tabstop>
+  <tabstop>folderBackgroundColorDark</tabstop>
+  <tabstop>nonprintableTextColor</tabstop>
+  <tabstop>nonprintableTextColorDark</tabstop>
+  <tabstop>currentScenarioTemplate</tabstop>
+  <tabstop>spellChecking</tabstop>
+  <tabstop>spellCheckingLanguage</tabstop>
+  <tabstop>autoContinueDialogue</tabstop>
+  <tabstop>autoCorrectionsOnPageBreaks</tabstop>
+  <tabstop>capitalizeFirstWord</tabstop>
+  <tabstop>correctDoubleCapitals</tabstop>
+  <tabstop>replaceThreeDots</tabstop>
+  <tabstop>smartQuotes</tabstop>
+  <tabstop>autoJumpToNextBlock</tabstop>
+  <tabstop>showSuggestionsInEmptyBlocks</tabstop>
+  <tabstop>reviewUseWordHighlight</tabstop>
+  <tabstop>wordsCounter</tabstop>
  </tabstops>
  <resources>
   <include location="../../../scenarist-core/Resources/Resources.qrc"/>

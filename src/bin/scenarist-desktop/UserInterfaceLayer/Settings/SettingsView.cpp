@@ -207,6 +207,16 @@ void SettingsView::setScenarioEditHighlightCurrentLine(bool _value)
 	ui->highlightCurrentLine->setChecked(_value);
 }
 
+void SettingsView::setScenarioEditAutoContinueDialogue(bool _value)
+{
+	ui->autoContinueDialogue->setChecked(_value);
+}
+
+void SettingsView::setScenarioEditAutoCorrectionsOnPageBreaks(bool _value)
+{
+	ui->autoCorrectionsOnPageBreaks->setChecked(_value);
+}
+
 void SettingsView::setScenarioEditCapitalizeFirstWord(bool _value)
 {
 	ui->capitalizeFirstWord->setChecked(_value);
@@ -698,6 +708,8 @@ void SettingsView::initConnections()
 	connect(ui->pageView, SIGNAL(toggled(bool)), this, SIGNAL(scenarioEditPageViewChanged(bool)));
 	connect(ui->showScenesNumbersInEditor, SIGNAL(toggled(bool)), this, SIGNAL(scenarioEditShowScenesNumbersChanged(bool)));
 	connect(ui->highlightCurrentLine, SIGNAL(toggled(bool)), this, SIGNAL(scenarioEditHighlightCurrentLineChanged(bool)));
+	connect(ui->autoContinueDialogue, &QCheckBox::toggled, this, &SettingsView::scenarioEditAutoContinueDialogueChanged);
+	connect(ui->autoCorrectionsOnPageBreaks, &QCheckBox::toggled, this, &SettingsView::scenarioEditAutoCorrectionsOnPageBreaksChanged);
 	connect(ui->capitalizeFirstWord, &QCheckBox::toggled, this, &SettingsView::scenarioEditCapitalizeFirstWordChanged);
 	connect(ui->correctDoubleCapitals, &QCheckBox::toggled, this, &SettingsView::scenarioEditCorrectDoubleCapitalsChanged);
 	connect(ui->replaceThreeDots, &QCheckBox::toggled, this, &SettingsView::scenarioEditReplaceThreeDotsChanged);
