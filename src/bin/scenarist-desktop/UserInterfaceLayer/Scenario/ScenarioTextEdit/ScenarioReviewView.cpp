@@ -11,6 +11,7 @@
 
 #include <QKeyEvent>
 #include <QMenu>
+#include <QShortcut>
 
 using BusinessLogic::ScenarioTextDocument;
 using BusinessLogic::ScenarioReviewModel;
@@ -270,6 +271,11 @@ void ScenarioReviewView::aboutDelete(int _commentIndex)
 	}
 }
 
+void ScenarioReviewView::aboutDeleteSelected()
+{
+	aboutDelete(0);
+}
+
 void ScenarioReviewView::initView()
 {
 	setContextMenuPolicy(Qt::CustomContextMenu);
@@ -285,4 +291,6 @@ void ScenarioReviewView::initConnections()
 
 	connect(this, SIGNAL(clicked(QModelIndex)), this, SLOT(aboutMoveCursorToMark(QModelIndex)));
 	connect(this, SIGNAL(activated(QModelIndex)), this, SLOT(aboutMoveCursorToMark(QModelIndex)));
+
+	new QShortcut(QKeySequence("Delete"), this, SLOT(aboutDeleteSelected()), 0, Qt::WidgetWithChildrenShortcut);
 }

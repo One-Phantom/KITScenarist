@@ -32,7 +32,7 @@ namespace {
 	 */
 	static const char* MORE = QT_TRANSLATE_NOOP("BusinessLogic::ScenarioTextCorrector", "MORE");
 	static const QString moreTerm() {
-		return QApplication::translate("BusinessLogic::ScenarioTextCorrector", MORE);
+		return QString("(%1)").arg(QApplication::translate("BusinessLogic::ScenarioTextCorrector", MORE));
 	}
 
 	static const QList<QChar> PUNCTUATION_CHARACTERS = { '.', '!', '?', QString("…").at(0)};
