@@ -467,7 +467,9 @@ void ScenarioReviewModel::aboutUpdateReviewModel(int _position, int _removed, in
 					//
 					// Расширим область проверки
 					//
-					_added = _removed = mark.endPosition() - _position;
+					if (_added < mark.endPosition() - _position) {
+						_added = _removed = mark.endPosition() - _position;
+					}
 
 					//
 					// Удалим заметку
