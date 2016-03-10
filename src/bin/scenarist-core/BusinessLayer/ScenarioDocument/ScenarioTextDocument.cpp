@@ -345,6 +345,12 @@ void ScenarioTextDocument::undoReimpl()
 
 	if (!m_undoStack.isEmpty()) {
 		Domain::ScenarioChange* change = m_undoStack.takeLast();
+
+#ifdef PATCH_DEBUG
+		qDebug() << "*******************************************************************";
+		qDebug() << change->uuid().toString() << change->user() << characterCount();
+#endif
+
 		m_redoStack.append(change);
 		applyPatch(change->undoPatch());
 

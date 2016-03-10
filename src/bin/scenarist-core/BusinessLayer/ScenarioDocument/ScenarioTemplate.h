@@ -27,7 +27,7 @@ namespace BusinessLogic
 			Action,			//!< Описание действия
 			Character,		//!< Имя героя
 			Parenthetical,	//!< Ремарка
-			Dialogue,			//!< Реплика героя
+			Dialogue,		//!< Реплика героя
 			Transition,		//!< Переход
 			Note,			//!< Примечание
 			TitleHeader,	//!< Заголовок титра

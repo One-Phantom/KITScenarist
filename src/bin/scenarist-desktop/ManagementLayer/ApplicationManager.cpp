@@ -932,7 +932,8 @@ void ApplicationManager::currentTabIndexChanged()
 					m_tabsSecondary->setCurrentTab(m_tabs->prevCurrentTab());
 				}
 			} else {
-				if (m_tabsSecondary->currentTab() == m_tabs->currentTab()) {
+				if (m_tabsSecondary->isVisible()
+					&& m_tabsSecondary->currentTab() == m_tabs->currentTab()) {
 					m_tabs->setCurrentTab(m_tabsSecondary->prevCurrentTab());
 				}
 			}
@@ -965,7 +966,7 @@ void ApplicationManager::currentTabIndexChanged()
 				m_tabsWidgets->setCurrentWidget(widget);
 			}
 			//
-			{
+			if (m_tabsSecondary->isVisible()) {
 				QWidget* widget = widgetForTab(m_tabsSecondary->currentTab());
 				m_tabsWidgetsSecondary->addWidget(widget);
 				m_tabsWidgetsSecondary->setCurrentWidget(widget);
@@ -1098,7 +1099,7 @@ void ApplicationManager::goToEditCurrentProject()
 	//
 	// Запускаем обработку изменений сценария
 	//
-    m_scenarioManager->startChangesHandling();
+	m_scenarioManager->startChangesHandling();
 
 	//
 	// Загрузить настройки файла
@@ -1333,9 +1334,9 @@ void ApplicationManager::initConnections()
 
 	connect(m_scenarioManager, SIGNAL(showFullscreen()), this, SLOT(aboutShowFullscreen()));
 	connect(m_scenarioManager, SIGNAL(scenarioChangesSaved()), this, SLOT(aboutUpdateLastChangeInfo()));
-    connect(m_scenarioManager, SIGNAL(scenarioChangesSaved()), m_synchronizationManager, SLOT(aboutWorkSyncScenario()));
-    connect(m_scenarioManager, SIGNAL(scenarioChangesSaved()), m_synchronizationManager, SLOT(aboutWorkSyncData()));
-    connect(m_scenarioManager, SIGNAL(cursorPositionUpdated(int,bool)), m_synchronizationManager, SLOT(aboutUpdateCursors(int,bool)));
+	connect(m_scenarioManager, SIGNAL(scenarioChangesSaved()), m_synchronizationManager, SLOT(aboutWorkSyncScenario()));
+	connect(m_scenarioManager, SIGNAL(scenarioChangesSaved()), m_synchronizationManager, SLOT(aboutWorkSyncData()));
+	connect(m_scenarioManager, SIGNAL(cursorPositionUpdated(int,bool)), m_synchronizationManager, SLOT(aboutUpdateCursors(int,bool)));
 
 	connect(m_charactersManager, SIGNAL(characterNameChanged(QString,QString)),
 			m_scenarioManager, SLOT(aboutCharacterNameChanged(QString,QString)));
