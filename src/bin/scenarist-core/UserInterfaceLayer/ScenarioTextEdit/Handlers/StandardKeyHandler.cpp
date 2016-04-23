@@ -272,6 +272,7 @@ void StandardKeyHandler::handleDown(QKeyEvent* _event)
 				   && (!cursor.block().isVisible()
 					   || cursor.blockFormat().boolProperty(ScenarioBlockStyle::PropertyIsCorrection))) {
 				cursor.movePosition(QTextCursor::NextBlock, cursorMoveMode);
+				cursor.movePosition(QTextCursor::EndOfBlock, cursorMoveMode);
 			}
 
 			//

@@ -1986,6 +1986,7 @@ QPoint PageTextEditPrivate::correctMousePosition(const QPoint& _eventPos)
 	while (!cursor.atEnd()
 		   && cursor.blockFormat().boolProperty(PageTextEdit::PropertyDontShowCursor)) {
 		cursor.movePosition(QTextCursor::NextBlock);
+		cursor.movePosition(QTextCursor::EndOfBlock);
 	}
 
 	//
