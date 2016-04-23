@@ -830,7 +830,7 @@ void ScenarioTextCorrector::correctDocumentText(QTextDocument* _document, int _s
 		// Храним последнего персонажа сцены
 		//
 		QString lastSceneCharacter;
-		while (!cursor.atEnd()) {
+		do {
 			if (ScenarioBlockStyle::forBlock(cursor.block()) == ScenarioBlockStyle::Character) {
 				const QString character = CharacterParser::name(cursor.block().text());
 				const bool isStartPositionInBlock =
@@ -869,18 +869,12 @@ void ScenarioTextCorrector::correctDocumentText(QTextDocument* _document, int _s
 					lastSceneCharacter = character;
 				}
 			}
-			//
-			// Очищаем имя последнего, если текущая сцена закончилась
-			//
-			else if (::cursorAtSceneBorder(cursor)) {
-				lastSceneCharacter.clear();
-			}
 
 			cursor.movePosition(QTextCursor::NextBlock);
 			cursor.movePosition(QTextCursor::EndOfBlock);
-		}
+		} while (!cursor.atEnd()
+				 && !::cursorAtSceneBorder(cursor));
 	}
-
 
 	//
 	// Если нужно корректировать текст на разрывах и используется постраничный режим,

@@ -42,8 +42,8 @@ DEFINES += NO_ANIMATIONS
 #
 # Включить профилирование
 #
-#QMAKE_CXXFLAGS_DEBUG += -pg
-#QMAKE_LFLAGS_DEBUG += -pg
+QMAKE_CXXFLAGS_DEBUG += -pg
+QMAKE_LFLAGS_DEBUG += -pg
 #
 
 #
@@ -543,7 +543,8 @@ HEADERS += \
     scenarist-desktop/ManagementLayer/Scenario/ScenarioSceneDescriptionManager.h \
     scenarist-core/BusinessLayer/ScenarioDocument/ScenarioTextCorrector.h \
     scenarist-core/3rd_party/Widgets/QLightBoxWidget/qlightboxprogress.h \
-    scenarist-core/3rd_party/Helpers/FileHelper.h
+    scenarist-core/3rd_party/Helpers/FileHelper.h \
+    scenarist-core/3rd_party/Helpers/DiffMatchPatchStl.h
 
 FORMS += \
     scenarist-desktop/UserInterfaceLayer/StartUp/StartUpView.ui \

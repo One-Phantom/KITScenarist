@@ -136,7 +136,7 @@
        <item row="1" column="0" colspan="2">
         <widget class="QStackedWidget" name="researchDataEditsContainer">
          <property name="currentIndex">
-          <number>0</number>
+          <number>6</number>
          </property>
          <widget class="QWidget" name="scenarioEdit">
           <layout class="QGridLayout" name="gridLayout_3">
@@ -492,7 +492,7 @@
          <widget class="QWidget" name="imagesGalleryEdit">
           <layout class="QGridLayout" name="gridLayout_6">
            <item row="3" column="0">
-            <widget class="ImagesPane" name="imagesGalleryPane" native="true">
+            <widget class="ImagesPane" name="imagesGalleryPane">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
                <horstretch>0</horstretch>
@@ -591,6 +591,12 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>ImagesPane</class>
+   <extends>QScrollArea</extends>
+   <header location="global">3rd_party/Widgets/ImagesPane/ImagesPane.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
    <class>FlatButton</class>
    <extends>QToolButton</extends>
    <header location="global">3rd_party/Widgets/FlatButton/FlatButton.h</header>
@@ -605,12 +611,6 @@
    <class>QWebEngineView</class>
    <extends>QWidget</extends>
    <header location="global">QWebEngineView</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>ImagesPane</class>
-   <extends>QWidget</extends>
-   <header location="global">3rd_party/Widgets/ImagesPane/ImagesPane.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

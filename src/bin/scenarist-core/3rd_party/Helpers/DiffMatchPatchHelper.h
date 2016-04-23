@@ -1,7 +1,12 @@
 #ifndef DIFFMATCHPATCHHELPER
 #define DIFFMATCHPATCHHELPER
 
+#ifdef QT_DMP_IMPL
 #include "DiffMatchPatch.h"
+#else
+#include "DiffMatchPatchStl.h"
+#endif
+
 #include "TextEditHelper.h"
 
 #include <QDebug>
@@ -95,8 +100,13 @@ public:
 	 * @brief Сформировать патч между двумя простыми текстами
 	 */
 	static QString makePatch(const QString& _text1, const QString& _text2) {
+#ifdef QT_DMP_IMPL
 		diff_match_patch dmp;
 		return dmp.patch_toText(dmp.patch_make(_text1, _text2));
+#else
+		diff_match_patch<std::wstring> dmp;
+		return QString::fromStdWString(dmp.patch_toText(dmp.patch_make(_text1.toStdWString(), _text2.toStdWString())));
+#endif
 	}
 
 	/**
@@ -116,9 +126,15 @@ public:
 	 * @brief Применить патч для простого текста
 	 */
 	static QString applyPatch(const QString& _text, const QString& _patch) {
+#ifdef QT_DMP_IMPL
 		diff_match_patch dmp;
 		QList<Patch> patches = dmp.patch_fromText(_patch);
 		return dmp.patch_apply(patches, _text).first;
+#else
+		diff_match_patch<std::wstring> dmp;
+		diff_match_patch<std::wstring>::Patches patches = dmp.patch_fromText(_patch.toStdWString());
+		return QString::fromStdWString(dmp.patch_apply(patches, _text.toStdWString()).first);
+#endif
 	}
 
 	/**
@@ -201,8 +217,13 @@ public:
 			//
 			// Разберём патчи на список
 			//
+#ifdef QT_DMP_IMPL
 			diff_match_patch dmp;
 			QList<Patch> patches = dmp.patch_fromText(newPatch);
+#else
+			diff_match_patch<std::wstring> dmp;
+			diff_match_patch<std::wstring>::Patches patches = dmp.patch_fromText(newPatch.toStdWString());
+#endif
 
 			//
 			// Рассчитаем метрики для формирования xml для обновления
@@ -212,7 +233,11 @@ public:
 			int oldDistance = 0;
 			int newStartPos = -1;
 			int newEndPos = -1;
+#ifdef QT_DMP_IMPL
 			foreach (const Patch& patch, patches) {
+#else
+			foreach (const diff_match_patch<std::wstring>::Patch& patch, patches) {
+#endif
 				//
 				// ... для старого
 				//
