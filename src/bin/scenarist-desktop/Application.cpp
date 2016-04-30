@@ -156,14 +156,14 @@ void Application::initTranslation()
 		// Подключим файл переводов Qt
 		//
 		QTranslator* qtTranslator = new QTranslator;
-		qtTranslator->load(":/Translations/Translations/qt_" + translationSuffix + ".qm");
+		qtTranslator->load(":/Translations/Translations/qt_" + qtTranslationSuffix + ".qm");
 		installTranslator(qtTranslator);
 
 		//
 		// Подключим дополнительный файл переводов Qt
 		//
 		QTranslator* qtBaseTranslator = new QTranslator;
-		qtBaseTranslator->load(":/Translations/Translations/qtbase_" + translationSuffix + ".qm");
+		qtBaseTranslator->load(":/Translations/Translations/qtbase_" + qtTranslationSuffix + ".qm");
 		installTranslator(qtBaseTranslator);
 	}
 
