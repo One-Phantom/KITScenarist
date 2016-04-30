@@ -17,9 +17,9 @@ DEFINES += MYTHES_LIBRARY
 # Конфигурируем расположение файлов сборки
 #
 CONFIG(debug, debug|release) {
-    DESTDIR = $$PWD/../../../build/Debug/libs/hunspell
+    DESTDIR = $$PWD/../../../build/Debug/libs/mythes
 } else {
-    DESTDIR = $$PWD/../../../build/Release/libs/hunspell
+    DESTDIR = $$PWD/../../../build/Release/libs/mythes
 }
 
 OBJECTS_DIR = $$DESTDIR/.obj

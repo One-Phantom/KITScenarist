@@ -13,10 +13,6 @@
         <file>HunspellDictionaries/ru_RU_yo.aff</file>
         <file>HunspellDictionaries/es_ES.dic</file>
         <file>HunspellDictionaries/es_ES.aff</file>
-        <file>HunspellDictionaries/en_GB.aff</file>
-        <file>HunspellDictionaries/en_GB.dic</file>
-        <file>HunspellDictionaries/en_US.dic</file>
-        <file>HunspellDictionaries/en_US.aff</file>
         <file>HunspellDictionaries/fr_FR.dic</file>
         <file>HunspellDictionaries/fr_FR.aff</file>
     </qresource>
@@ -124,6 +120,8 @@
         <file>Translations/Scenarist_fr.qm</file>
         <file>Translations/qtbase_fr.qm</file>
         <file>Translations/qt_fr.qm</file>
+        <file>Translations/Scenarist_kz.ts</file>
+        <file>Translations/Scenarist_kz.qm</file>
     </qresource>
     <qresource prefix="/Interface">
         <file>UI/menuarrow.png</file>
