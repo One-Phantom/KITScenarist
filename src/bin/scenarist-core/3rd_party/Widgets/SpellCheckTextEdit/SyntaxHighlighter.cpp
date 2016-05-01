@@ -175,18 +175,24 @@ void SyntaxHighlighterPrivate::reformatBlocks(int from, int charsRemoved, int ch
 
 	bool forceHighlightOfNextBlock = false;
 
-	int processEventsCounter = 0;
-	const int COUNTER_LIMIT = 3;
+	//
+	// TODO: придумать другой способ оптимизации
+	//
+//	int processEventsCounter = 0;
+//	const bool needProcessLimits = charsAdded < doc->characterCount();
+//	const int COUNTER_LIMIT = 3;
 	while (block.isValid() && (block.position() < endPosition || forceHighlightOfNextBlock)) {
-		//
-		// Даём выполниться накопившимсяы событиям через каждые COUNTER_LIMIT абзацев
-		//
-		if (processEventsCounter == COUNTER_LIMIT) {
-			QApplication::processEvents();
-			processEventsCounter = 0;
-		} else {
-			++processEventsCounter;
-		}
+//		if (needProcessLimits) {
+//			//
+//			// Даём выполниться накопившимсяы событиям через каждые COUNTER_LIMIT абзацев
+//			//
+//			if (processEventsCounter == COUNTER_LIMIT) {
+//				QApplication::processEvents();
+//				processEventsCounter = 0;
+//			} else {
+//				++processEventsCounter;
+//			}
+//		}
 
 		const int stateBeforeHighlight = block.userState();
 
