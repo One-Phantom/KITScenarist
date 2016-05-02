@@ -229,7 +229,7 @@ QTextDocument* AbstractExporter::prepareDocument(const BusinessLogic::ScenarioDo
 					foreach (const QTextLayout::FormatRange& range, sourceCursor.block().textFormats()) {
 						if (range.format.boolProperty(ScenarioBlockStyle::PropertyIsReviewMark)) {
 							destCursor.setPosition(startBlockPosition + range.start);
-							destCursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, range.length);
+							destCursor.setPosition(destCursor.position() + range.length, QTextCursor::KeepAnchor);
 							destCursor.mergeCharFormat(range.format);
 						}
 					}
@@ -491,7 +491,7 @@ QTextDocument* AbstractExporter::prepareDocument(const BusinessLogic::ScenarioDo
 						foreach (const QTextLayout::FormatRange& range, sourceDocumentCursor.block().textFormats()) {
 							if (range.format.boolProperty(ScenarioBlockStyle::PropertyIsReviewMark)) {
 								destDocumentCursor.setPosition(startBlockPosition + range.start);
-								destDocumentCursor.movePosition(QTextCursor::NextCharacter, QTextCursor::KeepAnchor, range.length);
+								destDocumentCursor.setPosition(destDocumentCursor.position() + range.length, QTextCursor::KeepAnchor);
 								destDocumentCursor.mergeCharFormat(range.format);
 							}
 						}
