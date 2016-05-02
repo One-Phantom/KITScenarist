@@ -27,8 +27,15 @@ SimpleTextEditor::SimpleTextEditor(QWidget *parent) :
 
 	setupMenu();
 
+	//
+	// Обновляем пункты меню
+	//
 	connect(this, SIGNAL(currentCharFormatChanged(QTextCharFormat)),
 			this, SLOT(currentCharFormatChanged(QTextCharFormat)));
+	//
+	// Принудительно настраиваем отступы между абзацами и рамки документа
+	//
+	connect(this, &SimpleTextEditor::textChanged, this, &SimpleTextEditor::updateDocumentSpacing);
 
 	//
 	// Подготовить редактор к синхронизации
@@ -94,6 +101,35 @@ void SimpleTextEditor::setZoomRange(int _zoomRange)
 		if (settings.value("simple-editor/zoom-range") != m_zoomRange) {
 			settings.setValue("simple-editor/zoom-range", m_zoomRange);
 		}
+	}
+}
+
+void SimpleTextEditor::updateDocumentSpacing()
+{
+	static bool s_isProcessed = false;
+	if (s_isProcessed == false && document() != 0) {
+		s_isProcessed = true;
+
+		if (document()->rootFrame()->frameFormat().margin() == 0) {
+			QTextFrameFormat frameFormat = document()->rootFrame()->frameFormat();
+			frameFormat.setMargin(6);
+			document()->rootFrame()->setFrameFormat(frameFormat);
+		}
+
+		QTextCursor cursor(document());
+		cursor.beginEditBlock();
+		while (!cursor.atEnd()) {
+			QTextBlockFormat blockFormat = cursor.blockFormat();
+			const QTextCharFormat blockCharFormat = cursor.blockCharFormat();
+			const int lineHeight = QFontMetrics(blockCharFormat.font()).height();
+			blockFormat.setBottomMargin(lineHeight);
+			cursor.setBlockFormat(blockFormat);
+
+			cursor.movePosition((QTextCursor::EndOfBlock));
+			cursor.movePosition((QTextCursor::NextBlock));
+		}
+		cursor.endEditBlock();
+		s_isProcessed = false;
 	}
 }
 
