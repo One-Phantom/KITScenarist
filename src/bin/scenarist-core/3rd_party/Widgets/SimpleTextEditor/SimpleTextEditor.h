@@ -59,11 +59,6 @@ private:
 	 */
 	void setZoomRange(int _zoomRange);
 
-	/**
-	 * @brief Принудительно настраиваем отступы между всеми параграфами и рамки документа
-	 */
-	void updateDocumentSpacing();
-
 private:
 	QAction* actionTextBold;
 	QAction* actionTextUnderline;
