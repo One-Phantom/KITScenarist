@@ -706,11 +706,16 @@ void ScenarioTextCorrector::configure(bool _continueDialogues, bool _correctText
 {
 	if (s_continueDialogues != _continueDialogues) {
 		s_continueDialogues = _continueDialogues;
-	}
+    }
 
-	if (s_correctTextOnPageBreaks != _correctTextOnPageBreaks) {
-		s_correctTextOnPageBreaks = _correctTextOnPageBreaks;
-	}
+    //
+    // FIXME: Отключил из-за плохой реализации
+    //
+    s_correctTextOnPageBreaks = false;
+    Q_UNUSED(_correctTextOnPageBreaks);
+//	if (s_correctTextOnPageBreaks != _correctTextOnPageBreaks) {
+//		s_correctTextOnPageBreaks = _correctTextOnPageBreaks;
+//	}
 }
 
 void ScenarioTextCorrector::removeDecorations(QTextDocument* _document, int _startPosition, int _endPosition)

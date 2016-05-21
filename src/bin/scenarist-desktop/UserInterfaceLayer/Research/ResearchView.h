@@ -80,6 +80,11 @@ namespace UserInterface
 		 */
 		void editImage(const QString& _name, const QPixmap& _image);
 
+        /**
+         * @brief Включить режим редактирования ментальной карты
+         */
+        void editMindMap(const QString& _name, const QString& _xml);
+
 		/**
 		 * @brief Установить режим работы со сценарием
 		 */
@@ -128,7 +133,14 @@ namespace UserInterface
 		void imagesGalleryImageRemoved(const QPixmap& _image, int _sortOrder);
 		void imageNameChanged(const QString& _name);
 		void imagePreviewChanged(const QPixmap& _image);
+        void mindMapNameChanged(const QString& _name);
+        void mindMapChanged(const QString& _xml);
 		/** @{ */
+
+        /**
+         * @brief Элемент был добавлен, или переставлен на другое место в дереве
+         */
+        void researchItemAdded();
 
 	protected:
 		/**

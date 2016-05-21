@@ -654,6 +654,11 @@ void SettingsView::initView()
 	ui->removeTemplate->updateIcons();
 	ui->applyTemplate->updateIcons();
 	ui->templates->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+
+    //
+    // FIXME: Скрываем флажок настройки корректировок на разрывах страниц
+    //
+    ui->autoCorrectionsOnPageBreaks->hide();
 }
 
 void SettingsView::initConnections()

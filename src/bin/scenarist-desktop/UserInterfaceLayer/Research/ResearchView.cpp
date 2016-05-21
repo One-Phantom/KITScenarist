@@ -100,6 +100,7 @@ void ResearchView::setResearchModel(QAbstractItemModel* _model)
 		//
 		connect(m_ui->researchNavigator->selectionModel(), &QItemSelectionModel::selectionChanged,
 				this, &ResearchView::currentResearchChanged);
+        connect(_model, &QAbstractItemModel::rowsInserted, this, &ResearchView::researchItemAdded);
 	}
 }
 
@@ -241,7 +242,17 @@ void ResearchView::editImage(const QString& _name, const QPixmap& _image)
 	m_ui->imagePreview->setImage(_image);
 
 	setResearchManageButtonsVisible(true);
-	setSearchVisible(false);
+    setSearchVisible(false);
+}
+
+void ResearchView::editMindMap(const QString &_name, const QString &_xml)
+{
+    m_ui->researchDataEditsContainer->setCurrentWidget(m_ui->mindMapEdit);
+    m_ui->mindMapName->setText(_name);
+//    m_ui->mindMap->load(_xml);
+
+    setResearchManageButtonsVisible(true);
+    setSearchVisible(false);
 }
 
 void ResearchView::setCommentOnly(bool _isCommentOnly)
@@ -260,6 +271,9 @@ void ResearchView::setCommentOnly(bool _isCommentOnly)
 	m_ui->synopsisText->setReadOnly(_isCommentOnly);
 	m_ui->textName->setReadOnly(_isCommentOnly);
 	m_ui->textDescription->setReadOnly(_isCommentOnly);
+    //
+    // FIXME: остальные редакторы
+    //
 	m_ui->searchWidget->setSearchOnly(_isCommentOnly);
 }
 
@@ -346,7 +360,7 @@ void ResearchView::initConnections()
 		if (_visible) {
 			m_ui->searchWidget->setFocus();
 		}
-	});
+    });
 
 	//
 	// Внутренние соединения формы
@@ -475,6 +489,12 @@ void ResearchView::initConnections()
 	// ... изображение
 	//
 	connect(m_ui->imageName, &QLineEdit::textChanged, this, &ResearchView::imageNameChanged);
+
+    //
+    // ... ментальная карта
+    //
+    connect(m_ui->mindMapName, &QLineEdit::textChanged, this, &ResearchView::mindMapNameChanged);
+//    connect(m_ui->mindMap, &MindMapEdit::mapChanged, this, &ResearchView::mindMapChanged);
 }
 
 void ResearchView::initStyleSheet()
@@ -493,4 +513,9 @@ void ResearchView::initStyleSheet()
 
 	m_ui->researchNavigator->setProperty("mainContainer", true);
 	m_ui->researchDataEditsContainer->setProperty("mainContainer", true);
+
+    m_ui->textName->setProperty("editableLabel", true);
+    m_ui->urlName->setProperty("editableLabel", true);
+    m_ui->imagesGalleryName->setProperty("editableLabel", true);
+    m_ui->imageName ->setProperty("editableLabel", true);
 }
