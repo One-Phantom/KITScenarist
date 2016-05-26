@@ -8,6 +8,7 @@ namespace Ui {
 }
 
 class QAbstractItemModel;
+class QUndoStack;
 
 
 namespace UserInterface
@@ -83,7 +84,7 @@ namespace UserInterface
         /**
          * @brief Включить режим редактирования ментальной карты
          */
-        void editMindMap(const QString& _name, const QString& _xml);
+        void editMindMap(const QString& _name, const QString& _xml, int _id);
 
 		/**
 		 * @brief Установить режим работы со сценарием
@@ -198,6 +199,11 @@ namespace UserInterface
 		 * @note Используется для восстановления положения прокрутки при возвращении к заданному тексту
 		 */
 		QHash<QString, int> m_textScrollingMap;
+
+        /**
+         * @brief Карта стеков отмены последнего действия для редактора ментальных карт
+         */
+        QHash<int, QUndoStack*> m_mindMapUndoStacks;
 	};
 }
 

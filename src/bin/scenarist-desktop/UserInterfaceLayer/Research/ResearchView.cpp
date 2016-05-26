@@ -245,11 +245,25 @@ void ResearchView::editImage(const QString& _name, const QPixmap& _image)
     setSearchVisible(false);
 }
 
-void ResearchView::editMindMap(const QString &_name, const QString &_xml)
+void ResearchView::editMindMap(const QString &_name, const QString &_xml, int _id)
 {
     m_ui->researchDataEditsContainer->setCurrentWidget(m_ui->mindMapEdit);
     m_ui->mindMapName->setText(_name);
-//    m_ui->mindMap->load(_xml);
+
+    m_ui->mindMap->closeScene();
+    if (_xml.isEmpty()) {
+        m_ui->mindMap->newScene();
+    } else {
+        m_ui->mindMap->load(_xml);
+    }
+
+    //
+    // Загрузим стек отмены последнего действия для этой карты
+    //
+    if (!m_mindMapUndoStacks.contains(_id)) {
+        m_mindMapUndoStacks[_id] = new QUndoStack(this);
+    }
+    m_ui->mindMap->graphLogic()->setUndoStack(m_mindMapUndoStacks[_id]);
 
     setResearchManageButtonsVisible(true);
     setSearchVisible(false);
@@ -494,7 +508,9 @@ void ResearchView::initConnections()
     // ... ментальная карта
     //
     connect(m_ui->mindMapName, &QLineEdit::textChanged, this, &ResearchView::mindMapNameChanged);
-//    connect(m_ui->mindMap, &MindMapEdit::mapChanged, this, &ResearchView::mindMapChanged);
+    connect(m_ui->mindMap, &GraphWidget::contentChanged, [=] {
+        emit mindMapChanged(m_ui->mindMap->save());
+    });
 }
 
 void ResearchView::initStyleSheet()
@@ -517,5 +533,6 @@ void ResearchView::initStyleSheet()
     m_ui->textName->setProperty("editableLabel", true);
     m_ui->urlName->setProperty("editableLabel", true);
     m_ui->imagesGalleryName->setProperty("editableLabel", true);
-    m_ui->imageName ->setProperty("editableLabel", true);
+    m_ui->imageName->setProperty("editableLabel", true);
+    m_ui->mindMapName->setProperty("editableLabel", true);
 }

@@ -210,7 +210,7 @@ void ResearchManager::editResearch(const QModelIndex& _index)
 
 				case Research::Folder:
 				case Research::Text: {
-					m_view->editText(research->name(), research->description());
+                    m_view->editText(research->name(), research->description());
 					break;
 				}
 
@@ -239,7 +239,7 @@ void ResearchManager::editResearch(const QModelIndex& _index)
 				}
 
                 case Research::MindMap: {
-                    m_view->editMindMap(research->name(), research->description());
+                    m_view->editMindMap(research->name(), research->description(), research->id().value());
                     break;
                 }
 			}

@@ -135,4 +135,15 @@
         <file>Templates/default.kitss</file>
         <file>Templates/mobile.kitss</file>
     </qresource>
+    <qresource prefix="/MindMap">
+        <file>QtMindMap/applications-system.svg</file>
+        <file>QtMindMap/dialog-information.svg</file>
+        <file>QtMindMap/dialog-warning.svg</file>
+        <file>QtMindMap/help-browser.svg</file>
+        <file>QtMindMap/mail-attachment.svg</file>
+        <file>QtMindMap/qtmindmap.svg</file>
+        <file>QtMindMap/system-users.svg</file>
+        <file>QtMindMap/user-trash-full.svg</file>
+        <file>QtMindMap/x-office-calendar.svg</file>
+    </qresource>
 </RCC>

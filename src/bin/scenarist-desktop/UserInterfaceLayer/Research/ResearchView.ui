@@ -552,7 +552,7 @@
             </widget>
            </item>
            <item row="1" column="0">
-            <widget class="QWidget" name="mindMap" native="true"/>
+            <widget class="GraphWidget" name="mindMap" native="true"/>
            </item>
           </layout>
          </widget>
@@ -600,6 +600,12 @@
    <class>SearchWidget</class>
    <extends>QFrame</extends>
    <header location="global">3rd_party/Widgets/SearchWidget/SearchWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>GraphWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">3rd_party/Widgets/QtMindMap/include/graphwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
