@@ -14,7 +14,7 @@ const double Node::m_pi = 3.14159265358979323846264338327950288419717;
 const double Node::m_oneAndHalfPi = Node::m_pi * 1.5;
 const double Node::m_twoPi = Node::m_pi * 2.0;
 
-const QColor Node::m_blue(50, 141, 255);
+const QColor Node::m_blue(57, 118, 254);
 
 Node::Node(GraphLogic *graphLogic)
     : m_graphLogic(graphLogic)
@@ -22,13 +22,13 @@ Node::Node(GraphLogic *graphLogic)
     , m_hasBorder(false)
     , m_numberIsSpecial(false)
     , m_color(m_blue)
-    , m_textColor(QApplication::palette().text().color())
+    , m_textColor(Qt::white)
     , m_effect(new QGraphicsDropShadowEffect(this))
 {
     setFlag(ItemIsMovable);
     setFlag(ItemSendsGeometryChanges);
     setCacheMode(DeviceCoordinateCache);
-    setDefaultTextColor(QApplication::palette().text().color());
+    setDefaultTextColor(Qt::white);
     setZValue(2);
     setGraphicsEffect(m_effect);
     m_effect->setEnabled(false);

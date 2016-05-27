@@ -57,8 +57,7 @@ class QPagedPaintDevice;
 
 class PageTextEdit : public QAbstractScrollArea
 {
-	Q_OBJECT
-	Q_DECLARE_PRIVATE(PageTextEdit)
+    Q_OBJECT
 	Q_FLAGS(AutoFormatting)
 	Q_PROPERTY(AutoFormatting autoFormatting READ autoFormatting WRITE setAutoFormatting)
 	Q_PROPERTY(bool tabChangesFocus READ tabChangesFocus WRITE setTabChangesFocus)
@@ -310,12 +309,17 @@ protected:
 	void zoomInF(float range);
 
 private:
+    Q_DECLARE_PRIVATE(PageTextEdit)
 	Q_DISABLE_COPY(PageTextEdit)
-	Q_PRIVATE_SLOT(d_func(), void _q_repaintContents(const QRectF &r))
-	Q_PRIVATE_SLOT(d_func(), void _q_currentCharFormatChanged(const QTextCharFormat &))
-	Q_PRIVATE_SLOT(d_func(), void _q_adjustScrollbars())
-	Q_PRIVATE_SLOT(d_func(), void _q_ensureVisible(const QRectF &))
-	Q_PRIVATE_SLOT(d_func(), void _q_cursorPositionChanged())
+    //
+    // FIXME: Нужно разобраться, как заставить это собираться без ручного ввода заголовочного файла
+    //        приватной части класса
+    //
+    Q_PRIVATE_SLOT(d_func(), void _q_repaintContents(const QRectF &r))
+    Q_PRIVATE_SLOT(d_func(), void _q_currentCharFormatChanged(const QTextCharFormat &))
+    Q_PRIVATE_SLOT(d_func(), void _q_adjustScrollbars())
+    Q_PRIVATE_SLOT(d_func(), void _q_ensureVisible(const QRectF &))
+    Q_PRIVATE_SLOT(d_func(), void _q_cursorPositionChanged())
 	friend class PageTextEditControl;
 	friend class QTextDocument;
 	friend class QWidgetTextControl;

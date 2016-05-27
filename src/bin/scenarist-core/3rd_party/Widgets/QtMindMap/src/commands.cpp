@@ -96,6 +96,51 @@ void InsertNodeCommand::redo()
     m_done = true;
 }
 
+InsertRootNodeCommand::InsertRootNodeCommand(UndoContext context)
+    : BaseUndoClass(context)
+{
+    setText(QObject::tr("Node added to scene"));
+
+    m_context.m_graphLogic->nodeLostFocus();
+
+    m_node = m_context.m_graphLogic->nodeFactory();
+    m_node->setHtml(QString(""));
+}
+
+InsertRootNodeCommand::~InsertRootNodeCommand()
+{
+    if (!m_done)
+    {
+        delete m_node;
+    }
+}
+
+void InsertRootNodeCommand::undo()
+{
+    // remove node
+    m_context.m_nodeList->removeAll(m_node);
+    m_context.m_graphLogic->graphWidget()->scene()->removeItem(m_node);
+    m_context.m_graphLogic->setActiveNode(m_activeNode);
+
+    m_context.m_graphLogic->reShowNumbers();
+    m_done = false;
+}
+
+void InsertRootNodeCommand::redo()
+{
+    // add node
+    m_context.m_graphLogic->graphWidget()->scene()->addItem(m_node);
+    m_context.m_nodeList->append(m_node);
+    m_node->setPos(m_context.m_pos);
+    m_context.m_graphLogic->setActiveNode(m_node);
+
+    if (m_context.m_graphLogic->graphWidget()->hasFocus())
+        m_context.m_graphLogic->nodeEdited();
+
+    m_context.m_graphLogic->reShowNumbers();
+    m_done = true;
+}
+
 RemoveNodeCommand::RemoveNodeCommand(UndoContext context)
     : BaseUndoClass(context)
     , m_hintNode(context.m_hintNode)

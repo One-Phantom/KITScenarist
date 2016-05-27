@@ -511,6 +511,17 @@ void ResearchView::initConnections()
     connect(m_ui->mindMap, &GraphWidget::contentChanged, [=] {
         emit mindMapChanged(m_ui->mindMap->save());
     });
+    //
+    // ... панель инструментов редактора ментальных карт
+    //
+    connect(m_ui->addRootNode, &FlatButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::insertRootNode);
+    connect(m_ui->addNode, &FlatButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::insertNode);
+    connect(m_ui->addSiblingNode, &FlatButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::insertSiblingNode);
+    connect(m_ui->deleteNode, &FlatButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::removeNode);
+//    connect(m_ui->addEdge, &FlatButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::addEdge);
+//    connect(m_ui->deleteEdge, &FlatButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::removeEdge);
+    connect(m_ui->nodeTextColor, &FlatButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::nodeTextColor);
+    connect(m_ui->nodeBackgroundColor, &FlatButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::nodeColor);
 }
 
 void ResearchView::initStyleSheet()
@@ -521,11 +532,21 @@ void ResearchView::initStyleSheet()
 	m_ui->topNavigatorEndLabel->setProperty("topPanelTopBordered", true);
 	m_ui->topDataLabel->setProperty("inTopPanel", true);
 	m_ui->topDataLabel->setProperty("topPanelTopBordered", true);
+    m_ui->topMindMapToolbarLabel->setProperty("inTopPanel", true);
+    m_ui->topMindMapToolbarLabel->setProperty("topPanelTopBordered", true);
 
 	m_ui->addResearchItem->setProperty("inTopPanel", true);
 	m_ui->removeResearchItem->setProperty("inTopPanel", true);
 
 	m_ui->search->setProperty("inTopPanel", true);
+
+    m_ui->addNode->setProperty("inTopPanel", true);
+    m_ui->addRootNode->setProperty("inTopPanel", true);
+    m_ui->deleteNode->setProperty("inTopPanel", true);
+    m_ui->addEdge->setProperty("inTopPanel", true);
+    m_ui->deleteEdge->setProperty("inTopPanel", true);
+    m_ui->nodeTextColor->setProperty("inTopPanel", true);
+    m_ui->nodeBackgroundColor->setProperty("inTopPanel", true);
 
 	m_ui->researchNavigator->setProperty("mainContainer", true);
 	m_ui->researchDataEditsContainer->setProperty("mainContainer", true);
@@ -535,4 +556,6 @@ void ResearchView::initStyleSheet()
     m_ui->imagesGalleryName->setProperty("editableLabel", true);
     m_ui->imageName->setProperty("editableLabel", true);
     m_ui->mindMapName->setProperty("editableLabel", true);
+
+    m_ui->mindMapToolbar->setStyleSheet("#mindMapToolbar { border-top: none; border-bottom: none; }");
 }

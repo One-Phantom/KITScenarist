@@ -24,18 +24,9 @@ GraphLogic::GraphLogic(GraphWidget *parent)
     m_memberMap.insert(std::pair<int, void(GraphLogic::*)()>
                        (Qt::Key_Delete, &GraphLogic::removeNode));
     m_memberMap.insert(std::pair<int, void(GraphLogic::*)()>
-                       (Qt::Key_F2, &GraphLogic::nodeEdited));
-
+                       (Qt::Key_Enter, &GraphLogic::nodeEdited));
     m_memberMap.insert(std::pair<int, void(GraphLogic::*)()>
-                       (Qt::Key_C, &GraphLogic::nodeColor));
-    m_memberMap.insert(std::pair<int, void(GraphLogic::*)()>
-                       (Qt::Key_T, &GraphLogic::nodeTextColor));
-    m_memberMap.insert(std::pair<int, void(GraphLogic::*)()>
-                       (Qt::Key_A, &GraphLogic::addEdge));
-    m_memberMap.insert(std::pair<int, void(GraphLogic::*)()>
-                       (Qt::Key_D, &GraphLogic::removeEdge));
-    m_memberMap.insert(std::pair<int, void(GraphLogic::*)()>
-                       (Qt::Key_F, &GraphLogic::hintMode));
+                       (Qt::Key_Return, &GraphLogic::nodeEdited));
 
     m_memberMap.insert(std::pair<int, void(GraphLogic::*)()>
                        (Qt::Key_Up, &GraphLogic::moveNodeUp));
@@ -45,13 +36,6 @@ GraphLogic::GraphLogic(GraphWidget *parent)
                        (Qt::Key_Left, &GraphLogic::moveNodeLeft));
     m_memberMap.insert(std::pair<int, void(GraphLogic::*)()>
                        (Qt::Key_Right, &GraphLogic::moveNodeRight));
-
-    m_memberMap.insert(std::pair<int, void(GraphLogic::*)()>
-                       (Qt::Key_Backspace, &GraphLogic::delNumber));
-    m_memberMap.insert(std::pair<int, void(GraphLogic::*)()>
-                       (Qt::Key_Return, &GraphLogic::applyNumber));
-    m_memberMap.insert(std::pair<int, void(GraphLogic::*)()>
-                       (Qt::Key_Enter, &GraphLogic::applyNumber));
 }
 
 GraphWidget *GraphLogic::graphWidget() const
@@ -96,6 +80,16 @@ bool GraphLogic::processKeyEvent(QKeyEvent *event)
     {
         /// @todo remove magic number
         appendNumber(event->key()-48);
+        return true;
+    }
+
+    if (event == QKeySequence::Undo) {
+        m_undoStack->undo();
+        return true;
+    }
+
+    if (event == QKeySequence::Redo) {
+        m_undoStack->redo();
         return true;
     }
 
@@ -338,6 +332,11 @@ Node * GraphLogic::nodeFactory()
     return node;
 }
 
+Node* GraphLogic::activeNode() const
+{
+    return m_activeNode;
+}
+
 void GraphLogic::setActiveNode(Node *node)
 {
     if (m_activeNode!=0)
@@ -357,6 +356,46 @@ void GraphLogic::reShowNumbers()
 {
     if (m_showingNodeNumbers)
         showNodeNumbers();
+}
+
+void GraphLogic::insertRootNode()
+{
+    // checks
+    if (!m_activeNode)
+    {
+        emit notification(tr("No active node."));
+        return;
+    }
+
+    // get the biggest angle between the edges of the Node.
+    double angle(m_activeNode->calculateBiggestAngle());
+
+    // let the distance between the current and new Node be 100 pixels
+    qreal length(100);
+
+    QPointF pos(m_activeNode->sceneBoundingRect().center() +
+                 QPointF(length * cos(angle), length * sin(angle)) -
+                 Node::newNodeCenter);
+
+    QRectF rect (m_graphWidget->scene()->sceneRect().topLeft(),
+                 m_graphWidget->scene()->sceneRect().bottomRight()
+                 - Node::newNodeBottomRigth);
+
+    if (!rect.contains(pos))
+    {
+        emit notification(tr("New node would be placed outside of the scene."));
+        return;
+    }
+
+    UndoContext context;
+    context.m_graphLogic = this;
+    context.m_nodeList = &m_nodeList;
+    context.m_activeNode = m_activeNode;
+    context.m_pos = pos;
+
+
+    QUndoCommand *insertRootNodeCommand = new InsertRootNodeCommand(context);
+    m_undoStack->push(insertRootNodeCommand);
 }
 
 void GraphLogic::insertNode()
@@ -397,6 +436,38 @@ void GraphLogic::insertNode()
 
     QUndoCommand *insertNodeCommand = new InsertNodeCommand(context);
     m_undoStack->push(insertNodeCommand);
+}
+
+void GraphLogic::insertSiblingNode()
+{
+    if (!m_activeNode)
+    {
+        emit notification(tr("No active node"));
+        return;
+    }
+
+    // find parent
+    Node* parentNode = 0;
+    foreach (Edge* edge, m_activeNode->edges()) {
+        if (edge->destNode() == m_activeNode) {
+            parentNode = edge->sourceNode();
+            break;
+        }
+    }
+
+    if (!parentNode) {
+        emit notification(tr("Node hasn't parent for add sibling node"));
+        return;
+    }
+
+    // turn off editing mode
+    if (m_editingNode) {
+        nodeLostFocus();
+    }
+    // select parent node
+    selectNode(parentNode);
+    // insert sibling
+    insertNode();
 }
 
 void GraphLogic::removeNode()

@@ -37,6 +37,7 @@ public:
     void writeContentToPngFile(const QString &fileName);
 
     Node *nodeFactory();
+    Node* activeNode() const;
     void setActiveNode(Node *node);
     void setHintNode(Node *node);
     void reShowNumbers();
@@ -46,7 +47,9 @@ public:
 public slots:
 
     // commands from toolbars:
+    void insertRootNode();  // undo command
     void insertNode();      // undo command
+    void insertSiblingNode(); // undo command
     void removeNode();      // undo command
     void nodeEdited();      /// @todo Rewrite as an undo action
     void scaleUp();         // undo command

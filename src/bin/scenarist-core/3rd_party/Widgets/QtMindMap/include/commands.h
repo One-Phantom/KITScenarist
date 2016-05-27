@@ -93,6 +93,22 @@ private:
     Edge *m_edge;
 };
 
+class InsertRootNodeCommand : public BaseUndoClass
+{
+
+public:
+
+    InsertRootNodeCommand(UndoContext context);
+    ~InsertRootNodeCommand();
+
+    void undo();
+    void redo();
+
+private:
+
+    Node *m_node;
+};
+
 class RemoveNodeCommand : public BaseUndoClass
 {
 
