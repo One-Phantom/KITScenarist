@@ -43,9 +43,9 @@ void LocationsDataEditManager::editLocation(Location* _location)
 		m_editor->setName(m_location->name());
 		m_editor->setDescription(m_location->description());
 		m_editor->setPhotos(m_location->photos());
-	} else {
-		clean();
-	}
+    } else {
+        clean();
+    }
 }
 
 void LocationsDataEditManager::setCommentOnly(bool _isCommentOnly)

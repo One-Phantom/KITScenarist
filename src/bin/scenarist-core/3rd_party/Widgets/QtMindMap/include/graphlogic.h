@@ -24,7 +24,6 @@ public:
 
     explicit GraphLogic(GraphWidget *parent = 0);
     GraphWidget *graphWidget() const;
-    void setUndoStack(QUndoStack *stack);
 
     bool processKeyEvent(QKeyEvent *event);
     void addFirstNode();

@@ -18,6 +18,7 @@ GraphLogic::GraphLogic(GraphWidget *parent)
     , m_editingNode(false)
     , m_edgeAdding(false)
     , m_edgeDeleting(false)
+    , m_undoStack(new QUndoStack(this))
 {
     m_memberMap.insert(std::pair<int, void(GraphLogic::*)()>
                        (Qt::Key_Insert, &GraphLogic::insertNode));
@@ -41,11 +42,6 @@ GraphLogic::GraphLogic(GraphWidget *parent)
 GraphWidget *GraphLogic::graphWidget() const
 {
     return m_graphWidget;
-}
-
-void GraphLogic::setUndoStack(QUndoStack *stack)
-{
-    m_undoStack = stack;
 }
 
 bool GraphLogic::processKeyEvent(QKeyEvent *event)
@@ -125,6 +121,8 @@ void GraphLogic::removeAllNodes()
 
 bool GraphLogic::readContentFromXml(const QString& _xml)
 {
+    m_undoStack->clear();
+
     // open & parse XML file
     QDomDocument doc("QtMindMap");
     if (!doc.setContent(_xml))
@@ -157,6 +155,7 @@ bool GraphLogic::readContentFromXml(const QString& _xml)
         if(!e.isNull())
         {
             Node *node = nodeFactory();
+            node->disconnect(node, SIGNAL(nodeChanged()), this, SLOT(nodeChanged()));
             m_graphWidget->scene()->addItem(node);
             m_nodeList.append(node);
             node->setHtml(e.attribute("htmlContent"));
@@ -170,6 +169,7 @@ bool GraphLogic::readContentFromXml(const QString& _xml)
             node->setTextColor(QColor(e.attribute("text_red").toFloat(),
                                       e.attribute("text_green").toFloat(),
                                       e.attribute("text_blue").toFloat()));
+            node->connect(node, SIGNAL(nodeChanged()), this, SLOT(nodeChanged()));
         }
     }
 
@@ -197,12 +197,15 @@ bool GraphLogic::readContentFromXml(const QString& _xml)
         }
     }
 
+    emit contentChanged();
+
     // test the first node the active one
     m_activeNode = m_nodeList.first();
     m_activeNode->setBorder();
     m_activeNode->setFocus();
 
     m_graphWidget->show();
+
     return true;
 }
 
@@ -808,6 +811,7 @@ void GraphLogic::selectNode(Node *node)
     {
         addEdge(m_activeNode, node);
         m_edgeAdding = false;
+        emit contentChanged();
     }
     else if (m_edgeDeleting && m_activeNode != 0)
     {

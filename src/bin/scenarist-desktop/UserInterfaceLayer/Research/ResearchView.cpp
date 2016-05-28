@@ -257,14 +257,6 @@ void ResearchView::editMindMap(const QString &_name, const QString &_xml, int _i
         m_ui->mindMap->load(_xml);
     }
 
-    //
-    // Загрузим стек отмены последнего действия для этой карты
-    //
-    if (!m_mindMapUndoStacks.contains(_id)) {
-        m_mindMapUndoStacks[_id] = new QUndoStack(this);
-    }
-    m_ui->mindMap->graphLogic()->setUndoStack(m_mindMapUndoStacks[_id]);
-
     setResearchManageButtonsVisible(true);
     setSearchVisible(false);
 }
@@ -518,8 +510,8 @@ void ResearchView::initConnections()
     connect(m_ui->addNode, &FlatButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::insertNode);
     connect(m_ui->addSiblingNode, &FlatButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::insertSiblingNode);
     connect(m_ui->deleteNode, &FlatButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::removeNode);
-//    connect(m_ui->addEdge, &FlatButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::addEdge);
-//    connect(m_ui->deleteEdge, &FlatButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::removeEdge);
+    connect(m_ui->addEdge, &FlatButton::clicked, m_ui->mindMap->graphLogic(), static_cast<void (GraphLogic::*)()>(&GraphLogic::addEdge));
+    connect(m_ui->deleteEdge, &FlatButton::clicked, m_ui->mindMap->graphLogic(), static_cast<void (GraphLogic::*)()>(&GraphLogic::removeEdge));
     connect(m_ui->nodeTextColor, &FlatButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::nodeTextColor);
     connect(m_ui->nodeBackgroundColor, &FlatButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::nodeColor);
 }
@@ -532,16 +524,19 @@ void ResearchView::initStyleSheet()
 	m_ui->topNavigatorEndLabel->setProperty("topPanelTopBordered", true);
 	m_ui->topDataLabel->setProperty("inTopPanel", true);
 	m_ui->topDataLabel->setProperty("topPanelTopBordered", true);
-    m_ui->topMindMapToolbarLabel->setProperty("inTopPanel", true);
-    m_ui->topMindMapToolbarLabel->setProperty("topPanelTopBordered", true);
+    m_ui->topMindMapToolbarLabelLeft->setProperty("inTopPanel", true);
+    m_ui->topMindMapToolbarLabelLeft->setProperty("topPanelLeftBordered", true);
+    m_ui->topMindMapToolbarLabelRight->setProperty("topPanelTopBordered", true);
+    m_ui->topMindMapToolbarLabelRight->setProperty("topPanelRightBordered", true);
 
 	m_ui->addResearchItem->setProperty("inTopPanel", true);
 	m_ui->removeResearchItem->setProperty("inTopPanel", true);
 
 	m_ui->search->setProperty("inTopPanel", true);
 
-    m_ui->addNode->setProperty("inTopPanel", true);
     m_ui->addRootNode->setProperty("inTopPanel", true);
+    m_ui->addNode->setProperty("inTopPanel", true);
+    m_ui->addSiblingNode->setProperty("inTopPanel", true);
     m_ui->deleteNode->setProperty("inTopPanel", true);
     m_ui->addEdge->setProperty("inTopPanel", true);
     m_ui->deleteEdge->setProperty("inTopPanel", true);
@@ -556,6 +551,4 @@ void ResearchView::initStyleSheet()
     m_ui->imagesGalleryName->setProperty("editableLabel", true);
     m_ui->imageName->setProperty("editableLabel", true);
     m_ui->mindMapName->setProperty("editableLabel", true);
-
-    m_ui->mindMapToolbar->setStyleSheet("#mindMapToolbar { border-top: none; border-bottom: none; }");
 }

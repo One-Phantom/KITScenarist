@@ -558,12 +558,6 @@
              </property>
              <item>
               <widget class="QFrame" name="mindMapToolbar">
-               <property name="frameShape">
-                <enum>QFrame::StyledPanel</enum>
-               </property>
-               <property name="frameShadow">
-                <enum>QFrame::Raised</enum>
-               </property>
                <layout class="QHBoxLayout" name="horizontalLayout">
                 <property name="spacing">
                  <number>0</number>
@@ -580,6 +574,31 @@
                 <property name="bottomMargin">
                  <number>0</number>
                 </property>
+                <item>
+                 <widget class="QLabel" name="topMindMapToolbarLabelLeft">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>1</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>1</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
                 <item>
                  <widget class="FlatButton" name="addRootNode">
                   <property name="text">
@@ -645,7 +664,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLabel" name="topMindMapToolbarLabel">
+                 <widget class="QLabel" name="topMindMapToolbarLabelRight">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                     <horstretch>0</horstretch>
