@@ -13,7 +13,6 @@ struct UndoContext
 {
     GraphLogic *m_graphLogic;
     Node *m_activeNode;
-    Node *m_hintNode;
     QList <Node *> *m_nodeList;
     QPointF m_pos;
     QColor m_color;
@@ -40,7 +39,6 @@ struct UndoContext
                 qreal scale = 0)
         : m_graphLogic(graphLogic)
         , m_activeNode(activeNode)
-        , m_hintNode(hintNode)
         , m_nodeList(nodeList)
         , m_pos(pos)
         , m_color(color)

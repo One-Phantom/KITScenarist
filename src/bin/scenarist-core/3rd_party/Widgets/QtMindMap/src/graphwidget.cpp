@@ -159,8 +159,7 @@ void GraphWidget::gestureEvent(QGestureEvent *_event)
     }
 }
 
-// MainWindow::keyPressEvent passes all keyevent to here, except
-// Ctrl + m (show/hide mainToolBar) and Ctrl + i (show/hide statusIconsToolbar)
+// MainWindow::keyPressEvent passes all keyevent to here
 void GraphWidget::keyPressEvent(QKeyEvent *_event)
 {
     // if GraphLogic handles the event then stop.

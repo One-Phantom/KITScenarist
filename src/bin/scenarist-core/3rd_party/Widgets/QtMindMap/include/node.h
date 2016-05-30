@@ -99,9 +99,7 @@ private:
 
     QList<EdgeElement> m_edgeList;
     GraphLogic *m_graphLogic;
-    int m_number;
     bool m_hasBorder;
-    bool m_numberIsSpecial;
     QColor m_color;
     QColor m_textColor;
     QGraphicsDropShadowEffect *m_effect;

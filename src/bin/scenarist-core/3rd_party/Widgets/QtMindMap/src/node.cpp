@@ -18,9 +18,7 @@ const QColor Node::m_blue(57, 118, 254);
 
 Node::Node(GraphLogic *graphLogic)
     : m_graphLogic(graphLogic)
-    , m_number(-1)
     , m_hasBorder(false)
-    , m_numberIsSpecial(false)
     , m_color(m_blue)
     , m_textColor(Qt::white)
     , m_effect(new QGraphicsDropShadowEffect(this))
@@ -238,15 +236,6 @@ void Node::setScale(const qreal &factor,const QRectF &sceneRect)
     }
 }
 
-void Node::showNumber(const int &number,
-                      const bool& show,
-                      const bool &numberIsSpecial)
-{
-    m_number = show ? number : -1;
-    m_numberIsSpecial = numberIsSpecial;
-    update();
-}
-
 void Node::insertPicture(const QString &picture)
 {
     QTextCursor c = textCursor();
@@ -339,6 +328,10 @@ double Node::calculateBiggestAngle() const
 void Node::keyPressEvent(QKeyEvent *event)
 {
     // cursor movements
+    const QTextCursor::MoveMode moveMode =
+        event->modifiers() & Qt::ShiftModifier
+        ? QTextCursor::KeepAnchor
+        : QTextCursor::MoveAnchor;
     switch (event->key()) {
 
     case Qt::Key_Left:
@@ -347,7 +340,7 @@ void Node::keyPressEvent(QKeyEvent *event)
         c.movePosition(
                     event->modifiers() == Qt::ControlModifier ?
                     QTextCursor::PreviousWord :
-                    QTextCursor::PreviousCharacter);
+                    QTextCursor::PreviousCharacter, moveMode);
         setTextCursor(c);
         break;
     }
@@ -357,21 +350,21 @@ void Node::keyPressEvent(QKeyEvent *event)
         c.movePosition(
                     event->modifiers() == Qt::ControlModifier ?
                     QTextCursor::NextWord :
-                    QTextCursor::NextCharacter);
+                    QTextCursor::NextCharacter, moveMode);
         setTextCursor(c);
         break;
     }
     case Qt::Key_Up:
     {
         QTextCursor c = textCursor();
-        c.movePosition(QTextCursor::Up);
+        c.movePosition(QTextCursor::Up, moveMode);
         setTextCursor(c);
         break;
     }
     case Qt::Key_Down:
     {
         QTextCursor c = textCursor();
-        c.movePosition(QTextCursor::Down);
+        c.movePosition(QTextCursor::Down, moveMode);
         setTextCursor(c);
         break;
     }
@@ -385,6 +378,10 @@ void Node::keyPressEvent(QKeyEvent *event)
         emit nodeChanged();
     }
 
+    if (!event->text().isEmpty()) {
+        update();
+    }
+
     ///@note leaving editing mode is done with esc, handled by graphwidget
 }
 
@@ -392,58 +389,34 @@ void Node::paint(QPainter *painter,
                  const QStyleOptionGraphicsItem *option,
                  QWidget *w)
 {
-    // draw background in hint mode. num == -1 : not in hint mode
-    // if m_numberIsSpecial (can be selected with enter) bg is green, not yellow
-    if (m_number != -1)
-    {
-        painter->setPen(Qt::transparent);
-        painter->setBrush(m_numberIsSpecial ? Qt::green : Qt::yellow);
+    painter->setPen(Qt::transparent);
+    if (m_hasBorder) {
+        //
+        // Рисуем рамку областью, т.к. родная рисуется коряво
+        //
+        painter->setBrush(QApplication::palette().text());
+        QRectF borderRect = boundingRect();
+        painter->drawRoundedRect(borderRect, 6.0, 6.0);
+
+        //
+        // Сужаем область отрисовки фона
+        //
+        painter->setBrush(m_color);
+        QRectF bodyRect = boundingRect();
+        bodyRect.moveTop(bodyRect.top() + 1);
+        bodyRect.moveLeft(bodyRect.left() + 1);
+        bodyRect.setWidth(bodyRect.width() - 2);
+        bodyRect.setHeight(bodyRect.height() - 2);
+        painter->drawRoundedRect(bodyRect, 6.0, 6.0);
+    } else {
+        painter->setBrush(m_color);
         painter->drawRoundedRect(boundingRect(), 6.0, 6.0);
-    }
-    else
-    {
-        painter->setPen(Qt::transparent);
-
-        if (m_hasBorder) {
-            //
-            // Рисуем рамку областью, т.к. родная рисуется коряво
-            //
-            painter->setBrush(QApplication::palette().text());
-            QRectF borderRect = boundingRect();
-            painter->drawRoundedRect(borderRect, 6.0, 6.0);
-
-            //
-            // Сужаем область отрисовки фона
-            //
-            painter->setBrush(m_color);
-            QRectF bodyRect = boundingRect();
-            bodyRect.moveTop(bodyRect.top() + 1);
-            bodyRect.moveLeft(bodyRect.left() + 1);
-            bodyRect.setWidth(bodyRect.width() - 2);
-            bodyRect.setHeight(bodyRect.height() - 2);
-            painter->drawRoundedRect(bodyRect, 6.0, 6.0);
-        } else {
-            painter->setBrush(m_color);
-            painter->drawRoundedRect(boundingRect(), 6.0, 6.0);
-        }
-
     }
     painter->setBrush(Qt::NoBrush);
 
     // the text itself
     setDefaultTextColor(m_textColor);
     QGraphicsTextItem::paint(painter, option, w);
-
-
-    // print num to topleft corner in hint mode.
-    if (m_number != -1)
-    {
-        painter->setPen(Qt::white);
-        painter->setBackground(Qt::red);
-        painter->setBackgroundMode(Qt::OpaqueMode);
-        painter->drawText(boundingRect().topLeft()+QPointF(0,11),
-                          QString("%1").arg(m_number));
-    }
 }
 
 QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)

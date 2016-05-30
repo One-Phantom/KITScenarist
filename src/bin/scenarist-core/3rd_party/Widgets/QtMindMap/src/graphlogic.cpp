@@ -12,9 +12,6 @@ GraphLogic::GraphLogic(GraphWidget *parent)
     : QObject(parent)
     , m_graphWidget(parent)
     , m_activeNode(0)
-    , m_showingNodeNumbers(false)
-    , m_hintNumber("")
-    , m_hintNode(0)
     , m_editingNode(false)
     , m_edgeAdding(false)
     , m_edgeDeleting(false)
@@ -71,14 +68,6 @@ bool GraphLogic::processKeyEvent(QKeyEvent *event)
         return true;
     }
 
-    if (m_showingNodeNumbers &&
-            event->key() >= Qt::Key_0 && event->key() <= Qt::Key_9)
-    {
-        /// @todo remove magic number
-        appendNumber(event->key()-48);
-        return true;
-    }
-
     if (event == QKeySequence::Undo) {
         m_undoStack->undo();
         return true;
@@ -86,6 +75,13 @@ bool GraphLogic::processKeyEvent(QKeyEvent *event)
 
     if (event == QKeySequence::Redo) {
         m_undoStack->redo();
+        return true;
+    }
+
+    if ((event->key() == Qt::Key_Enter || event->key() == Qt::Key_Return) &&
+        event->modifiers() & Qt::ControlModifier)
+    {
+        insertSiblingNode();
         return true;
     }
 
@@ -350,17 +346,6 @@ void GraphLogic::setActiveNode(Node *node)
         m_activeNode->setBorder();
 }
 
-void GraphLogic::setHintNode(Node *node)
-{
-    m_hintNode = node;
-}
-
-void GraphLogic::reShowNumbers()
-{
-    if (m_showingNodeNumbers)
-        showNodeNumbers();
-}
-
 void GraphLogic::insertRootNode()
 {
     // checks
@@ -491,7 +476,6 @@ void GraphLogic::removeNode()
     context.m_graphLogic = this;
     context.m_nodeList = &m_nodeList;
     context.m_activeNode = m_activeNode;
-    context.m_hintNode = m_hintNode;
 
     QUndoCommand *insertNodeCommand = new RemoveNodeCommand(context);
     m_undoStack->push(insertNodeCommand);
@@ -636,21 +620,6 @@ void GraphLogic::removeEdge()
     m_edgeDeleting = true;
 }
 
-void GraphLogic::hintMode()
-{
-    // vimperator-style node selection with keys.
-    // show or hide the numbers if we enter/leave this mode.
-    m_showingNodeNumbers = !m_showingNodeNumbers;
-    if (!m_showingNodeNumbers)
-    {
-        showingAllNodeNumbers(false);
-        return;
-    }
-
-    m_hintNumber.clear();
-    showNodeNumbers();
-}
-
 void GraphLogic::insertPicture(const QString &picture)
 {
     if (!m_activeNode)
@@ -717,14 +686,6 @@ void GraphLogic::nodeLostFocus()
         emit notification(tr("Edge deleting cancelled."));
         return;
     }
-
-    if(m_showingNodeNumbers)
-    {
-        m_hintNumber.clear();
-        showingAllNodeNumbers(false);
-        m_showingNodeNumbers = false;
-        return;
-    }
 }
 
 void GraphLogic::moveNodeUp()
@@ -778,35 +739,8 @@ void GraphLogic::moveNode(qreal x, qreal y)
     m_undoStack->push(moveCommand);
 }
 
-void GraphLogic::appendNumber(const int &num)
-{
-    m_hintNumber.append(QString::number(num));
-
-    showingAllNodeNumbers(false);
-    showingNodeNumbersBeginWithNumber(m_hintNumber.toInt(), true);
-}
-
-void GraphLogic::delNumber()
-{
-    if (!m_showingNodeNumbers && m_hintNumber.isEmpty())
-        return;
-
-    m_hintNumber.remove(m_hintNumber.length()-1,1);
-    showNodeNumbers();
-}
-
-void GraphLogic::applyNumber()
-{
-    if (m_hintNode && m_showingNodeNumbers)
-        selectNode(m_hintNode);
-}
-
 void GraphLogic::selectNode(Node *node)
 {
-    // leave hint mode
-    showingAllNodeNumbers(false);
-    m_showingNodeNumbers = false;
-
     if (m_edgeAdding && m_activeNode != 0)
     {
         addEdge(m_activeNode, node);
@@ -893,68 +827,4 @@ void GraphLogic::removeEdge(Node *source, Node *destination)
     QUndoCommand *removeEdgeCommand = new RemoveEdgeCommand(context);
     m_undoStack->push(removeEdgeCommand);
 
-}
-
-// re-draw numbers
-void GraphLogic::showNodeNumbers()
-{
-    if (m_hintNumber.isEmpty())
-     {
-         showingAllNodeNumbers(true);
-         m_nodeList.first()->showNumber(0,true,true);
-         m_hintNode = m_nodeList.first();
-     }
-     else
-     {
-         showingAllNodeNumbers(false);
-         showingNodeNumbersBeginWithNumber(m_hintNumber.toInt(), true);
-     }
-}
-
-// show/hide numbers on all nodes
-void GraphLogic::showingAllNodeNumbers(const bool &show)
-{
-    int i(0);
-    for (QList<Node *>::const_iterator it = m_nodeList.begin();
-         it != m_nodeList.end(); it++,
-         i++)
-    {
-        dynamic_cast<Node*>(*it)->showNumber(i,show);
-    }
-}
-
-// show nodes numbers where number begins with 'prefix'
-void GraphLogic::showingNodeNumbersBeginWithNumber(const int &prefix,
-                                                    const bool &show)
-{
-    int i(0);
-    int hit(0);
-    for (QList<Node *>::const_iterator it = m_nodeList.begin();
-         it != m_nodeList.end(); it++, i++)
-    {
-        // if nodenumber == 'prefix' the node is selected
-        if (i == prefix)
-        {
-            hit++;
-            dynamic_cast<Node*>(*it)->showNumber(i,show,true);
-            m_hintNode = dynamic_cast<Node*>(*it);
-            continue;
-        }
-
-        // if 'i' starts with 'prefix'
-        if ((QString::number(i)).startsWith(QString::number(prefix)))
-        {
-            hit++;
-            dynamic_cast<Node*>(*it)->showNumber(i,show);
-        }
-    }
-    if (hit==1)
-    {
-        selectNode(m_hintNode);
-    }
-    else if (hit == 0)
-    {
-        m_showingNodeNumbers = false;
-        showingAllNodeNumbers(false);
-    }
 }

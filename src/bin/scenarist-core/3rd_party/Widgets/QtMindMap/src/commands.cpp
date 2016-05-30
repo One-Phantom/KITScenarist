@@ -72,7 +72,6 @@ void InsertNodeCommand::undo()
     m_edge->destNode()->removeEdge(m_edge);
     m_context.m_graphLogic->graphWidget()->scene()->removeItem(m_edge);
 
-    m_context.m_graphLogic->reShowNumbers();
     m_done = false;
 }
 
@@ -92,7 +91,6 @@ void InsertNodeCommand::redo()
     m_edge->destNode()->addEdge(m_edge,false);
     m_context.m_graphLogic->graphWidget()->scene()->addItem(m_edge);
 
-    m_context.m_graphLogic->reShowNumbers();
     m_done = true;
 }
 
@@ -122,7 +120,6 @@ void InsertRootNodeCommand::undo()
     m_context.m_graphLogic->graphWidget()->scene()->removeItem(m_node);
     m_context.m_graphLogic->setActiveNode(m_activeNode);
 
-    m_context.m_graphLogic->reShowNumbers();
     m_done = false;
 }
 
@@ -137,13 +134,11 @@ void InsertRootNodeCommand::redo()
     if (m_context.m_graphLogic->graphWidget()->hasFocus())
         m_context.m_graphLogic->nodeEdited();
 
-    m_context.m_graphLogic->reShowNumbers();
     m_done = true;
 }
 
 RemoveNodeCommand::RemoveNodeCommand(UndoContext context)
     : BaseUndoClass(context)
-    , m_hintNode(context.m_hintNode)
 {
     setText(QObject::tr("Node deleted \"").append(
                 m_activeNode->toPlainText().append("\"")).append(
@@ -175,18 +170,12 @@ void RemoveNodeCommand::undo()
     }
 
     m_context.m_graphLogic->setActiveNode(m_activeNode);
-    m_context.m_graphLogic->setHintNode(m_hintNode);
-
-    m_context.m_graphLogic->reShowNumbers();
 }
 
 void RemoveNodeCommand::redo()
 {
     foreach(Node *node, m_nodeList)
     {
-        if (m_context.m_hintNode==node)
-            m_context.m_graphLogic->setHintNode(0);
-
         m_context.m_nodeList->removeAll(node);
         m_context.m_graphLogic->graphWidget()->scene()->removeItem(node);
     }
@@ -199,8 +188,6 @@ void RemoveNodeCommand::redo()
     }
 
     m_context.m_graphLogic->setActiveNode(0);
-
-    m_context.m_graphLogic->reShowNumbers();
 }
 
 AddEdgeCommand::AddEdgeCommand(UndoContext context)

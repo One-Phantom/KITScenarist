@@ -38,8 +38,6 @@ public:
     Node *nodeFactory();
     Node* activeNode() const;
     void setActiveNode(Node *node);
-    void setHintNode(Node *node);
-    void reShowNumbers();
 
     void moveNode(qreal x, qreal y); // undo command
 
@@ -57,7 +55,6 @@ public slots:
     void nodeTextColor();   // undo command
     void addEdge();
     void removeEdge();
-    void hintMode();
     void insertPicture(const QString &picture); /// @todo Rewrite as an undo action
 
     void nodeChanged();
@@ -77,11 +74,6 @@ private:
     void moveNodeLeft();
     void moveNodeRight();
 
-    // hint mode
-    void appendNumber(const int &unm);
-    void delNumber();
-    void applyNumber();
-
     void selectNode(Node *node);
 
     // functions on the edges
@@ -92,8 +84,6 @@ private:
     // hint mode's nodenumber handling functions
     void showNodeNumbers();
     void showingAllNodeNumbers(const bool &show = true);
-    void showingNodeNumbersBeginWithNumber(const int &prefix,
-                                           const bool &show = true);
 
     GraphWidget *m_graphWidget;
 
