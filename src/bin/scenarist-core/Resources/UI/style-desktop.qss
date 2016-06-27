@@ -119,7 +119,12 @@ QComboBox[inTopPanel="true"]  {
 	color: palette(button-text);
 }
 
+QComboBox[inTopPanel="true"]:editable {
+    background: palette(base);
+}
+
 QComboBox::drop-down[inTopPanel="true"] {
+    background: palette(button);
 	subcontrol-origin: padding;
 	subcontrol-position: top right;
 	width: 15px;
@@ -140,6 +145,29 @@ QComboBox:on[inTopPanel="true"], QComboBox:off[inTopPanel="true"] {
 QComboBox:on:selected[inTopPanel="true"], QComboBox:off:selected[inTopPanel="true"] {
 	color: palette(highlighted-text);
 	background: palette(highlight);
+}
+
+/*
+ * Выбор числа
+ */
+QSpinBox::up-button[inTopPanel="true"] {
+    height: 13px;
+    background: palette(button);
+    border: 1px solid palette(dark);
+}
+
+QSpinBox::up-arrow[inTopPanel="true"] {
+    image: url(:/Interface/UI/menuarrow.png);
+}
+
+QSpinBox::down-button[inTopPanel="true"] {
+    height: 13px;
+    background: palette(button);
+    border: 1px solid palette(dark);
+}
+
+QSpinBox::down-arrow[inTopPanel="true"] {
+    image: url(:/Interface/UI/menuarrow.png);
 }
 
 /*
@@ -347,7 +375,7 @@ QProgressBar::chunk {
     font-weight: 800;
 }
 
-[editableLabel=true]::!hover {
+[editableLabel=true]::!hover::!focus {
     border: none;
     padding: 2px 1px 1px 0px;
     background-color: palette(window);

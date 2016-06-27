@@ -12,6 +12,7 @@
 #include <QFileDialog>
 #include <QScrollBar>
 #include <QStandardPaths>
+#include <QStringListModel>
 
 using UserInterface::ResearchView;
 using UserInterface::ResearchNavigatorItemDelegate;
@@ -342,6 +343,8 @@ void ResearchView::initView()
 
 	m_ui->search->setIcons(m_ui->search->icon());
 
+    m_ui->textFont->setModel(new QStringListModel(QFontDatabase().families(), m_ui->textFont));
+
 	m_ui->imagesGalleryPane->setLastSelectedImagePath(::imagesFolderPath());
 
 	m_ui->imagePreview->setReadOnly(true);
@@ -524,8 +527,12 @@ void ResearchView::initStyleSheet()
 	m_ui->topNavigatorEndLabel->setProperty("topPanelTopBordered", true);
 	m_ui->topDataLabel->setProperty("inTopPanel", true);
 	m_ui->topDataLabel->setProperty("topPanelTopBordered", true);
+    m_ui->topTextToolbarLabelRight->setProperty("inTopPanel", true);
+    m_ui->topTextToolbarLabelRight->setProperty("topPanelTopBordered", true);
+    m_ui->topTextToolbarLabelRight->setProperty("topPanelRightBordered", true);
     m_ui->topMindMapToolbarLabelLeft->setProperty("inTopPanel", true);
     m_ui->topMindMapToolbarLabelLeft->setProperty("topPanelLeftBordered", true);
+    m_ui->topMindMapToolbarLabelRight->setProperty("inTopPanel", true);
     m_ui->topMindMapToolbarLabelRight->setProperty("topPanelTopBordered", true);
     m_ui->topMindMapToolbarLabelRight->setProperty("topPanelRightBordered", true);
 
@@ -533,6 +540,19 @@ void ResearchView::initStyleSheet()
 	m_ui->removeResearchItem->setProperty("inTopPanel", true);
 
 	m_ui->search->setProperty("inTopPanel", true);
+
+    m_ui->textFont->setProperty("inTopPanel", true);
+    m_ui->textFont->setProperty("topPanelTopBordered", true);
+    m_ui->textFont->setProperty("topPanelLeftBordered", true);
+    m_ui->textFont->setProperty("topPanelRightBordered", true);
+    m_ui->textFontSize->setProperty("inTopPanel", true);
+    m_ui->textFontSize->setProperty("topPanelTopBordered", true);
+    m_ui->textFontSize->setProperty("topPanelRightBordered", true);
+    m_ui->textBold->setProperty("inTopPanel", true);
+    m_ui->textItalic->setProperty("inTopPanel", true);
+    m_ui->textUnderline->setProperty("inTopPanel", true);
+    m_ui->textColor->setProperty("inTopPanel", true);
+    m_ui->textBackgroundColor->setProperty("inTopPanel", true);
 
     m_ui->addRootNode->setProperty("inTopPanel", true);
     m_ui->addNode->setProperty("inTopPanel", true);
