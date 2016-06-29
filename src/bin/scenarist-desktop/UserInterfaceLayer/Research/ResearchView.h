@@ -188,6 +188,11 @@ namespace UserInterface
 	private:
 		Ui::ResearchView* m_ui;
 
+        /**
+         * @brief Находится ли текстовый редактор в режиме обновления панели инструментов с форматом
+         */
+        bool m_isInTextFormatUpdate;
+
 		/**
 		 * @brief Кэшированные данные страницы
 		 */

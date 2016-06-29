@@ -68,7 +68,8 @@ namespace {
 
 ResearchView::ResearchView(QWidget *parent) :
 	QWidget(parent),
-	m_ui(new Ui::ResearchView)
+    m_ui(new Ui::ResearchView),
+    m_isInTextFormatUpdate(false)
 {
 	m_ui->setupUi(this);
 
@@ -464,6 +465,26 @@ void ResearchView::initConnections()
 	connect(m_ui->textDescription, &SimpleTextEditor::textChanged, [=] {
 		emit textDescriptionChanged(TextEditHelper::removeDocumentTags(m_ui->textDescription->toHtml()));
 	});
+    //
+    // ... панель инструментов текстового редактора
+    //
+    connect(m_ui->textDescription, &SimpleTextEditor::currentCharFormatChanged,
+            [=] (const QTextCharFormat& _format) {
+        m_isInTextFormatUpdate = true;
+        const QFont font = _format.font();
+        m_ui->textFont->setCurrentText(font.family());
+        m_ui->textFontSize->setCurrentText(QString::number(font.pointSize()));
+        m_ui->textBold->setChecked(font.bold());
+        m_ui->textItalic->setChecked(font.italic());
+        m_ui->textUnderline->setChecked(font.underline());
+        m_isInTextFormatUpdate = false;
+    });
+    connect(m_ui->textFont, &QComboBox::currentTextChanged, [=] {
+        if (!m_isInTextFormatUpdate) {
+            QFont font(m_ui->textFont->currentText(), m_ui->textFontSize->currentText().toInt());
+            m_ui->textDescription->setTextFont(font);
+        }
+    });
 	//
 	// ... интернет-страница
 	//

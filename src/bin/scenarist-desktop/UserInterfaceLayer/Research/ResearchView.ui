@@ -428,7 +428,7 @@
                 <item>
                  <widget class="QComboBox" name="textFont">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
@@ -436,22 +436,74 @@
                   <property name="editable">
                    <bool>true</bool>
                   </property>
+                  <property name="sizeAdjustPolicy">
+                   <enum>QComboBox::AdjustToContents</enum>
+                  </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QSpinBox" name="textFontSize">
+                 <widget class="QComboBox" name="textFontSize">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
+                  <property name="editable">
+                   <bool>true</bool>
+                  </property>
+                  <property name="sizeAdjustPolicy">
+                   <enum>QComboBox::AdjustToContents</enum>
+                  </property>
+                  <item>
+                   <property name="text">
+                    <string>8</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>10</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>12</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>14</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>18</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>24</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>32</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>64</string>
+                   </property>
+                  </item>
                  </widget>
                 </item>
                 <item>
                  <widget class="FlatButton" name="textBold">
                   <property name="text">
                    <string>Bold</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
@@ -460,12 +512,18 @@
                   <property name="text">
                    <string>Italic</string>
                   </property>
+                  <property name="checkable">
+                   <bool>true</bool>
+                  </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="FlatButton" name="textUnderline">
                   <property name="text">
                    <string>Underline</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
@@ -508,9 +566,7 @@
               </widget>
              </item>
              <item>
-              <widget class="SimpleTextEditor" name="textDescription">
-               <zorder>mindMapToolbar_2</zorder>
-              </widget>
+              <widget class="SimpleTextEditor" name="textDescription"/>
              </item>
             </layout>
            </item>

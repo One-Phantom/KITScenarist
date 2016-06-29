@@ -119,7 +119,7 @@ QComboBox[inTopPanel="true"]  {
 	color: palette(button-text);
 }
 
-QComboBox[inTopPanel="true"]:editable {
+QComboBox:editable[inTopPanel="true"] {
     background: palette(base);
 }
 
@@ -132,14 +132,22 @@ QComboBox::drop-down[inTopPanel="true"] {
 	padding-right: 4px;
 }
 
+QComboBox::drop-down:editable[inTopPanel="true"] {
+    background: palette(base);
+}
+
 QComboBox::down-arrow[inTopPanel="true"] {
 	image: url(:/Interface/UI/comboboxarrow.png);
 }
 
-
 QComboBox:on[inTopPanel="true"], QComboBox:off[inTopPanel="true"] {
 	color: palette(button-text);
 	background: palette(button);
+}
+
+QComboBox:on:editable[inTopPanel="true"], QComboBox:off:editable[inTopPanel="true"] {
+    color: palette(button-text);
+    background: palette(base);
 }
 
 QComboBox:on:selected[inTopPanel="true"], QComboBox:off:selected[inTopPanel="true"] {

@@ -31,8 +31,13 @@ SimpleTextEditor::SimpleTextEditor(QWidget *parent) :
 	//
 	// Обновляем пункты меню
 	//
-	connect(this, SIGNAL(currentCharFormatChanged(QTextCharFormat)),
-			this, SLOT(currentCharFormatChanged(QTextCharFormat)));
+    connect(this, &SimpleTextEditor::currentCharFormatChanged,
+            [=] (const QTextCharFormat& _format) {
+        QFont formatFont = _format.font();
+        actionTextBold->setChecked(formatFont.bold());
+        actionTextItalic->setChecked(formatFont.italic());
+        actionTextUnderline->setChecked(formatFont.underline());
+    });
 
 	//
 	// Подготовить редактор к синхронизации
@@ -61,6 +66,48 @@ SimpleTextEditor::SimpleTextEditor(QWidget *parent) :
 SimpleTextEditor::~SimpleTextEditor()
 {
 	s_editors.removeOne(this);
+}
+
+void SimpleTextEditor::setTextBold()
+{
+    QTextCharFormat fmt;
+    fmt.setFontWeight(actionTextBold->isChecked() ? QFont::Bold : QFont::Normal);
+    mergeFormatOnWordOrSelection(fmt);
+}
+
+void SimpleTextEditor::setTextUnderline()
+{
+    QTextCharFormat fmt;
+    fmt.setFontUnderline(actionTextUnderline->isChecked());
+    mergeFormatOnWordOrSelection(fmt);
+}
+
+void SimpleTextEditor::setTextItalic()
+{
+    QTextCharFormat fmt;
+    fmt.setFontItalic(actionTextItalic->isChecked());
+    mergeFormatOnWordOrSelection(fmt);
+}
+
+void SimpleTextEditor::setTextColor(const QColor& _color)
+{
+    QTextCharFormat fmt;
+    fmt.setForeground(_color);
+    mergeFormatOnWordOrSelection(fmt);
+}
+
+void SimpleTextEditor::setTextBackgroundColor(const QColor& _color)
+{
+    QTextCharFormat fmt;
+    fmt.setBackground(_color);
+    mergeFormatOnWordOrSelection(fmt);
+}
+
+void SimpleTextEditor::setTextFont(const QFont& _font)
+{
+    QTextCharFormat fmt;
+    fmt.setFont(_font);
+    mergeFormatOnWordOrSelection(fmt);
 }
 
 bool SimpleTextEditor::event(QEvent *_event)
@@ -186,41 +233,9 @@ void SimpleTextEditor::gestureEvent(QGestureEvent *_event)
 
 void SimpleTextEditor::insertFromMimeData(const QMimeData* _source)
 {
-	//
-	// Если простой текст, то вставляем его, как описание действия
-	//
 	if (_source->hasText()) {
 		textCursor().insertText(_source->text());
 	}
-}
-
-void SimpleTextEditor::textBold()
-{
-	QTextCharFormat fmt;
-	fmt.setFontWeight(actionTextBold->isChecked() ? QFont::Bold : QFont::Normal);
-	mergeFormatOnWordOrSelection(fmt);
-}
-
-void SimpleTextEditor::textUnderline()
-{
-	QTextCharFormat fmt;
-	fmt.setFontUnderline(actionTextUnderline->isChecked());
-	mergeFormatOnWordOrSelection(fmt);
-}
-
-void SimpleTextEditor::textItalic()
-{
-	QTextCharFormat fmt;
-	fmt.setFontItalic(actionTextItalic->isChecked());
-	mergeFormatOnWordOrSelection(fmt);
-}
-
-void SimpleTextEditor::currentCharFormatChanged(const QTextCharFormat& format)
-{
-	QFont formatFont = format.font();
-	actionTextBold->setChecked(formatFont.bold());
-	actionTextItalic->setChecked(formatFont.italic());
-	actionTextUnderline->setChecked(formatFont.underline());
 }
 
 void SimpleTextEditor::setupMenu()
@@ -232,7 +247,7 @@ void SimpleTextEditor::setupMenu()
 	QFont bold;
 	bold.setBold(true);
 	actionTextBold->setFont(bold);
-	connect(actionTextBold, SIGNAL(triggered()), this, SLOT(textBold()));
+    connect(actionTextBold, &QAction::triggered, this, &SimpleTextEditor::setTextBold);
 	actionTextBold->setCheckable(true);
 
 	actionTextItalic = new QAction(tr("Italic"), this);
@@ -242,7 +257,7 @@ void SimpleTextEditor::setupMenu()
 	QFont italic;
 	italic.setItalic(true);
 	actionTextItalic->setFont(italic);
-	connect(actionTextItalic, SIGNAL(triggered()), this, SLOT(textItalic()));
+    connect(actionTextItalic, &QAction::triggered, this, &SimpleTextEditor::setTextItalic);
 	actionTextItalic->setCheckable(true);
 
 	actionTextUnderline = new QAction(tr("Underline"), this);
@@ -252,7 +267,7 @@ void SimpleTextEditor::setupMenu()
 	QFont underline;
 	underline.setUnderline(true);
 	actionTextUnderline->setFont(underline);
-	connect(actionTextUnderline, SIGNAL(triggered()), this, SLOT(textUnderline()));
+    connect(actionTextUnderline, &QAction::triggered, this, &SimpleTextEditor::setTextUnderline);
 	actionTextUnderline->setCheckable(true);
 
 	//

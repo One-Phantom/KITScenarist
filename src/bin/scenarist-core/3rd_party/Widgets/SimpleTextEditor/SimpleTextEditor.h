@@ -17,6 +17,18 @@ public:
 	explicit SimpleTextEditor(QWidget *parent = 0);
 	~SimpleTextEditor();
 
+    /**
+     * @brief Методы настройки формата
+     */
+    /** @{ */
+    void setTextBold();
+    void setTextUnderline();
+    void setTextItalic();
+    void setTextColor(const QColor& _color);
+    void setTextBackgroundColor(const QColor& _color);
+    void setTextFont(const QFont& _font);
+    /** @} */
+
 protected:
 	/**
 	 * @brief Переопределяем для обработки жестов
@@ -41,14 +53,7 @@ protected:
 	/**
 	 * @brief Вставляется только простой текст
 	 */
-	void insertFromMimeData(const QMimeData* _source);
-
-private slots:
-	void textBold();
-	void textUnderline();
-	void textItalic();
-
-	void currentCharFormatChanged(const QTextCharFormat &format);
+    void insertFromMimeData(const QMimeData* _source);
 
 private:
 	void setupMenu();
