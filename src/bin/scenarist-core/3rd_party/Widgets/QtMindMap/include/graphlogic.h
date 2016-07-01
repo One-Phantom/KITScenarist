@@ -52,7 +52,9 @@ public slots:
     void scaleUp();         // undo command
     void scaleDown();       // undo command
     void nodeColor();       // undo command
+    void setNodeColor(const QColor& _color);
     void nodeTextColor();   // undo command
+    void setNodeTextColor(const QColor& _color);
     void addEdge();
     void removeEdge();
     void insertPicture(const QString &picture); /// @todo Rewrite as an undo action
@@ -64,6 +66,7 @@ public slots:
 
 signals:
 
+    void activeNodeChanged();
     void contentChanged(const bool& changed = true);
     void notification(const QString &msg);
 

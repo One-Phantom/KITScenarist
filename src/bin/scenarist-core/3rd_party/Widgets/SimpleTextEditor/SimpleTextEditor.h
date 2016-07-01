@@ -58,6 +58,7 @@ protected:
 private:
 	void setupMenu();
 	void mergeFormatOnWordOrSelection(const QTextCharFormat &format);
+    void mergeFormatOnParagraphOrSelection(const QTextCharFormat &format);
 
 	/**
 	 * @brief Установить масштабирование

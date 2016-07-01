@@ -99,12 +99,12 @@ QToolButton::menu-arrow[inTopPanel="true"] {
 	image: url(:Interface/UI/menuarrow.png);
 }
 
-QToolButton[reviewPanel="true"] {
+ColoredToolButton[inTopPanel="true"] {
 	padding-right: 14px;
 	min-width: 20px;
 }
 
-QToolButton::menu-button[reviewPanel="true"] {
+ColoredToolButton::menu-button[inTopPanel="true"] {
 	padding-right: 3px;
 	border-right: none;
 }

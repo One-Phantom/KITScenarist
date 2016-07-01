@@ -139,7 +139,7 @@
           <string notr="true"/>
          </property>
          <property name="currentIndex">
-          <number>4</number>
+          <number>8</number>
          </property>
          <widget class="QWidget" name="scenarioEdit">
           <layout class="QGridLayout" name="gridLayout_3">
@@ -499,6 +499,9 @@
                 </item>
                 <item>
                  <widget class="FlatButton" name="textBold">
+                  <property name="toolTip">
+                   <string>Make text bold</string>
+                  </property>
                   <property name="text">
                    <string>Bold</string>
                   </property>
@@ -509,6 +512,9 @@
                 </item>
                 <item>
                  <widget class="FlatButton" name="textItalic">
+                  <property name="toolTip">
+                   <string>Make text italic</string>
+                  </property>
                   <property name="text">
                    <string>Italic</string>
                   </property>
@@ -519,6 +525,9 @@
                 </item>
                 <item>
                  <widget class="FlatButton" name="textUnderline">
+                  <property name="toolTip">
+                   <string>Make text underlined</string>
+                  </property>
                   <property name="text">
                    <string>Underline</string>
                   </property>
@@ -528,7 +537,10 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="FlatButton" name="textColor">
+                 <widget class="ColoredToolButton" name="textColor">
+                  <property name="toolTip">
+                   <string>Change text color</string>
+                  </property>
                   <property name="text">
                    <string>Text color</string>
                   </property>
@@ -536,16 +548,37 @@
                    <iconset resource="../../../scenarist-core/Resources/Resources.qrc">
                     <normaloff>:/Graphics/Icons/Review/font-color.png</normaloff>:/Graphics/Icons/Review/font-color.png</iconset>
                   </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>20</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                  <property name="popupMode">
+                   <enum>QToolButton::MenuButtonPopup</enum>
+                  </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="FlatButton" name="textBackgroundColor">
+                 <widget class="ColoredToolButton" name="textBackgroundColor">
+                  <property name="toolTip">
+                   <string>Change text background color</string>
+                  </property>
                   <property name="text">
                    <string>Background color</string>
                   </property>
                   <property name="icon">
                    <iconset resource="../../../scenarist-core/Resources/Resources.qrc">
                     <normaloff>:/Graphics/Icons/Review/font-bg-color.png</normaloff>:/Graphics/Icons/Review/font-bg-color.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>20</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                  <property name="popupMode">
+                   <enum>QToolButton::MenuButtonPopup</enum>
                   </property>
                  </widget>
                 </item>
@@ -810,7 +843,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="FlatButton" name="nodeTextColor">
+                 <widget class="ColoredToolButton" name="nodeTextColor">
                   <property name="text">
                    <string>Text color</string>
                   </property>
@@ -818,16 +851,34 @@
                    <iconset resource="../../../scenarist-core/Resources/Resources.qrc">
                     <normaloff>:/Graphics/Icons/Review/font-color.png</normaloff>:/Graphics/Icons/Review/font-color.png</iconset>
                   </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>20</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                  <property name="popupMode">
+                   <enum>QToolButton::MenuButtonPopup</enum>
+                  </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="FlatButton" name="nodeBackgroundColor">
+                 <widget class="ColoredToolButton" name="nodeBackgroundColor">
                   <property name="text">
                    <string>Background color</string>
                   </property>
                   <property name="icon">
                    <iconset resource="../../../scenarist-core/Resources/Resources.qrc">
                     <normaloff>:/Graphics/Icons/Review/font-bg-color.png</normaloff>:/Graphics/Icons/Review/font-bg-color.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>20</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                  <property name="popupMode">
+                   <enum>QToolButton::MenuButtonPopup</enum>
                   </property>
                  </widget>
                 </item>
@@ -912,6 +963,11 @@
    <extends>QWidget</extends>
    <header location="global">3rd_party/Widgets/QtMindMap/include/graphwidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ColoredToolButton</class>
+   <extends>QToolButton</extends>
+   <header location="global">3rd_party/Widgets/ColoredToolButton/ColoredToolButton.h</header>
   </customwidget>
  </customwidgets>
  <resources>

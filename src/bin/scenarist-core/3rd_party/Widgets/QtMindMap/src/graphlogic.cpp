@@ -338,12 +338,16 @@ Node* GraphLogic::activeNode() const
 
 void GraphLogic::setActiveNode(Node *node)
 {
-    if (m_activeNode!=0)
-        m_activeNode->setBorder(false);
+    if (m_activeNode != node) {
+        if (m_activeNode!=0)
+            m_activeNode->setBorder(false);
 
-    m_activeNode = node;
-    if (m_activeNode)
-        m_activeNode->setBorder();
+        m_activeNode = node;
+        if (m_activeNode)
+            m_activeNode->setBorder();
+
+        emit activeNodeChanged();
+    }
 }
 
 void GraphLogic::insertRootNode()
@@ -579,6 +583,28 @@ void GraphLogic::nodeColor()
     m_undoStack->push(nodeColorCommand);
 }
 
+void GraphLogic::setNodeColor(const QColor& _color)
+{
+    if (!m_activeNode)
+    {
+        emit notification(tr("No active node."));
+        return;
+    }
+
+    bool subtree(QApplication::keyboardModifiers() & Qt::ControlModifier &&
+                 QApplication::keyboardModifiers() & Qt::ShiftModifier);
+
+    UndoContext context;
+    context.m_graphLogic = this;
+    context.m_nodeList = &m_nodeList;
+    context.m_activeNode = m_activeNode;
+    context.m_color = _color;
+    context.m_subtree = subtree;
+
+    QUndoCommand *nodeColorCommand = new NodeColorCommand(context);
+    m_undoStack->push(nodeColorCommand);
+}
+
 void GraphLogic::nodeTextColor()
 {
     if (!m_activeNode)
@@ -602,6 +628,28 @@ void GraphLogic::nodeTextColor()
     context.m_nodeList = &m_nodeList;
     context.m_activeNode = m_activeNode;
     context.m_color = dialog.selectedColor();
+    context.m_subtree = subtree;
+
+    QUndoCommand *nodeTextColorCommand = new NodeTextColorCommand(context);
+    m_undoStack->push(nodeTextColorCommand);
+}
+
+void GraphLogic::setNodeTextColor(const QColor& _color)
+{
+    if (!m_activeNode)
+    {
+        emit notification(tr("No active node."));
+        return;
+    }
+
+    bool subtree(QApplication::keyboardModifiers() & Qt::ControlModifier &&
+                QApplication::keyboardModifiers() & Qt::ShiftModifier);
+
+    UndoContext context;
+    context.m_graphLogic = this;
+    context.m_nodeList = &m_nodeList;
+    context.m_activeNode = m_activeNode;
+    context.m_color = _color;
     context.m_subtree = subtree;
 
     QUndoCommand *nodeTextColorCommand = new NodeTextColorCommand(context);

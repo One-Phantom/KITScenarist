@@ -98,6 +98,7 @@ void FlatButton::aboutUpdateIcon()
 	if (!m_icon.isNull()) {
 		const bool isCheckedIcon = !m_checkedIcon.isNull() && isEnabled() && isChecked();
 		setIcon(isCheckedIcon ? m_checkedIcon : m_icon);
+//        setStyleSheet(isCheckedIcon ? "color: palette(highlight)" : "");
 	}
 }
 

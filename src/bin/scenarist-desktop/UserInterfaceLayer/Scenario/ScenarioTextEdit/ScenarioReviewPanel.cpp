@@ -306,12 +306,7 @@ void ScenarioReviewPanel::initStyleSheet()
 	m_textHighlight->setProperty("inTopPanel", true);
 	m_comment->setProperty("inTopPanel", true);
 	m_done->setProperty("inTopPanel", true);
-	m_clear->setProperty("inTopPanel", true);
-
-	m_textColor->setProperty("reviewPanel", true);
-	m_textBgColor->setProperty("reviewPanel", true);
-	m_textHighlight->setProperty("reviewPanel", true);
-	m_comment->setProperty("reviewPanel", true);
+    m_clear->setProperty("inTopPanel", true);
 }
 
 BusinessLogic::ScenarioReviewModel* ScenarioReviewPanel::reviewModel() const

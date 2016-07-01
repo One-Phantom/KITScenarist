@@ -107,7 +107,7 @@ void SimpleTextEditor::setTextFont(const QFont& _font)
 {
     QTextCharFormat fmt;
     fmt.setFont(_font);
-    mergeFormatOnWordOrSelection(fmt);
+    mergeFormatOnParagraphOrSelection(fmt);
 }
 
 bool SimpleTextEditor::event(QEvent *_event)
@@ -284,7 +284,16 @@ void SimpleTextEditor::mergeFormatOnWordOrSelection(const QTextCharFormat& forma
 	if (!cursor.hasSelection())
 		cursor.select(QTextCursor::WordUnderCursor);
 	cursor.mergeCharFormat(format);
-	mergeCurrentCharFormat(format);
+    mergeCurrentCharFormat(format);
+}
+
+void SimpleTextEditor::mergeFormatOnParagraphOrSelection(const QTextCharFormat& format)
+{
+    QTextCursor cursor = textCursor();
+    if (!cursor.hasSelection())
+        cursor.select(QTextCursor::BlockUnderCursor);
+    cursor.mergeCharFormat(format);
+    mergeCurrentCharFormat(format);
 }
 
 QList<SimpleTextEditor*> SimpleTextEditor::s_editors;

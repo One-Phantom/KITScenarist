@@ -345,10 +345,18 @@ void ResearchView::initView()
 	m_ui->search->setIcons(m_ui->search->icon());
 
     m_ui->textFont->setModel(new QStringListModel(QFontDatabase().families(), m_ui->textFont));
+    m_ui->textBold->setIcons(m_ui->textBold->icon());
+    m_ui->textItalic->setIcons(m_ui->textItalic->icon());
+    m_ui->textUnderline->setIcons(m_ui->textUnderline->icon());
+    m_ui->textColor->setColorsPane(ColoredToolButton::Google);
+    m_ui->textBackgroundColor->setColorsPane(ColoredToolButton::Google);
 
 	m_ui->imagesGalleryPane->setLastSelectedImagePath(::imagesFolderPath());
 
 	m_ui->imagePreview->setReadOnly(true);
+
+    m_ui->nodeTextColor->setColorsPane(ColoredToolButton::Google);
+    m_ui->nodeBackgroundColor->setColorsPane(ColoredToolButton::Google);
 
 	m_ui->searchWidget->setEditor(m_ui->textDescription);
 	m_ui->searchWidget->hide();
@@ -477,12 +485,50 @@ void ResearchView::initConnections()
         m_ui->textBold->setChecked(font.bold());
         m_ui->textItalic->setChecked(font.italic());
         m_ui->textUnderline->setChecked(font.underline());
+        QColor textColor = palette().text().color();
+        if (_format.hasProperty(QTextFormat::ForegroundBrush)) {
+            textColor = _format.foreground().color();
+        }
+        m_ui->textColor->setColor(textColor);
+        QColor textBackgroundColor = palette().base().color();
+        if (_format.hasProperty(QTextFormat::BackgroundBrush)) {
+            textBackgroundColor = _format.background().color();
+        }
+        m_ui->textBackgroundColor->setColor(textBackgroundColor);
         m_isInTextFormatUpdate = false;
     });
+    //
+    // ... шрифт
+    //
     connect(m_ui->textFont, &QComboBox::currentTextChanged, [=] {
         if (!m_isInTextFormatUpdate) {
             QFont font(m_ui->textFont->currentText(), m_ui->textFontSize->currentText().toInt());
             m_ui->textDescription->setTextFont(font);
+        }
+    });
+    //
+    // ... размер шрифта
+    //
+    connect(m_ui->textFontSize, &QComboBox::currentTextChanged, [=] {
+        if (!m_isInTextFormatUpdate) {
+            QFont font(m_ui->textFont->currentText(), m_ui->textFontSize->currentText().toInt());
+            m_ui->textDescription->setTextFont(font);
+        }
+    });
+    //
+    // ... цвет текста
+    //
+    connect(m_ui->textColor, &ColoredToolButton::clicked, [=] (const QColor& _color) {
+        if (!m_isInTextFormatUpdate) {
+            m_ui->textDescription->setTextColor(_color);
+        }
+    });
+    //
+    // ... цвет фона текста
+    //
+    connect(m_ui->textBackgroundColor, &ColoredToolButton::clicked, [=] (const QColor& _color) {
+        if (!m_isInTextFormatUpdate) {
+            m_ui->textDescription->setTextBackgroundColor(_color);
         }
     });
 	//
@@ -530,14 +576,23 @@ void ResearchView::initConnections()
     //
     // ... панель инструментов редактора ментальных карт
     //
+    connect(m_ui->mindMap->graphLogic(), &GraphLogic::activeNodeChanged, [=] {
+        if (Node* activeNode = m_ui->mindMap->graphLogic()->activeNode()) {
+            m_ui->nodeTextColor->setColor(activeNode->textColor());
+            m_ui->nodeBackgroundColor->setColor(activeNode->color());
+        } else {
+            m_ui->nodeTextColor->setColor(QColor());
+            m_ui->nodeBackgroundColor->setColor(QColor());
+        }
+    });
     connect(m_ui->addRootNode, &FlatButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::insertRootNode);
     connect(m_ui->addNode, &FlatButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::insertNode);
     connect(m_ui->addSiblingNode, &FlatButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::insertSiblingNode);
     connect(m_ui->deleteNode, &FlatButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::removeNode);
     connect(m_ui->addEdge, &FlatButton::clicked, m_ui->mindMap->graphLogic(), static_cast<void (GraphLogic::*)()>(&GraphLogic::addEdge));
     connect(m_ui->deleteEdge, &FlatButton::clicked, m_ui->mindMap->graphLogic(), static_cast<void (GraphLogic::*)()>(&GraphLogic::removeEdge));
-    connect(m_ui->nodeTextColor, &FlatButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::nodeTextColor);
-    connect(m_ui->nodeBackgroundColor, &FlatButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::nodeColor);
+    connect(m_ui->nodeTextColor, &ColoredToolButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::setNodeTextColor);
+    connect(m_ui->nodeBackgroundColor, &ColoredToolButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::setNodeColor);
 }
 
 void ResearchView::initStyleSheet()
