@@ -17,17 +17,17 @@ public:
 	explicit SimpleTextEditor(QWidget *parent = 0);
 	~SimpleTextEditor();
 
-    /**
-     * @brief Методы настройки формата
-     */
-    /** @{ */
-    void setTextBold();
-    void setTextUnderline();
-    void setTextItalic();
-    void setTextColor(const QColor& _color);
-    void setTextBackgroundColor(const QColor& _color);
-    void setTextFont(const QFont& _font);
-    /** @} */
+	/**
+	 * @brief Методы настройки формата
+	 */
+	/** @{ */
+	void setTextBold();
+	void setTextUnderline();
+	void setTextItalic();
+	void setTextColor(const QColor& _color);
+	void setTextBackgroundColor(const QColor& _color);
+	void setTextFont(const QFont& _font);
+	/** @} */
 
 protected:
 	/**
@@ -51,14 +51,19 @@ protected:
 	void gestureEvent(QGestureEvent* _event);
 
 	/**
+	 * @brief Добавляем отдельный тип для собственных данных
+	 */
+	QMimeData* createMimeDataFromSelection() const;
+
+	/**
 	 * @brief Вставляется только простой текст
 	 */
-    void insertFromMimeData(const QMimeData* _source);
+	void insertFromMimeData(const QMimeData* _source);
 
 private:
 	void setupMenu();
 	void mergeFormatOnWordOrSelection(const QTextCharFormat &format);
-    void mergeFormatOnParagraphOrSelection(const QTextCharFormat &format);
+	void mergeFormatOnParagraphOrSelection(const QTextCharFormat &format);
 
 	/**
 	 * @brief Установить масштабирование
