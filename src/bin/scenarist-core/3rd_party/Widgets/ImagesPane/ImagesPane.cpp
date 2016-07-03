@@ -47,23 +47,23 @@ void ImagesPane::clear()
 
 void ImagesPane::addImage(const QPixmap& _image)
 {
-    if (!_image.isNull()) {
-        const int imageSortOrder = m_images.size();
+	if (!_image.isNull()) {
+		const int imageSortOrder = m_images.size();
 
-        m_images.append(_image);
+		m_images.append(_image);
 
-        ImageLabel* imageLabel = new ImageLabel(this);
-        imageLabel->setFixedSize(200, 150);
-        imageLabel->setImage(_image);
-        imageLabel->setSortOrder(imageSortOrder);
+		ImageLabel* imageLabel = new ImageLabel(this);
+		imageLabel->setFixedSize(200, 150);
+		imageLabel->setImage(_image);
+		imageLabel->setSortOrder(imageSortOrder);
 
-        connect(imageLabel, &ImageLabel::clicked, this, &ImagesPane::showImage);
-        connect(imageLabel, &ImageLabel::removeRequested, this, &ImagesPane::removeImage);
+		connect(imageLabel, &ImageLabel::clicked, this, &ImagesPane::showImage);
+		connect(imageLabel, &ImageLabel::removeRequested, this, &ImagesPane::removeImage);
 
-        m_layout->insertWidget(m_layout->count() - 1, imageLabel);
+		m_layout->insertWidget(m_layout->count() - 1, imageLabel);
 
-        emit imageAdded(_image, imageSortOrder);
-    }
+		emit imageAdded(_image, imageSortOrder);
+	}
 }
 
 void ImagesPane::addImageFromFile(const QString& _imagePath)
@@ -93,63 +93,63 @@ void ImagesPane::setLastSelectedImagePath(const QString& _path)
 
 void ImagesPane::dragEnterEvent(QDragEnterEvent* _event)
 {
-    _event->acceptProposedAction();
+	_event->acceptProposedAction();
 }
 
 void ImagesPane::dragMoveEvent(QDragMoveEvent* _event)
 {
-    _event->acceptProposedAction();
+	_event->acceptProposedAction();
 }
 
 void ImagesPane::dragLeaveEvent(QDragLeaveEvent* _event)
 {
-    _event->accept();
+	_event->accept();
 }
 
 void ImagesPane::dropEvent(QDropEvent* _event)
 {
-    const QMimeData *mimeData = _event->mimeData();
+	const QMimeData *mimeData = _event->mimeData();
 
-    //
-    // Первым делом проверяем список ссылок, возможно выбраны сразу несколько фотогафий
-    //
-    if (mimeData->hasUrls()) {
-        foreach (const QUrl& url, mimeData->urls()) {
-            //
-            // Обрабатываем только изображения
-            //
-            const QString urlString = url.toString().toLower();
-            if (urlString.endsWith("png")
-                || urlString.endsWith("jpg")
-                || urlString.endsWith("jpeg")
-                || urlString.endsWith("gif")
-                || urlString.endsWith("tiff")
-                || urlString.endsWith("bmp")) {
-                //
-                // ... локальные считываем из файла
-                //
-                if (url.scheme() == "file") {
-                    const QPixmap pixmap(url.toLocalFile());
-                    addImage(pixmap);
-                }
-                //
-                // ... подгружаем картинки с инета
-                //
-                else if (url.scheme() == "http"
-                           || url.scheme() == "https") {
-                    const QByteArray pixmapData = WebLoader().loadSync(url);
-                    const QImage image = QImage::fromData(pixmapData);
-                    const QPixmap pixmap = QPixmap::fromImage(image);
-                    addImage(pixmap);
-                }
-            }
-        }
-    } else if (mimeData->hasImage()) {
-        const QPixmap pixmap = qvariant_cast<QPixmap>(mimeData->imageData());
-        addImage(pixmap);
-    }
+	//
+	// Первым делом проверяем список ссылок, возможно выбраны сразу несколько фотогафий
+	//
+	if (mimeData->hasUrls()) {
+		foreach (const QUrl& url, mimeData->urls()) {
+			//
+			// Обрабатываем только изображения
+			//
+			const QString urlString = url.toString().toLower();
+			if (urlString.contains(".png")
+				|| urlString.contains(".jpg")
+				|| urlString.contains(".jpeg")
+				|| urlString.contains(".gif")
+				|| urlString.contains(".tiff")
+				|| urlString.contains(".bmp")) {
+				//
+				// ... локальные считываем из файла
+				//
+				if (url.scheme() == "file") {
+					const QPixmap pixmap(url.toLocalFile());
+					addImage(pixmap);
+				}
+				//
+				// ... подгружаем картинки с инета
+				//
+				else if (url.scheme() == "http"
+						   || url.scheme() == "https") {
+					const QByteArray pixmapData = WebLoader().loadSync(url);
+					const QImage image = QImage::fromData(pixmapData);
+					const QPixmap pixmap = QPixmap::fromImage(image);
+					addImage(pixmap);
+				}
+			}
+		}
+	} else if (mimeData->hasImage()) {
+		const QPixmap pixmap = qvariant_cast<QPixmap>(mimeData->imageData());
+		addImage(pixmap);
+	}
 
-    _event->acceptProposedAction();
+	_event->acceptProposedAction();
 }
 
 bool ImagesPane::eventFilter(QObject* _object, QEvent* _event)
