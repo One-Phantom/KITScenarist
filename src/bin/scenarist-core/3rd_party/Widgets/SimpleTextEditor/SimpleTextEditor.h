@@ -1,7 +1,7 @@
 #ifndef SIMPLETEXTEDITOR_H
 #define SIMPLETEXTEDITOR_H
 
-#include <3rd_party/Widgets/PagesTextEdit/PageTextEdit.h>
+#include <3rd_party/Widgets/SpellCheckTextEdit/SpellCheckTextEdit.h>
 
 class QGestureEvent;
 
@@ -9,9 +9,15 @@ class QGestureEvent;
 /**
  * @brief Простейший редактор текста
  */
-class SimpleTextEditor : public PageTextEdit
+class SimpleTextEditor : public SpellCheckTextEdit
 {
 	Q_OBJECT
+
+public:
+    /**
+     * @brief Включить/выключить проверку правописания
+     */
+    static void enableSpellCheck(bool _enable, SpellChecker::Language _language = SpellChecker::Undefined);
 
 public:
 	explicit SimpleTextEditor(QWidget *parent = 0);
@@ -31,27 +37,12 @@ public:
 
 protected:
 	/**
-	 * @brief Переопределяем для обработки жестов
-	 */
-	bool event(QEvent* _event);
-
-	/**
 	 * @brief Переопределяется для добавления пунктов форматирования текста
 	 */
-	void contextMenuEvent(QContextMenuEvent* _event);
+    void contextMenuEvent(QContextMenuEvent* _event);
 
 	/**
-	 * @brief Переопределяется для реализации увеличения/уменьшения текста
-	 */
-	void wheelEvent(QWheelEvent* _event);
-
-	/**
-	 * @brief Обрабатываем жест увеличения масштаба
-	 */
-	void gestureEvent(QGestureEvent* _event);
-
-	/**
-	 * @brief Вставляется только простой текст
+     * @brief Вставляется только простой текст
 	 */
     void insertFromMimeData(const QMimeData* _source);
 
@@ -68,19 +59,17 @@ private:
 private:
 	QAction* actionTextBold;
 	QAction* actionTextUnderline;
-	QAction* actionTextItalic;
-
-	int m_zoomRange;
-
-	/**
-	 * @brief Инерционный тормоз масштабирования при помощи жестов
-	 */
-	int m_gestureZoomInertionBreak;
+    QAction* actionTextItalic;
 
 	/**
 	 * @brief Синхронизация масштабирования всех редакторов данного типа
 	 */
-	static QList<SimpleTextEditor*> s_editors;
+    static QList<SimpleTextEditor*> s_editors;
+
+    /**
+     * @brief Даём виджету доступ к защищённым членам класса
+     */
+    friend class SimpleTextEditorWidget;
 };
 
 #endif // SIMPLETEXTEDITOR_H

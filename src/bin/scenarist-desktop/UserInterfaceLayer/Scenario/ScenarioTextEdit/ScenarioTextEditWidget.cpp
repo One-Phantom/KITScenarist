@@ -145,7 +145,7 @@ void ScenarioTextEditWidget::setUsePageView(bool _use)
 
 void ScenarioTextEditWidget::setUseSpellChecker(bool _use)
 {
-	m_editor->setUseSpellChecker(_use);
+    m_editor->setUseSpellChecker(_use);
 }
 
 void ScenarioTextEditWidget::setShowSuggestionsInEmptyBlocks(bool _show)

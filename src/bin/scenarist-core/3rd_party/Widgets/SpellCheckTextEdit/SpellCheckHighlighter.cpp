@@ -94,7 +94,7 @@ void SpellCheckHighlighter::highlightBlock(const QString& _text)
 						//
 						const int wordWithoutPunctLength = wordWithoutPunct.length();
 						int positionInText = _text.indexOf(wordWithoutPunct, 0);
-						while (positionInText != -1) {
+                        while (positionInText != -1) {
 							setFormat(positionInText, wordWithoutPunctLength, m_misspeledCharFormat);
 							positionInText = _text.indexOf(wordWithoutPunct, positionInText + 1);
 						}

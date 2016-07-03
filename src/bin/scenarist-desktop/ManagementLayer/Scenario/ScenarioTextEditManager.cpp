@@ -55,7 +55,7 @@ void ScenarioTextEditManager::setCursorPosition(int _position)
 {
 	m_view->setCursorPosition(_position);
 }
-
+#include <3rd_party/Widgets/SimpleTextEditor/SimpleTextEditor.h>
 void ScenarioTextEditManager::reloadTextEditSettings()
 {
 	m_view->setUsePageView(
@@ -94,12 +94,23 @@ void ScenarioTextEditManager::reloadTextEditSettings()
 				DataStorageLayer::StorageFacade::settingsStorage()->value(
 					"scenario-editor/spell-checking",
 					DataStorageLayer::SettingsStorage::ApplicationSettings)
-				.toInt());
+                .toInt());
 	m_view->setSpellCheckLanguage(
 				DataStorageLayer::StorageFacade::settingsStorage()->value(
 					"scenario-editor/spell-checking-language",
 					DataStorageLayer::SettingsStorage::ApplicationSettings)
 				.toInt());
+
+
+    SimpleTextEditor::enableSpellCheck(
+                DataStorageLayer::StorageFacade::settingsStorage()->value(
+                    "scenario-editor/spell-checking",
+                    DataStorageLayer::SettingsStorage::ApplicationSettings)
+                .toInt(),
+                (SpellChecker::Language)DataStorageLayer::StorageFacade::settingsStorage()->value(
+                    "scenario-editor/spell-checking-language",
+                    DataStorageLayer::SettingsStorage::ApplicationSettings)
+                .toInt());
 
 	//
 	// Цветовая схема

@@ -139,7 +139,7 @@
           <string notr="true"/>
          </property>
          <property name="currentIndex">
-          <number>8</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="scenarioEdit">
           <layout class="QGridLayout" name="gridLayout_3">
@@ -372,7 +372,14 @@
             </widget>
            </item>
            <item>
-            <widget class="SimpleTextEditor" name="synopsisText"/>
+            <widget class="SimpleTextEditorWidget" name="synopsisText" native="true">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -968,6 +975,12 @@
    <class>ColoredToolButton</class>
    <extends>QToolButton</extends>
    <header location="global">3rd_party/Widgets/ColoredToolButton/ColoredToolButton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>SimpleTextEditorWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">3rd_party/Widgets/SimpleTextEditor/SimpleTextEditorWidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>

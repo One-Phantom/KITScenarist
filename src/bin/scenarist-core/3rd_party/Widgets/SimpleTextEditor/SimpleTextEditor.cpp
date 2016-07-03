@@ -14,17 +14,25 @@
 #include <QShortcut>
 
 
+void SimpleTextEditor::enableSpellCheck(bool _enable, SpellChecker::Language _language)
+{
+    //
+    // Для каждого редактора
+    //
+    foreach (SimpleTextEditor* editor, s_editors) {
+        editor->setUseSpellChecker(_enable);
+        editor->setSpellCheckLanguage(_language);
+        editor->setHighlighterDocument(editor->document());
+    }
+}
+
 SimpleTextEditor::SimpleTextEditor(QWidget *parent) :
-	PageTextEdit(parent),
-	m_zoomRange(0),
-	m_gestureZoomInertionBreak(0)
+    SpellCheckTextEdit(parent)
 {
 	setAddSpaceToBottom(false);
 	setTabChangesFocus(true);
 	setUsePageMode(false);
-	setPageMargins(QMarginsF(2, 2, 2, 2));
-
-	grabGesture(Qt::PinchGesture);
+    setPageMargins(QMarginsF(2, 2, 2, 2));
 
 	setupMenu();
 
@@ -42,25 +50,7 @@ SimpleTextEditor::SimpleTextEditor(QWidget *parent) :
 	//
 	// Подготовить редактор к синхронизации
 	//
-	s_editors.append(this);
-	//
-	// Обновить масштаб
-	//
-	QSettings settings;
-	setZoomRange(settings.value("simple-editor/zoom-range", 0).toInt());
-
-	//
-	// Добавляем возможность масштабирования при помощи комбинаций Ctrl +/-
-	//
-	auto zoomInFunc = [=] { setZoomRange(m_zoomRange + 1); };
-	QShortcut* zoomInShortcut1 = new QShortcut(QKeySequence("Ctrl++"), this, 0, 0, Qt::WidgetShortcut);
-	connect(zoomInShortcut1, &QShortcut::activated, zoomInFunc);
-	QShortcut* zoomInShortcut2 = new QShortcut(QKeySequence("Ctrl+="), this, 0, 0, Qt::WidgetShortcut);
-	connect(zoomInShortcut2, &QShortcut::activated, zoomInFunc);
-	//
-	auto zoomOutFunc = [=] { setZoomRange(m_zoomRange - 1); };
-	QShortcut* zoomOutShortcut = new QShortcut(QKeySequence("Ctrl+-"), this, 0, 0, Qt::WidgetShortcut);
-	connect(zoomOutShortcut, &QShortcut::activated, zoomOutFunc);
+    s_editors.append(this);
 }
 
 SimpleTextEditor::~SimpleTextEditor()
@@ -110,50 +100,12 @@ void SimpleTextEditor::setTextFont(const QFont& _font)
     mergeFormatOnParagraphOrSelection(fmt);
 }
 
-bool SimpleTextEditor::event(QEvent *_event)
-{
-	bool result = true;
-	if (_event->type() == QEvent::Gesture) {
-		gestureEvent(static_cast<QGestureEvent*>(_event));
-	} else {
-		result = PageTextEdit::event(_event);
-	}
-
-	return result;
-}
-
-void SimpleTextEditor::setZoomRange(int _zoomRange)
-{
-	if (m_zoomRange != _zoomRange) {
-		//
-		// Применить масштабирование
-		//
-		zoomIn(_zoomRange - m_zoomRange);
-		m_zoomRange = _zoomRange;
-
-		//
-		// Для каждого редактора применить коэффициент
-		//
-		foreach (SimpleTextEditor* editor, s_editors) {
-			editor->setZoomRange(m_zoomRange);
-		}
-
-		//
-		// Сохранить значение масштаба
-		//
-		QSettings settings;
-		if (settings.value("simple-editor/zoom-range") != m_zoomRange) {
-			settings.setValue("simple-editor/zoom-range", m_zoomRange);
-		}
-	}
-}
-
 void SimpleTextEditor::contextMenuEvent(QContextMenuEvent* _event)
 {
 	//
 	// Сформируем  контекстное меню
 	//
-	QMenu* menu = createStandardContextMenu();
+    QMenu* menu = createContextMenu(_event->globalPos());
 
 	if (!isReadOnly()) {
 		//
@@ -174,61 +126,6 @@ void SimpleTextEditor::contextMenuEvent(QContextMenuEvent* _event)
 	//
 	menu->exec(_event->globalPos());
 	delete menu;
-}
-
-void SimpleTextEditor::wheelEvent(QWheelEvent* _event)
-{
-	if (_event->modifiers() & Qt::ControlModifier) {
-		if (_event->orientation() == Qt::Vertical) {
-			//
-			// zoomRange > 0 - Текст увеличивается
-			// zoomRange < 0 - Текст уменьшается
-			//
-			int zoomRange = m_zoomRange + (_event->angleDelta().y() / 120);
-			setZoomRange(zoomRange);
-
-			_event->accept();
-		}
-	} else {
-		PageTextEdit::wheelEvent(_event);
-	}
-}
-
-void SimpleTextEditor::gestureEvent(QGestureEvent *_event)
-{
-	if (QGesture* gesture = _event->gesture(Qt::PinchGesture)) {
-		if (QPinchGesture* pinch = qobject_cast<QPinchGesture *>(gesture)) {
-			//
-			// При масштабировании за счёт жестов приходится немного притормаживать
-			// т.к. события приходят слишком часто и при обработке каждого события
-			// пользователю просто невозможно корректно настроить масштаб
-			//
-
-			int zoomRange = m_zoomRange;
-			if (pinch->scaleFactor() > 1) {
-				if (m_gestureZoomInertionBreak < 0) {
-					m_gestureZoomInertionBreak = 0;
-				} else if (m_gestureZoomInertionBreak >= 8) {
-					m_gestureZoomInertionBreak = 0;
-					++zoomRange;
-				} else {
-					++m_gestureZoomInertionBreak;
-				}
-			} else if (pinch->scaleFactor() < 1) {
-				if (m_gestureZoomInertionBreak > 0) {
-					m_gestureZoomInertionBreak = 0;
-				} else if (m_gestureZoomInertionBreak <= -8) {
-					m_gestureZoomInertionBreak = 0;
-					--zoomRange;
-				} else {
-					--m_gestureZoomInertionBreak;
-				}
-			}
-			setZoomRange(zoomRange);
-
-			_event->accept();
-		}
-	}
 }
 
 void SimpleTextEditor::insertFromMimeData(const QMimeData* _source)

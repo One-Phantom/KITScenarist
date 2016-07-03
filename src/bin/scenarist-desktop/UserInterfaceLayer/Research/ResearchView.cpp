@@ -463,7 +463,7 @@ void ResearchView::initConnections()
 	//
 	// ... синопсис
 	//
-	connect(m_ui->synopsisText, &SimpleTextEditor::textChanged, [=]{
+    connect(m_ui->synopsisText, &SimpleTextEditorWidget::textChanged, [=]{
 		emit synopsisTextChanged(TextEditHelper::removeDocumentTags(m_ui->synopsisText->toHtml()));
 	});
 	//
