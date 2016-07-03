@@ -106,6 +106,9 @@
         <file>Icons/Mobile/logout.png</file>
         <file>Icons/unknown.png</file>
         <file>Icons/file-mind-map.png</file>
+        <file>Icons/Editing/format-bold.png</file>
+        <file>Icons/Editing/format-italic.png</file>
+        <file>Icons/Editing/format-underline.png</file>
     </qresource>
     <qresource prefix="/Translations">
         <file>Translations/Scenarist_ru.qm</file>

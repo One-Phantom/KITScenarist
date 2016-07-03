@@ -68,8 +68,8 @@ namespace {
 
 ResearchView::ResearchView(QWidget *parent) :
 	QWidget(parent),
-    m_ui(new Ui::ResearchView),
-    m_isInTextFormatUpdate(false)
+	m_ui(new Ui::ResearchView),
+	m_isInTextFormatUpdate(false)
 {
 	m_ui->setupUi(this);
 
@@ -102,7 +102,7 @@ void ResearchView::setResearchModel(QAbstractItemModel* _model)
 		//
 		connect(m_ui->researchNavigator->selectionModel(), &QItemSelectionModel::selectionChanged,
 				this, &ResearchView::currentResearchChanged);
-        connect(_model, &QAbstractItemModel::rowsInserted, this, &ResearchView::researchItemAdded);
+		connect(_model, &QAbstractItemModel::rowsInserted, this, &ResearchView::researchItemAdded);
 	}
 }
 
@@ -244,23 +244,23 @@ void ResearchView::editImage(const QString& _name, const QPixmap& _image)
 	m_ui->imagePreview->setImage(_image);
 
 	setResearchManageButtonsVisible(true);
-    setSearchVisible(false);
+	setSearchVisible(false);
 }
 
 void ResearchView::editMindMap(const QString &_name, const QString &_xml, int _id)
 {
-    m_ui->researchDataEditsContainer->setCurrentWidget(m_ui->mindMapEdit);
-    m_ui->mindMapName->setText(_name);
+	m_ui->researchDataEditsContainer->setCurrentWidget(m_ui->mindMapEdit);
+	m_ui->mindMapName->setText(_name);
 
-    m_ui->mindMap->closeScene();
-    if (_xml.isEmpty()) {
-        m_ui->mindMap->newScene();
-    } else {
-        m_ui->mindMap->load(_xml);
-    }
+	m_ui->mindMap->closeScene();
+	if (_xml.isEmpty()) {
+		m_ui->mindMap->newScene();
+	} else {
+		m_ui->mindMap->load(_xml);
+	}
 
-    setResearchManageButtonsVisible(true);
-    setSearchVisible(false);
+	setResearchManageButtonsVisible(true);
+	setSearchVisible(false);
 }
 
 void ResearchView::setCommentOnly(bool _isCommentOnly)
@@ -279,9 +279,9 @@ void ResearchView::setCommentOnly(bool _isCommentOnly)
 	m_ui->synopsisText->setReadOnly(_isCommentOnly);
 	m_ui->textName->setReadOnly(_isCommentOnly);
 	m_ui->textDescription->setReadOnly(_isCommentOnly);
-    //
-    // FIXME: остальные редакторы
-    //
+	//
+	// FIXME: остальные редакторы
+	//
 	m_ui->searchWidget->setSearchOnly(_isCommentOnly);
 }
 
@@ -344,19 +344,21 @@ void ResearchView::initView()
 
 	m_ui->search->setIcons(m_ui->search->icon());
 
-    m_ui->textFont->setModel(new QStringListModel(QFontDatabase().families(), m_ui->textFont));
-    m_ui->textBold->setIcons(m_ui->textBold->icon());
-    m_ui->textItalic->setIcons(m_ui->textItalic->icon());
-    m_ui->textUnderline->setIcons(m_ui->textUnderline->icon());
-    m_ui->textColor->setColorsPane(ColoredToolButton::Google);
-    m_ui->textBackgroundColor->setColorsPane(ColoredToolButton::Google);
+	m_ui->synopsisText->setUsePageMode(true);
+
+	m_ui->textFont->setModel(new QStringListModel(QFontDatabase().families(), m_ui->textFont));
+	m_ui->textBold->setIcons(m_ui->textBold->icon());
+	m_ui->textItalic->setIcons(m_ui->textItalic->icon());
+	m_ui->textUnderline->setIcons(m_ui->textUnderline->icon());
+	m_ui->textColor->setColorsPane(ColoredToolButton::Google);
+	m_ui->textBackgroundColor->setColorsPane(ColoredToolButton::Google);
 
 	m_ui->imagesGalleryPane->setLastSelectedImagePath(::imagesFolderPath());
 
 	m_ui->imagePreview->setReadOnly(true);
 
-    m_ui->nodeTextColor->setColorsPane(ColoredToolButton::Google);
-    m_ui->nodeBackgroundColor->setColorsPane(ColoredToolButton::Google);
+	m_ui->nodeTextColor->setColorsPane(ColoredToolButton::Google);
+	m_ui->nodeBackgroundColor->setColorsPane(ColoredToolButton::Google);
 
 	m_ui->searchWidget->setEditor(m_ui->textDescription);
 	m_ui->searchWidget->hide();
@@ -378,7 +380,7 @@ void ResearchView::initConnections()
 		if (_visible) {
 			m_ui->searchWidget->setFocus();
 		}
-    });
+	});
 
 	//
 	// Внутренние соединения формы
@@ -473,64 +475,82 @@ void ResearchView::initConnections()
 	connect(m_ui->textDescription, &SimpleTextEditor::textChanged, [=] {
 		emit textDescriptionChanged(TextEditHelper::removeDocumentTags(m_ui->textDescription->toHtml()));
 	});
-    //
-    // ... панель инструментов текстового редактора
-    //
-    connect(m_ui->textDescription, &SimpleTextEditor::currentCharFormatChanged,
-            [=] (const QTextCharFormat& _format) {
-        m_isInTextFormatUpdate = true;
-        const QFont font = _format.font();
-        m_ui->textFont->setCurrentText(font.family());
-        m_ui->textFontSize->setCurrentText(QString::number(font.pointSize()));
-        m_ui->textBold->setChecked(font.bold());
-        m_ui->textItalic->setChecked(font.italic());
-        m_ui->textUnderline->setChecked(font.underline());
-        QColor textColor = palette().text().color();
-        if (_format.hasProperty(QTextFormat::ForegroundBrush)) {
-            textColor = _format.foreground().color();
-        }
-        m_ui->textColor->setColor(textColor);
-        QColor textBackgroundColor = palette().base().color();
-        if (_format.hasProperty(QTextFormat::BackgroundBrush)) {
-            textBackgroundColor = _format.background().color();
-        }
-        m_ui->textBackgroundColor->setColor(textBackgroundColor);
-        m_isInTextFormatUpdate = false;
-    });
-    //
-    // ... шрифт
-    //
-    connect(m_ui->textFont, &QComboBox::currentTextChanged, [=] {
-        if (!m_isInTextFormatUpdate) {
-            QFont font(m_ui->textFont->currentText(), m_ui->textFontSize->currentText().toInt());
-            m_ui->textDescription->setTextFont(font);
-        }
-    });
-    //
-    // ... размер шрифта
-    //
-    connect(m_ui->textFontSize, &QComboBox::currentTextChanged, [=] {
-        if (!m_isInTextFormatUpdate) {
-            QFont font(m_ui->textFont->currentText(), m_ui->textFontSize->currentText().toInt());
-            m_ui->textDescription->setTextFont(font);
-        }
-    });
-    //
-    // ... цвет текста
-    //
-    connect(m_ui->textColor, &ColoredToolButton::clicked, [=] (const QColor& _color) {
-        if (!m_isInTextFormatUpdate) {
-            m_ui->textDescription->setTextColor(_color);
-        }
-    });
-    //
-    // ... цвет фона текста
-    //
-    connect(m_ui->textBackgroundColor, &ColoredToolButton::clicked, [=] (const QColor& _color) {
-        if (!m_isInTextFormatUpdate) {
-            m_ui->textDescription->setTextBackgroundColor(_color);
-        }
-    });
+	//
+	// ... панель инструментов текстового редактора
+	//
+	connect(m_ui->textDescription, &SimpleTextEditor::currentCharFormatChanged,
+			[=] (const QTextCharFormat& _format) {
+		m_isInTextFormatUpdate = true;
+		const QFont font = _format.font();
+		m_ui->textFont->setCurrentText(font.family());
+		m_ui->textFontSize->setCurrentText(QString::number(font.pointSize()));
+		m_ui->textBold->setChecked(font.bold());
+		m_ui->textItalic->setChecked(font.italic());
+		m_ui->textUnderline->setChecked(font.underline());
+		QColor textColor = palette().text().color();
+		if (_format.hasProperty(QTextFormat::ForegroundBrush)) {
+			textColor = _format.foreground().color();
+		}
+		m_ui->textColor->setColor(textColor);
+		QColor textBackgroundColor = palette().base().color();
+		if (_format.hasProperty(QTextFormat::BackgroundBrush)) {
+			textBackgroundColor = _format.background().color();
+		}
+		m_ui->textBackgroundColor->setColor(textBackgroundColor);
+		m_isInTextFormatUpdate = false;
+	});
+	//
+	// ... шрифт
+	//
+	connect(m_ui->textFont, &QComboBox::currentTextChanged, [=] {
+		if (!m_isInTextFormatUpdate) {
+			QFont font(m_ui->textFont->currentText(), m_ui->textFontSize->currentText().toInt());
+			m_ui->textDescription->setTextFont(font);
+		}
+	});
+	//
+	// ... размер шрифта
+	//
+	connect(m_ui->textFontSize, &QComboBox::currentTextChanged, [=] {
+		if (!m_isInTextFormatUpdate) {
+			QFont font(m_ui->textFont->currentText(), m_ui->textFontSize->currentText().toInt());
+			m_ui->textDescription->setTextFont(font);
+		}
+	});
+	//
+	// ... начертания
+	//
+	connect(m_ui->textBold, &FlatButton::toggled, [=] {
+		if (!m_isInTextFormatUpdate) {
+			m_ui->textDescription->setTextBold();
+		}
+	});
+	connect(m_ui->textItalic, &FlatButton::toggled, [=] {
+		if (!m_isInTextFormatUpdate) {
+			m_ui->textDescription->setTextItalic();
+		}
+	});
+	connect(m_ui->textUnderline, &FlatButton::toggled, [=] {
+		if (!m_isInTextFormatUpdate) {
+			m_ui->textDescription->setTextUnderline();
+		}
+	});
+	//
+	// ... цвет текста
+	//
+	connect(m_ui->textColor, &ColoredToolButton::clicked, [=] (const QColor& _color) {
+		if (!m_isInTextFormatUpdate) {
+			m_ui->textDescription->setTextColor(_color);
+		}
+	});
+	//
+	// ... цвет фона текста
+	//
+	connect(m_ui->textBackgroundColor, &ColoredToolButton::clicked, [=] (const QColor& _color) {
+		if (!m_isInTextFormatUpdate) {
+			m_ui->textDescription->setTextBackgroundColor(_color);
+		}
+	});
 	//
 	// ... интернет-страница
 	//
@@ -566,33 +586,33 @@ void ResearchView::initConnections()
 	//
 	connect(m_ui->imageName, &QLineEdit::textChanged, this, &ResearchView::imageNameChanged);
 
-    //
-    // ... ментальная карта
-    //
-    connect(m_ui->mindMapName, &QLineEdit::textChanged, this, &ResearchView::mindMapNameChanged);
-    connect(m_ui->mindMap, &GraphWidget::contentChanged, [=] {
-        emit mindMapChanged(m_ui->mindMap->save());
-    });
-    //
-    // ... панель инструментов редактора ментальных карт
-    //
-    connect(m_ui->mindMap->graphLogic(), &GraphLogic::activeNodeChanged, [=] {
-        if (Node* activeNode = m_ui->mindMap->graphLogic()->activeNode()) {
-            m_ui->nodeTextColor->setColor(activeNode->textColor());
-            m_ui->nodeBackgroundColor->setColor(activeNode->color());
-        } else {
-            m_ui->nodeTextColor->setColor(QColor());
-            m_ui->nodeBackgroundColor->setColor(QColor());
-        }
-    });
-    connect(m_ui->addRootNode, &FlatButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::insertRootNode);
-    connect(m_ui->addNode, &FlatButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::insertNode);
-    connect(m_ui->addSiblingNode, &FlatButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::insertSiblingNode);
-    connect(m_ui->deleteNode, &FlatButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::removeNode);
-    connect(m_ui->addEdge, &FlatButton::clicked, m_ui->mindMap->graphLogic(), static_cast<void (GraphLogic::*)()>(&GraphLogic::addEdge));
-    connect(m_ui->deleteEdge, &FlatButton::clicked, m_ui->mindMap->graphLogic(), static_cast<void (GraphLogic::*)()>(&GraphLogic::removeEdge));
-    connect(m_ui->nodeTextColor, &ColoredToolButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::setNodeTextColor);
-    connect(m_ui->nodeBackgroundColor, &ColoredToolButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::setNodeColor);
+	//
+	// ... ментальная карта
+	//
+	connect(m_ui->mindMapName, &QLineEdit::textChanged, this, &ResearchView::mindMapNameChanged);
+	connect(m_ui->mindMap, &GraphWidget::contentChanged, [=] {
+		emit mindMapChanged(m_ui->mindMap->save());
+	});
+	//
+	// ... панель инструментов редактора ментальных карт
+	//
+	connect(m_ui->mindMap->graphLogic(), &GraphLogic::activeNodeChanged, [=] {
+		if (Node* activeNode = m_ui->mindMap->graphLogic()->activeNode()) {
+			m_ui->nodeTextColor->setColor(activeNode->textColor());
+			m_ui->nodeBackgroundColor->setColor(activeNode->color());
+		} else {
+			m_ui->nodeTextColor->setColor(QColor());
+			m_ui->nodeBackgroundColor->setColor(QColor());
+		}
+	});
+	connect(m_ui->addRootNode, &FlatButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::insertRootNode);
+	connect(m_ui->addNode, &FlatButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::insertNode);
+	connect(m_ui->addSiblingNode, &FlatButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::insertSiblingNode);
+	connect(m_ui->deleteNode, &FlatButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::removeNode);
+	connect(m_ui->addEdge, &FlatButton::clicked, m_ui->mindMap->graphLogic(), static_cast<void (GraphLogic::*)()>(&GraphLogic::addEdge));
+	connect(m_ui->deleteEdge, &FlatButton::clicked, m_ui->mindMap->graphLogic(), static_cast<void (GraphLogic::*)()>(&GraphLogic::removeEdge));
+	connect(m_ui->nodeTextColor, &ColoredToolButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::setNodeTextColor);
+	connect(m_ui->nodeBackgroundColor, &ColoredToolButton::clicked, m_ui->mindMap->graphLogic(), &GraphLogic::setNodeColor);
 }
 
 void ResearchView::initStyleSheet()
@@ -603,48 +623,48 @@ void ResearchView::initStyleSheet()
 	m_ui->topNavigatorEndLabel->setProperty("topPanelTopBordered", true);
 	m_ui->topDataLabel->setProperty("inTopPanel", true);
 	m_ui->topDataLabel->setProperty("topPanelTopBordered", true);
-    m_ui->topTextToolbarLabelRight->setProperty("inTopPanel", true);
-    m_ui->topTextToolbarLabelRight->setProperty("topPanelTopBordered", true);
-    m_ui->topTextToolbarLabelRight->setProperty("topPanelRightBordered", true);
-    m_ui->topMindMapToolbarLabelLeft->setProperty("inTopPanel", true);
-    m_ui->topMindMapToolbarLabelLeft->setProperty("topPanelLeftBordered", true);
-    m_ui->topMindMapToolbarLabelRight->setProperty("inTopPanel", true);
-    m_ui->topMindMapToolbarLabelRight->setProperty("topPanelTopBordered", true);
-    m_ui->topMindMapToolbarLabelRight->setProperty("topPanelRightBordered", true);
+	m_ui->topTextToolbarLabelRight->setProperty("inTopPanel", true);
+	m_ui->topTextToolbarLabelRight->setProperty("topPanelTopBordered", true);
+	m_ui->topTextToolbarLabelRight->setProperty("topPanelRightBordered", true);
+	m_ui->topMindMapToolbarLabelLeft->setProperty("inTopPanel", true);
+	m_ui->topMindMapToolbarLabelLeft->setProperty("topPanelLeftBordered", true);
+	m_ui->topMindMapToolbarLabelRight->setProperty("inTopPanel", true);
+	m_ui->topMindMapToolbarLabelRight->setProperty("topPanelTopBordered", true);
+	m_ui->topMindMapToolbarLabelRight->setProperty("topPanelRightBordered", true);
 
 	m_ui->addResearchItem->setProperty("inTopPanel", true);
 	m_ui->removeResearchItem->setProperty("inTopPanel", true);
 
 	m_ui->search->setProperty("inTopPanel", true);
 
-    m_ui->textFont->setProperty("inTopPanel", true);
-    m_ui->textFont->setProperty("topPanelTopBordered", true);
-    m_ui->textFont->setProperty("topPanelLeftBordered", true);
-    m_ui->textFont->setProperty("topPanelRightBordered", true);
-    m_ui->textFontSize->setProperty("inTopPanel", true);
-    m_ui->textFontSize->setProperty("topPanelTopBordered", true);
-    m_ui->textFontSize->setProperty("topPanelRightBordered", true);
-    m_ui->textBold->setProperty("inTopPanel", true);
-    m_ui->textItalic->setProperty("inTopPanel", true);
-    m_ui->textUnderline->setProperty("inTopPanel", true);
-    m_ui->textColor->setProperty("inTopPanel", true);
-    m_ui->textBackgroundColor->setProperty("inTopPanel", true);
+	m_ui->textFont->setProperty("inTopPanel", true);
+	m_ui->textFont->setProperty("topPanelTopBordered", true);
+	m_ui->textFont->setProperty("topPanelLeftBordered", true);
+	m_ui->textFont->setProperty("topPanelRightBordered", true);
+	m_ui->textFontSize->setProperty("inTopPanel", true);
+	m_ui->textFontSize->setProperty("topPanelTopBordered", true);
+	m_ui->textFontSize->setProperty("topPanelRightBordered", true);
+	m_ui->textBold->setProperty("inTopPanel", true);
+	m_ui->textItalic->setProperty("inTopPanel", true);
+	m_ui->textUnderline->setProperty("inTopPanel", true);
+	m_ui->textColor->setProperty("inTopPanel", true);
+	m_ui->textBackgroundColor->setProperty("inTopPanel", true);
 
-    m_ui->addRootNode->setProperty("inTopPanel", true);
-    m_ui->addNode->setProperty("inTopPanel", true);
-    m_ui->addSiblingNode->setProperty("inTopPanel", true);
-    m_ui->deleteNode->setProperty("inTopPanel", true);
-    m_ui->addEdge->setProperty("inTopPanel", true);
-    m_ui->deleteEdge->setProperty("inTopPanel", true);
-    m_ui->nodeTextColor->setProperty("inTopPanel", true);
-    m_ui->nodeBackgroundColor->setProperty("inTopPanel", true);
+	m_ui->addRootNode->setProperty("inTopPanel", true);
+	m_ui->addNode->setProperty("inTopPanel", true);
+	m_ui->addSiblingNode->setProperty("inTopPanel", true);
+	m_ui->deleteNode->setProperty("inTopPanel", true);
+	m_ui->addEdge->setProperty("inTopPanel", true);
+	m_ui->deleteEdge->setProperty("inTopPanel", true);
+	m_ui->nodeTextColor->setProperty("inTopPanel", true);
+	m_ui->nodeBackgroundColor->setProperty("inTopPanel", true);
 
 	m_ui->researchNavigator->setProperty("mainContainer", true);
 	m_ui->researchDataEditsContainer->setProperty("mainContainer", true);
 
-    m_ui->textName->setProperty("editableLabel", true);
-    m_ui->urlName->setProperty("editableLabel", true);
-    m_ui->imagesGalleryName->setProperty("editableLabel", true);
-    m_ui->imageName->setProperty("editableLabel", true);
-    m_ui->mindMapName->setProperty("editableLabel", true);
+	m_ui->textName->setProperty("editableLabel", true);
+	m_ui->urlName->setProperty("editableLabel", true);
+	m_ui->imagesGalleryName->setProperty("editableLabel", true);
+	m_ui->imageName->setProperty("editableLabel", true);
+	m_ui->mindMapName->setProperty("editableLabel", true);
 }
