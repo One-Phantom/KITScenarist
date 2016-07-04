@@ -24,9 +24,16 @@
  */
 *[mainContainer="true"] {
 	border: none;
-	border-top-width: 1px;
+    border-top-width: 1px;
 	border-top-style: solid;
-	border-top-color: palette(dark);
+    border-top-color: palette(dark);
+}
+
+/*
+ * Виджет без рамок
+ */
+*[nobordersContainer="true"] {
+    border: none;
 }
 
 /*

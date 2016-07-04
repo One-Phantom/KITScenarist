@@ -139,22 +139,36 @@
           <string notr="true"/>
          </property>
          <property name="currentIndex">
-          <number>4</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="scenarioEdit">
           <layout class="QGridLayout" name="gridLayout_3">
-           <item row="4" column="2">
-            <spacer name="verticalSpacer">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
+           <item row="1" column="0" colspan="4">
+            <widget class="QLineEdit" name="scenarioName">
+             <property name="maxLength">
+              <number>300</number>
              </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>139</height>
-              </size>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLabel" name="scenarioLoglineWordsLabel">
+             <property name="text">
+              <string>words:</string>
              </property>
-            </spacer>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_2">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Logline:</string>
+             </property>
+            </widget>
            </item>
            <item row="0" column="0">
             <widget class="QLabel" name="label">
@@ -185,33 +199,26 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="0" colspan="4">
-            <widget class="QLineEdit" name="scenarioName">
-             <property name="maxLength">
-              <number>300</number>
+           <item row="4" column="2">
+            <spacer name="verticalSpacer">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
              </property>
-            </widget>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>139</height>
+              </size>
+             </property>
+            </spacer>
            </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_2">
+           <item row="3" column="0" colspan="3">
+            <widget class="SimpleTextEditorWidget" name="scenarioLogline" native="true">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Logline:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0" colspan="4">
-            <widget class="SimpleTextEditor" name="scenarioLogline"/>
-           </item>
-           <item row="2" column="1">
-            <widget class="QLabel" name="scenarioLoglineWordsLabel">
-             <property name="text">
-              <string>words:</string>
              </property>
             </widget>
            </item>
@@ -372,7 +379,14 @@
             </widget>
            </item>
            <item>
-            <widget class="SimpleTextEditor" name="synopsisText"/>
+            <widget class="SimpleTextEditorWidget" name="synopsisText" native="true">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -403,217 +417,14 @@
             </widget>
            </item>
            <item>
-            <layout class="QVBoxLayout" name="verticalLayout_4">
-             <property name="spacing">
-              <number>0</number>
+            <widget class="SimpleTextEditorWidget" name="textDescription" native="true">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
              </property>
-             <item>
-              <widget class="QFrame" name="mindMapToolbar_2">
-               <layout class="QHBoxLayout" name="horizontalLayout_2">
-                <property name="spacing">
-                 <number>0</number>
-                </property>
-                <property name="leftMargin">
-                 <number>0</number>
-                </property>
-                <property name="topMargin">
-                 <number>0</number>
-                </property>
-                <property name="rightMargin">
-                 <number>0</number>
-                </property>
-                <property name="bottomMargin">
-                 <number>0</number>
-                </property>
-                <item>
-                 <widget class="QComboBox" name="textFont">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="editable">
-                   <bool>true</bool>
-                  </property>
-                  <property name="sizeAdjustPolicy">
-                   <enum>QComboBox::AdjustToContents</enum>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QComboBox" name="textFontSize">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="editable">
-                   <bool>true</bool>
-                  </property>
-                  <property name="sizeAdjustPolicy">
-                   <enum>QComboBox::AdjustToContents</enum>
-                  </property>
-                  <item>
-                   <property name="text">
-                    <string>8</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>10</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>12</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>14</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>18</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>24</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>32</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>64</string>
-                   </property>
-                  </item>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="FlatButton" name="textBold">
-                  <property name="toolTip">
-                   <string>Make text bold</string>
-                  </property>
-                  <property name="text">
-                   <string>Bold</string>
-                  </property>
-                  <property name="icon">
-                   <iconset resource="../../../scenarist-core/Resources/Resources.qrc">
-                    <normaloff>:/Graphics/Icons/Editing/format-bold.png</normaloff>:/Graphics/Icons/Editing/format-bold.png</iconset>
-                  </property>
-                  <property name="checkable">
-                   <bool>true</bool>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="FlatButton" name="textItalic">
-                  <property name="toolTip">
-                   <string>Make text italic</string>
-                  </property>
-                  <property name="text">
-                   <string>Italic</string>
-                  </property>
-                  <property name="icon">
-                   <iconset resource="../../../scenarist-core/Resources/Resources.qrc">
-                    <normaloff>:/Graphics/Icons/Editing/format-italic.png</normaloff>:/Graphics/Icons/Editing/format-italic.png</iconset>
-                  </property>
-                  <property name="checkable">
-                   <bool>true</bool>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="FlatButton" name="textUnderline">
-                  <property name="toolTip">
-                   <string>Make text underlined</string>
-                  </property>
-                  <property name="text">
-                   <string>Underline</string>
-                  </property>
-                  <property name="icon">
-                   <iconset resource="../../../scenarist-core/Resources/Resources.qrc">
-                    <normaloff>:/Graphics/Icons/Editing/format-underline.png</normaloff>:/Graphics/Icons/Editing/format-underline.png</iconset>
-                  </property>
-                  <property name="checkable">
-                   <bool>true</bool>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="ColoredToolButton" name="textColor">
-                  <property name="toolTip">
-                   <string>Change text color</string>
-                  </property>
-                  <property name="text">
-                   <string>Text color</string>
-                  </property>
-                  <property name="icon">
-                   <iconset resource="../../../scenarist-core/Resources/Resources.qrc">
-                    <normaloff>:/Graphics/Icons/Review/font-color.png</normaloff>:/Graphics/Icons/Review/font-color.png</iconset>
-                  </property>
-                  <property name="iconSize">
-                   <size>
-                    <width>20</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                  <property name="popupMode">
-                   <enum>QToolButton::MenuButtonPopup</enum>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="ColoredToolButton" name="textBackgroundColor">
-                  <property name="toolTip">
-                   <string>Change text background color</string>
-                  </property>
-                  <property name="text">
-                   <string>Background color</string>
-                  </property>
-                  <property name="icon">
-                   <iconset resource="../../../scenarist-core/Resources/Resources.qrc">
-                    <normaloff>:/Graphics/Icons/Review/font-bg-color.png</normaloff>:/Graphics/Icons/Review/font-bg-color.png</iconset>
-                  </property>
-                  <property name="iconSize">
-                   <size>
-                    <width>20</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                  <property name="popupMode">
-                   <enum>QToolButton::MenuButtonPopup</enum>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="topTextToolbarLabelRight">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-             </item>
-             <item>
-              <widget class="SimpleTextEditor" name="textDescription"/>
-             </item>
-            </layout>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -689,7 +500,7 @@
               <string notr="true"/>
              </property>
              <property name="text">
-              <string>some ftext</string>
+              <string/>
              </property>
              <property name="maxLength">
               <number>300</number>
@@ -948,12 +759,6 @@
    <header location="global">3rd_party/Widgets/FlatButton/FlatButton.h</header>
   </customwidget>
   <customwidget>
-   <class>SimpleTextEditor</class>
-   <extends>QTextEdit</extends>
-   <header location="global">3rd_party/Widgets/SimpleTextEditor/SimpleTextEditor.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>QWebEngineView</class>
    <extends>QWidget</extends>
    <header location="global">QWebEngineView</header>
@@ -980,6 +785,12 @@
    <class>ColoredToolButton</class>
    <extends>QToolButton</extends>
    <header location="global">3rd_party/Widgets/ColoredToolButton/ColoredToolButton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>SimpleTextEditorWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">3rd_party/Widgets/SimpleTextEditor/SimpleTextEditorWidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>

@@ -5,6 +5,7 @@
 #include <DataLayer/DataStorageLayer/SettingsStorage.h>
 
 #include <3rd_party/Helpers/TextEditHelper.h>
+#include <3rd_party/Widgets/SimpleTextEditor/SimpleTextEditor.h>
 
 #include "ResearchNavigatorItemDelegate.h"
 #include "ResearchNavigatorProxyStyle.h"
@@ -175,7 +176,7 @@ void ResearchView::editText(const QString& _name, const QString& _description)
 	// Сохраняем позицию предыдущего текста
 	//
 	const QString oldText = TextEditHelper::removeDocumentTags(m_ui->textDescription->toHtml());
-	m_textScrollingMap[oldText] = m_ui->textDescription->verticalScrollBar()->value();
+	m_textScrollingMap[oldText] = m_ui->textDescription->editor()->verticalScrollBar()->value();
 
 	//
 	// Загружаем новые данные
@@ -193,7 +194,7 @@ void ResearchView::editText(const QString& _name, const QString& _description)
 	// ... восстанавливаем позицию прокрутки текста, если это возможно
 	//
 	if (m_textScrollingMap.contains(_description)) {
-		m_ui->textDescription->verticalScrollBar()->setValue(m_textScrollingMap[_description]);
+		m_ui->textDescription->editor()->verticalScrollBar()->setValue(m_textScrollingMap[_description]);
 		//
 		// Удаляем себя из карты, чтобы не засорять память, т.к. текст может быть изменён
 		//
@@ -344,14 +345,9 @@ void ResearchView::initView()
 
 	m_ui->search->setIcons(m_ui->search->icon());
 
-	m_ui->synopsisText->setUsePageMode(true);
+	m_ui->scenarioLogline->setToolbarVisible(false);
 
-	m_ui->textFont->setModel(new QStringListModel(QFontDatabase().families(), m_ui->textFont));
-	m_ui->textBold->setIcons(m_ui->textBold->icon());
-	m_ui->textItalic->setIcons(m_ui->textItalic->icon());
-	m_ui->textUnderline->setIcons(m_ui->textUnderline->icon());
-	m_ui->textColor->setColorsPane(ColoredToolButton::Google);
-	m_ui->textBackgroundColor->setColorsPane(ColoredToolButton::Google);
+	m_ui->synopsisText->setUsePageMode(true);
 
 	m_ui->imagesGalleryPane->setLastSelectedImagePath(::imagesFolderPath());
 
@@ -360,7 +356,7 @@ void ResearchView::initView()
 	m_ui->nodeTextColor->setColorsPane(ColoredToolButton::Google);
 	m_ui->nodeBackgroundColor->setColorsPane(ColoredToolButton::Google);
 
-	m_ui->searchWidget->setEditor(m_ui->textDescription);
+	m_ui->searchWidget->setEditor(m_ui->textDescription->editor());
 	m_ui->searchWidget->hide();
 }
 
@@ -388,7 +384,7 @@ void ResearchView::initConnections()
 	connect(m_ui->scenarioName, &QLineEdit::textChanged, [=] {
 		::updateText(m_ui->titlePageName, m_ui->scenarioName->text());
 	});
-	connect(m_ui->scenarioLogline, &SimpleTextEditor::textChanged, [=] {
+	connect(m_ui->scenarioLogline, &SimpleTextEditorWidget::textChanged, [=] {
 		const QString textToSplit = m_ui->scenarioLogline->toPlainText().simplified();
 		const int wordsCount = textToSplit.split(QRegExp("([^\\w,^\\\\]|(?=\\\\))+"), QString::SkipEmptyParts).size();
 		m_ui->scenarioLoglineWords->setVisible(wordsCount > 0);
@@ -448,7 +444,7 @@ void ResearchView::initConnections()
 	// ... сценарий
 	//
 	connect(m_ui->scenarioName, &QLineEdit::textChanged, this, &ResearchView::scenarioNameChanged);
-	connect(m_ui->scenarioLogline, &SimpleTextEditor::textChanged, [=]{
+	connect(m_ui->scenarioLogline, &SimpleTextEditorWidget::textChanged, [=]{
 		emit scenarioLoglineChanged(TextEditHelper::removeDocumentTags(m_ui->scenarioLogline->toHtml()));
 	});
 	//
@@ -465,91 +461,15 @@ void ResearchView::initConnections()
 	//
 	// ... синопсис
 	//
-	connect(m_ui->synopsisText, &SimpleTextEditor::textChanged, [=]{
+	connect(m_ui->synopsisText, &SimpleTextEditorWidget::textChanged, [=]{
 		emit synopsisTextChanged(TextEditHelper::removeDocumentTags(m_ui->synopsisText->toHtml()));
 	});
 	//
 	// ... текстовый элемент
 	//
 	connect(m_ui->textName, &QLineEdit::textChanged, this, &ResearchView::textNameChanged);
-	connect(m_ui->textDescription, &SimpleTextEditor::textChanged, [=] {
+	connect(m_ui->textDescription, &SimpleTextEditorWidget::textChanged, [=] {
 		emit textDescriptionChanged(TextEditHelper::removeDocumentTags(m_ui->textDescription->toHtml()));
-	});
-	//
-	// ... панель инструментов текстового редактора
-	//
-	connect(m_ui->textDescription, &SimpleTextEditor::currentCharFormatChanged,
-			[=] (const QTextCharFormat& _format) {
-		m_isInTextFormatUpdate = true;
-		const QFont font = _format.font();
-		m_ui->textFont->setCurrentText(font.family());
-		m_ui->textFontSize->setCurrentText(QString::number(font.pointSize()));
-		m_ui->textBold->setChecked(font.bold());
-		m_ui->textItalic->setChecked(font.italic());
-		m_ui->textUnderline->setChecked(font.underline());
-		QColor textColor = palette().text().color();
-		if (_format.hasProperty(QTextFormat::ForegroundBrush)) {
-			textColor = _format.foreground().color();
-		}
-		m_ui->textColor->setColor(textColor);
-		QColor textBackgroundColor = palette().base().color();
-		if (_format.hasProperty(QTextFormat::BackgroundBrush)) {
-			textBackgroundColor = _format.background().color();
-		}
-		m_ui->textBackgroundColor->setColor(textBackgroundColor);
-		m_isInTextFormatUpdate = false;
-	});
-	//
-	// ... шрифт
-	//
-	connect(m_ui->textFont, &QComboBox::currentTextChanged, [=] {
-		if (!m_isInTextFormatUpdate) {
-			QFont font(m_ui->textFont->currentText(), m_ui->textFontSize->currentText().toInt());
-			m_ui->textDescription->setTextFont(font);
-		}
-	});
-	//
-	// ... размер шрифта
-	//
-	connect(m_ui->textFontSize, &QComboBox::currentTextChanged, [=] {
-		if (!m_isInTextFormatUpdate) {
-			QFont font(m_ui->textFont->currentText(), m_ui->textFontSize->currentText().toInt());
-			m_ui->textDescription->setTextFont(font);
-		}
-	});
-	//
-	// ... начертания
-	//
-	connect(m_ui->textBold, &FlatButton::toggled, [=] {
-		if (!m_isInTextFormatUpdate) {
-			m_ui->textDescription->setTextBold();
-		}
-	});
-	connect(m_ui->textItalic, &FlatButton::toggled, [=] {
-		if (!m_isInTextFormatUpdate) {
-			m_ui->textDescription->setTextItalic();
-		}
-	});
-	connect(m_ui->textUnderline, &FlatButton::toggled, [=] {
-		if (!m_isInTextFormatUpdate) {
-			m_ui->textDescription->setTextUnderline();
-		}
-	});
-	//
-	// ... цвет текста
-	//
-	connect(m_ui->textColor, &ColoredToolButton::clicked, [=] (const QColor& _color) {
-		if (!m_isInTextFormatUpdate) {
-			m_ui->textDescription->setTextColor(_color);
-		}
-	});
-	//
-	// ... цвет фона текста
-	//
-	connect(m_ui->textBackgroundColor, &ColoredToolButton::clicked, [=] (const QColor& _color) {
-		if (!m_isInTextFormatUpdate) {
-			m_ui->textDescription->setTextBackgroundColor(_color);
-		}
 	});
 	//
 	// ... интернет-страница
@@ -623,9 +543,6 @@ void ResearchView::initStyleSheet()
 	m_ui->topNavigatorEndLabel->setProperty("topPanelTopBordered", true);
 	m_ui->topDataLabel->setProperty("inTopPanel", true);
 	m_ui->topDataLabel->setProperty("topPanelTopBordered", true);
-	m_ui->topTextToolbarLabelRight->setProperty("inTopPanel", true);
-	m_ui->topTextToolbarLabelRight->setProperty("topPanelTopBordered", true);
-	m_ui->topTextToolbarLabelRight->setProperty("topPanelRightBordered", true);
 	m_ui->topMindMapToolbarLabelLeft->setProperty("inTopPanel", true);
 	m_ui->topMindMapToolbarLabelLeft->setProperty("topPanelLeftBordered", true);
 	m_ui->topMindMapToolbarLabelRight->setProperty("inTopPanel", true);
@@ -636,19 +553,6 @@ void ResearchView::initStyleSheet()
 	m_ui->removeResearchItem->setProperty("inTopPanel", true);
 
 	m_ui->search->setProperty("inTopPanel", true);
-
-	m_ui->textFont->setProperty("inTopPanel", true);
-	m_ui->textFont->setProperty("topPanelTopBordered", true);
-	m_ui->textFont->setProperty("topPanelLeftBordered", true);
-	m_ui->textFont->setProperty("topPanelRightBordered", true);
-	m_ui->textFontSize->setProperty("inTopPanel", true);
-	m_ui->textFontSize->setProperty("topPanelTopBordered", true);
-	m_ui->textFontSize->setProperty("topPanelRightBordered", true);
-	m_ui->textBold->setProperty("inTopPanel", true);
-	m_ui->textItalic->setProperty("inTopPanel", true);
-	m_ui->textUnderline->setProperty("inTopPanel", true);
-	m_ui->textColor->setProperty("inTopPanel", true);
-	m_ui->textBackgroundColor->setProperty("inTopPanel", true);
 
 	m_ui->addRootNode->setProperty("inTopPanel", true);
 	m_ui->addNode->setProperty("inTopPanel", true);

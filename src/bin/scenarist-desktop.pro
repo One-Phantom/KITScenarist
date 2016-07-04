@@ -302,7 +302,9 @@ SOURCES += \
     scenarist-core/3rd_party/Widgets/QtMindMap/src/edge.cpp \
     scenarist-core/3rd_party/Widgets/QtMindMap/src/graphlogic.cpp \
     scenarist-core/3rd_party/Widgets/QtMindMap/src/graphwidget.cpp \
-    scenarist-core/3rd_party/Widgets/QtMindMap/src/node.cpp
+    scenarist-core/3rd_party/Widgets/QtMindMap/src/node.cpp \
+    scenarist-core/3rd_party/Widgets/SimpleTextEditor/SimpleScalableTextEditor.cpp \
+    scenarist-core/3rd_party/Widgets/SimpleTextEditor/SimpleTextEditorWidget.cpp
 
 HEADERS += \
     scenarist-desktop/ManagementLayer/ApplicationManager.h \
@@ -546,14 +548,15 @@ HEADERS += \
     scenarist-core/3rd_party/Widgets/QtMindMap/include/edge.h \
     scenarist-core/3rd_party/Widgets/QtMindMap/include/graphlogic.h \
     scenarist-core/3rd_party/Widgets/QtMindMap/include/graphwidget.h \
-    scenarist-core/3rd_party/Widgets/QtMindMap/include/node.h
+    scenarist-core/3rd_party/Widgets/QtMindMap/include/node.h \
+    scenarist-core/3rd_party/Widgets/SimpleTextEditor/SimpleScalableTextEditor.h \
+    scenarist-core/3rd_party/Widgets/SimpleTextEditor/SimpleTextEditorWidget.h
 
 FORMS += \
     scenarist-desktop/UserInterfaceLayer/StartUp/StartUpView.ui \
     scenarist-desktop/UserInterfaceLayer/Characters/CharactersDataEdit/CharactersDataEdit.ui \
     scenarist-desktop/UserInterfaceLayer/Locations/LocationsDataEdit/LocationsDataEdit.ui \
     scenarist-desktop/UserInterfaceLayer/Settings/SettingsView.ui \
-    scenarist-desktop/UserInterfaceLayer/Scenario/ScenarioDataEdit/ScenarioDataEdit.ui \
     scenarist-desktop/UserInterfaceLayer/Export/ExportDialog.ui \
     scenarist-desktop/UserInterfaceLayer/Import/ImportDialog.ui \
     scenarist-desktop/UserInterfaceLayer/Settings/TemplateDialog.ui \
