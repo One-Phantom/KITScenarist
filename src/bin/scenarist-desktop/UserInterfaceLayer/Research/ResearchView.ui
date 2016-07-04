@@ -139,7 +139,7 @@
           <string notr="true"/>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>8</number>
          </property>
          <widget class="QWidget" name="scenarioEdit">
           <layout class="QGridLayout" name="gridLayout_3">
@@ -625,48 +625,65 @@
                 </item>
                 <item>
                  <widget class="FlatButton" name="addRootNode">
+                  <property name="toolTip">
+                   <string>Add root node</string>
+                  </property>
                   <property name="text">
                    <string>Add root node</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../../../scenarist-core/Resources/Resources.qrc">
+                    <normaloff>:/Graphics/Icons/MindMap/add-root.png</normaloff>:/Graphics/Icons/MindMap/add-root.png</iconset>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="FlatButton" name="addNode">
+                  <property name="toolTip">
+                   <string>Add child node</string>
+                  </property>
                   <property name="text">
                    <string>Add child node</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../../../scenarist-core/Resources/Resources.qrc">
+                    <normaloff>:/Graphics/Icons/MindMap/add-child.png</normaloff>:/Graphics/Icons/MindMap/add-child.png</iconset>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="FlatButton" name="addSiblingNode">
+                  <property name="toolTip">
+                   <string>Add sibling node</string>
+                  </property>
                   <property name="text">
                    <string>Add sibling node</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../../../scenarist-core/Resources/Resources.qrc">
+                    <normaloff>:/Graphics/Icons/MindMap/add-sibling.png</normaloff>:/Graphics/Icons/MindMap/add-sibling.png</iconset>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="FlatButton" name="deleteNode">
+                  <property name="toolTip">
+                   <string>Delete node</string>
+                  </property>
                   <property name="text">
                    <string>Delete node</string>
                   </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="FlatButton" name="addEdge">
-                  <property name="text">
-                   <string>Add edge</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="FlatButton" name="deleteEdge">
-                  <property name="text">
-                   <string>Delete edge</string>
+                  <property name="icon">
+                   <iconset resource="../../../scenarist-core/Resources/Resources.qrc">
+                    <normaloff>:/Graphics/Icons/MindMap/remove-node.png</normaloff>:/Graphics/Icons/MindMap/remove-node.png</iconset>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="ColoredToolButton" name="nodeTextColor">
+                  <property name="toolTip">
+                   <string>Node text color</string>
+                  </property>
                   <property name="text">
                    <string>Text color</string>
                   </property>
@@ -687,6 +704,9 @@
                 </item>
                 <item>
                  <widget class="ColoredToolButton" name="nodeBackgroundColor">
+                  <property name="toolTip">
+                   <string>Node background color</string>
+                  </property>
                   <property name="text">
                    <string>Background color</string>
                   </property>
@@ -702,6 +722,34 @@
                   </property>
                   <property name="popupMode">
                    <enum>QToolButton::MenuButtonPopup</enum>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="FlatButton" name="addEdge">
+                  <property name="toolTip">
+                   <string>Add edge</string>
+                  </property>
+                  <property name="text">
+                   <string>Add edge</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../../../scenarist-core/Resources/Resources.qrc">
+                    <normaloff>:/Graphics/Icons/MindMap/add-edge.png</normaloff>:/Graphics/Icons/MindMap/add-edge.png</iconset>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="FlatButton" name="deleteEdge">
+                  <property name="toolTip">
+                   <string>Delete edge</string>
+                  </property>
+                  <property name="text">
+                   <string>Delete edge</string>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../../../scenarist-core/Resources/Resources.qrc">
+                    <normaloff>:/Graphics/Icons/MindMap/remove-edge.png</normaloff>:/Graphics/Icons/MindMap/remove-edge.png</iconset>
                   </property>
                  </widget>
                 </item>
