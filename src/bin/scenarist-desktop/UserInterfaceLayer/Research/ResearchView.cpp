@@ -62,6 +62,8 @@ namespace {
 			if (plainTextEdit->toPlainText() != _text) {
 				plainTextEdit->setPlainText(_text);
 			}
+		} else if (SimpleTextEditorWidget* simpleTextEdit = qobject_cast<SimpleTextEditorWidget*>(_edit)) {
+			simpleTextEdit->setHtml(_text);
 		}
 	}
 }
