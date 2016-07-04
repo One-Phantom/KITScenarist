@@ -1352,6 +1352,8 @@ void ApplicationManager::initConnections()
 
 	connect(m_settingsManager, SIGNAL(applicationSettingsUpdated()),
 			this, SLOT(aboutApplicationSettingsUpdated()));
+	connect(m_settingsManager, &SettingsManager::scenarioEditSettingsUpdated,
+			m_researchManager, &ResearchManager::updateSettings);
 	connect(m_settingsManager, SIGNAL(scenarioEditSettingsUpdated()),
 			m_scenarioManager, SLOT(aboutTextEditSettingsUpdated()));
 	connect(m_settingsManager, SIGNAL(navigatorSettingsUpdated()),

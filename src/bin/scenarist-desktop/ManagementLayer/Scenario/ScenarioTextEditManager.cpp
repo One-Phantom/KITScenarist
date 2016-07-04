@@ -55,7 +55,7 @@ void ScenarioTextEditManager::setCursorPosition(int _position)
 {
 	m_view->setCursorPosition(_position);
 }
-#include <3rd_party/Widgets/SimpleTextEditor/SimpleTextEditorWidget.h>
+
 void ScenarioTextEditManager::reloadTextEditSettings()
 {
 	m_view->setUsePageView(
@@ -97,17 +97,6 @@ void ScenarioTextEditManager::reloadTextEditSettings()
 				.toInt());
 	m_view->setSpellCheckLanguage(
 				DataStorageLayer::StorageFacade::settingsStorage()->value(
-					"scenario-editor/spell-checking-language",
-					DataStorageLayer::SettingsStorage::ApplicationSettings)
-				.toInt());
-
-
-	SimpleTextEditorWidget::enableSpellCheck(
-				DataStorageLayer::StorageFacade::settingsStorage()->value(
-					"scenario-editor/spell-checking",
-					DataStorageLayer::SettingsStorage::ApplicationSettings)
-				.toInt(),
-				(SpellChecker::Language)DataStorageLayer::StorageFacade::settingsStorage()->value(
 					"scenario-editor/spell-checking-language",
 					DataStorageLayer::SettingsStorage::ApplicationSettings)
 				.toInt());

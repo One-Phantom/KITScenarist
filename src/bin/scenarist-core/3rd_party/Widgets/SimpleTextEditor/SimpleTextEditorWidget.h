@@ -1,6 +1,7 @@
 #ifndef SIMPLETEXTEDITORWIDGET_H
 #define SIMPLETEXTEDITORWIDGET_H
 
+#include <QPageSize>
 #include <QWidget>
 
 #include <3rd_party/Widgets/SpellCheckTextEdit/SpellChecker.h>
@@ -47,6 +48,11 @@ public:
 	 * @brief Использовать ли постраничный режим в редакторе
 	 */
 	void setUsePageMode(bool _use);
+
+	/**
+	 * @brief Задать параметры страницы
+	 */
+	void setPageSettings(QPageSize::PageSizeId _pageSize, const QMarginsF& _margins, Qt::Alignment _numberingAlign);
 
 	/**
 	 * @brief Получить текст редактора

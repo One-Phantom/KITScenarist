@@ -86,6 +86,11 @@ ResearchView::~ResearchView()
 	delete m_ui;
 }
 
+void ResearchView::setSynopsisSettings(QPageSize::PageSizeId _pageSize, const QMarginsF& _margins, Qt::Alignment _numberingAlign)
+{
+	m_ui->synopsisText->setPageSettings(_pageSize, _margins, _numberingAlign);
+}
+
 void ResearchView::setResearchModel(QAbstractItemModel* _model)
 {
 	//

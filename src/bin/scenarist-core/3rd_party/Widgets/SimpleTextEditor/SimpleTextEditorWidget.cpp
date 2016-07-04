@@ -71,6 +71,13 @@ void SimpleTextEditorWidget::setUsePageMode(bool _use)
 	m_editor->setPageMargins(_use ? QMarginsF(20, 20, 20, 20) : QMarginsF(2, 2, 2, 2));
 }
 
+void SimpleTextEditorWidget::setPageSettings(QPageSize::PageSizeId _pageSize, const QMarginsF& _margins, Qt::Alignment _numberingAlign)
+{
+	m_editor->setPageFormat(_pageSize);
+	m_editor->setPageMargins(_margins);
+	m_editor->setPageNumbersAlignment(_numberingAlign);
+}
+
 QString SimpleTextEditorWidget::toHtml() const
 {
 	return m_editor->toHtml();
