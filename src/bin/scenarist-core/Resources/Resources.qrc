@@ -1,6 +1,10 @@
 <RCC>
     <qresource prefix="/Fonts">
         <file alias="Courier New">Fonts/cour.ttf</file>
+        <file>Fonts/embed/courierprime-bold-italic.odttf</file>
+        <file>Fonts/embed/courierprime-bold.odttf</file>
+        <file>Fonts/embed/courierprime-italic.odttf</file>
+        <file>Fonts/embed/courierprime-regular.odttf</file>
     </qresource>
     <qresource prefix="/SpellChecking">
         <file>HunspellDictionaries/ru_RU.aff</file>
